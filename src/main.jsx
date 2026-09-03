@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
 
+const asset = (path) => `${import.meta.env.BASE_URL}${path}`
+
 function Icon({ children, size = 24, strokeWidth = 2, ...props }) {
   return <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{children}</svg>
 }
@@ -20,11 +22,11 @@ const Bot = (props) => <Icon {...props}><rect x="4" y="7" width="16" height="13"
 const Code2 = (props) => <Icon {...props}><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14" /></Icon>
 
 const projects = [
-  { name: 'Gardinen Mannheim', meta: 'Website · UX/UI · Booking', image: '/assets/projects/gardinen-mannheim-dark.jpg' },
-  { name: 'Avci Gerüstbau', meta: 'Website · UX/UI · Development', image: '/assets/projects/avci-geruestbau.jpg' },
-  { name: 'Stadtmüller Bedachungen', meta: 'Website · UX/UI · Development', image: '/assets/projects/stadtmueller.jpg' },
-  { name: 'Ingenieurbüro Nuri', meta: 'Website · UX/UI · Development', image: '/assets/projects/kfz-nuri.jpg' },
-  { name: 'Campingglück', meta: 'Website · UX/UI', image: '/assets/projects/campingglueck.jpg' },
+  { name: 'Gardinen Mannheim', meta: 'Website · UX/UI · Booking', image: asset('assets/projects/gardinen-mannheim-dark.jpg') },
+  { name: 'Avci Gerüstbau', meta: 'Website · UX/UI · Development', image: asset('assets/projects/avci-geruestbau.jpg') },
+  { name: 'Stadtmüller Bedachungen', meta: 'Website · UX/UI · Development', image: asset('assets/projects/stadtmueller.jpg') },
+  { name: 'Ingenieurbüro Nuri', meta: 'Website · UX/UI · Development', image: asset('assets/projects/kfz-nuri.jpg') },
+  { name: 'Campingglück', meta: 'Website · UX/UI', image: asset('assets/projects/campingglueck.jpg') },
 ]
 
 const services = [
@@ -58,7 +60,7 @@ function Navigation() {
         <a href="#ueber-uns">Über uns</a>
         <a href="#kontakt">Kontakt</a>
         <a className="nav-logo" href="#top" aria-label="CODE² Startseite">
-          <img src="/assets/code2-wordmark.png" alt="CODE²" />
+          <img src={asset('assets/code2-wordmark.png')} alt="CODE²" />
         </a>
         <a href="#projekte">Projekte</a>
         <a href="#leistungen">Leistungen</a>
@@ -92,7 +94,7 @@ function Hero() {
         </div>
         <div className="portrait-wrap">
           <div className="portrait-halo"></div>
-          <img src="/assets/people/alex-editorial.png" alt="Alex Kodalis" />
+          <img src={asset('assets/people/alex-editorial.png')} alt="Alex Kodalis" />
           <div className="portrait-actions">
             <Button>Projekt starten</Button>
             <Button href="#projekte" secondary>Projekte</Button>
@@ -160,7 +162,7 @@ function Services() {
     <section className="services grid-bg" id="leistungen">
       <div className="services-visual reveal">
         <div className="orange-sketch"></div>
-        <img src="/assets/people/alex-editorial.png" alt="Alex Kodalis" />
+        <img src={asset('assets/people/alex-editorial.png')} alt="Alex Kodalis" />
         <div className="service-card card-one"><PanelsTopLeft /><div><strong>Webseiten</strong><span>Design, Entwicklung, SEO & Hosting.</span></div></div>
         <div className="service-card card-two"><Workflow /><div><strong>Automatisierung</strong><span>Weniger Routine, mehr Zeit.</span></div></div>
         <div className="service-card card-three"><Bot /><div><strong>KI-Agenten</strong><span>Erreichbar, wenn ihr es nicht seid.</span></div></div>
@@ -214,7 +216,7 @@ function Contact() {
     <section className="contact grid-bg" id="kontakt">
       <div className="contact-person reveal">
         <div className="portrait-halo"></div>
-        <img src="/assets/people/bilal-editorial.png" alt="Bilal Altuntas" />
+        <img src={asset('assets/people/bilal-editorial.png')} alt="Bilal Altuntas" />
         <Doodle />
       </div>
       <div className="contact-copy reveal">
@@ -268,7 +270,7 @@ function Footer() {
   return (
     <footer className="footer grid-bg" id="ueber-uns">
       <div className="footer-brand">
-        <img src="/assets/code2-wordmark.png" alt="CODE²" />
+        <img src={asset('assets/code2-wordmark.png')} alt="CODE²" />
         <p>Digitale Auftritte, Automatisierungen und KI-Lösungen, die im Alltag wirklich arbeiten.</p>
         <span>Alexandros Kodalis & Bilal Altuntas</span>
       </div>
