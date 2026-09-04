@@ -16,4 +16,4 @@ npm run build
 npm run preview
 ```
 
-Die Kontaktfunktion zeigt aktuell bewusst nur einen lokalen Bestätigungszustand. Vor dem Livegang sollte sie mit dem gewünschten Formular- oder CRM-Dienst verbunden werden.
+Die Kontaktfunktion macht aktuell bewusst transparent, dass ohne bestätigte Zieladresse noch nichts versendet wird. Vor einem produktiven Formularversand muss die gewünschte E-Mail-Adresse oder ein Formular-/CRM-Endpunkt hinterlegt werden.
