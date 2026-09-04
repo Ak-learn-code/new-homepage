@@ -1,4 +1,4 @@
-# CODE² – Neue Homepage
+# CODE²: Neue Homepage
 
 Ein responsiver One-Page-Auftritt für CODE² mit Projektgalerie, Leistungsübersicht, Prozessdarstellung und Kontakt-Einstieg.
 
