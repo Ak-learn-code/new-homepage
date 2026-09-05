@@ -50,6 +50,15 @@ function Button({ href = '#kontakt', children, secondary = false }) {
   )
 }
 
+function HeroActions({ className = '' }) {
+  return (
+    <div className={`hero-actions ${className}`}>
+      <Button>Projekt anfragen</Button>
+      <Button href="#projekte" secondary>Projekte ansehen</Button>
+    </div>
+  )
+}
+
 function EditorialMark({ className = '' }) {
   return (
     <span className={`editorial-mark ${className}`} aria-hidden="true">
@@ -110,6 +119,7 @@ function Hero() {
       <div className="hero-heading">
         <h1>Wir bauen digitale Auftritte,<br />{' '}die <em>arbeiten.</em></h1>
         <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
+        <HeroActions className="hero-copy-actions" />
       </div>
       <div className="hero-stage">
         <blockquote className="hero-quote">
@@ -122,10 +132,7 @@ function Hero() {
           <span className="halo-orbit" aria-hidden="true" />
           <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
           <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
-          <div className="portrait-actions">
-            <Button>Projekt anfragen</Button>
-            <Button href="#projekte" secondary>Projekte ansehen</Button>
-          </div>
+          <HeroActions className="portrait-actions" />
         </div>
         <div className="hero-qualifications" aria-label="Unsere Qualifikationen">
           {serviceItems.map(({ Icon, title }) => (
@@ -167,7 +174,7 @@ function ProjectCollage() {
           <div className="project-caption"><span>{project.meta}</span><strong>{project.name}</strong></div>
         </article>
         <article className="project-side">
-          <div className="orange-cut" />
+          <div className="accent-cut" />
           <div className="project-poster-title">Designing<span>²</span></div>
           <img src={nextProject.image} alt={`Projekt ${nextProject.name}`} />
           <p>{nextProject.short}<br /><b>{nextProject.name}</b></p>
