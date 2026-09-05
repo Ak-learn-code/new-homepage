@@ -11,6 +11,7 @@ import {
   EnvelopeSimple,
   FlowArrow,
   List,
+  Quotes,
   Robot,
   X,
 } from '@phosphor-icons/react'
@@ -71,13 +72,16 @@ function Navigation() {
   return (
     <header className="nav-shell">
       <nav className="nav-pill" aria-label="Hauptnavigation">
-        <a href="#ueber-uns">Über uns</a>
-        <a href="#kontakt">Kontakt</a>
         <a className="nav-logo" href="#top" aria-label="CODE² Startseite">
           <img src={asset('assets/code2-wordmark.png')} alt="CODE²" />
         </a>
-        <a href="#projekte">Projekte</a>
-        <a href="#leistungen">Leistungen</a>
+        <div className="nav-links">
+          <a href="#ueber-uns">Über uns</a>
+          <a href="#leistungen">Leistungen</a>
+          <a href="#projekte">Projekte</a>
+          <a href="#ablauf">Ablauf</a>
+        </div>
+        <a className="nav-contact" href="#kontakt">Kontakt</a>
         <button
           className="menu-button"
           onClick={() => setOpen((current) => !current)}
@@ -104,26 +108,31 @@ function Hero() {
     <section className="hero grid-bg" id="top">
       <Navigation />
       <div className="hero-heading">
-        <EditorialMark className="hero-mark" />
-        <h1>Wir bauen digitale Auftritte,<br />die <em>arbeiten.</em></h1>
+        <h1>Wir bauen digitale Auftritte,<br />{' '}die <em>arbeiten.</em></h1>
+        <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
       </div>
       <div className="hero-stage">
-        <div className="hero-side hero-side-left">
-          <p>Websites und Automatisierungen, die Abläufe vereinfachen und im Alltag genutzt werden.</p>
-          <a className="outline-link" href="#ueber-uns">Mehr über uns</a>
-        </div>
+        <blockquote className="hero-quote">
+          <Quotes size={42} weight="fill" aria-hidden="true" />
+          <p>„Gute digitale Lösungen sehen klar aus und funktionieren zuverlässig.“</p>
+          <cite>Alex & Bilal, CODE²</cite>
+        </blockquote>
         <div className="portrait-wrap">
           <div className="portrait-halo" />
-          <img src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
+          <span className="halo-orbit" aria-hidden="true" />
+          <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
+          <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
           <div className="portrait-actions">
             <Button>Projekt anfragen</Button>
             <Button href="#projekte" secondary>Projekte ansehen</Button>
           </div>
         </div>
-        <div className="hero-side hero-side-right">
-          <strong>Direkt mit uns</strong>
-          <span>Von der Idee bis live.</span>
+        <div className="hero-qualifications" aria-label="Unsere Qualifikationen">
+          {serviceItems.map(({ Icon, title }) => (
+            <span key={title}><Icon size={18} weight="duotone" />{title}</span>
+          ))}
         </div>
+        <EditorialMark className="hero-mark" />
       </div>
     </section>
   )
