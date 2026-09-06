@@ -10,8 +10,8 @@ import {
   CaretRight,
   EnvelopeSimple,
   FlowArrow,
+  GoogleLogo,
   List,
-  Quotes,
   Robot,
   X,
 } from '@phosphor-icons/react'
@@ -27,6 +27,8 @@ const projects = [
   { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.jpg'), short: 'Technik verständlich gemacht.' },
   { name: 'Campingglück', meta: 'Website, UX/UI', image: asset('assets/projects/campingglueck.jpg'), short: 'Freiheit digital erzählt.' },
 ]
+
+const heroProjects = projects.slice(0, 4)
 
 const serviceItems = [
   { Icon: Browser, title: 'Webseiten', text: 'Design, Texte, SEO und Hosting.' },
@@ -114,32 +116,39 @@ function Navigation() {
 
 function Hero() {
   return (
-    <section className="hero grid-bg" id="top">
+    <section className="hero" id="top">
       <Navigation />
-      <div className="hero-heading">
-        <h1>Wir bauen digitale Auftritte,<br />{' '}die <em>arbeiten.</em></h1>
-        <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
-        <HeroActions className="hero-copy-actions" />
+      <div className="hero-atmosphere" aria-hidden="true">
+        <span className="hero-orb hero-orb-one" />
+        <span className="hero-orb hero-orb-two" />
       </div>
-      <div className="hero-stage">
-        <blockquote className="hero-quote">
-          <Quotes size={42} weight="fill" aria-hidden="true" />
-          <p>„Gute digitale Lösungen sehen klar aus und funktionieren zuverlässig.“</p>
-          <cite>Alex & Bilal, CODE²</cite>
-        </blockquote>
-        <div className="portrait-wrap">
-          <div className="portrait-halo" />
-          <span className="halo-orbit" aria-hidden="true" />
+      <div className="hero-content">
+        <div className="hero-heading">
+          <h1>Wir bauen digitale Auftritte,<br />die <em>arbeiten.</em></h1>
+          <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
+          <HeroActions className="hero-copy-actions" />
+          <div className="google-rating" aria-label="Google-Bewertungen, Profil wird verknüpft">
+            <GoogleLogo size={28} weight="bold" aria-hidden="true" />
+            <div>
+              <strong>Google-Bewertungen</strong>
+              <small>Profil wird verknüpft</small>
+            </div>
+          </div>
+        </div>
+        <div className="hero-founders" aria-label="Alex und Bilal von CODE²">
+          <span className="founder-aura" aria-hidden="true" />
           <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
           <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
-          <HeroActions className="portrait-actions" />
+          <div className="founder-signature"><strong>Alex & Bilal</strong><span>CODE²</span></div>
         </div>
-        <div className="hero-qualifications" aria-label="Unsere Qualifikationen">
-          {serviceItems.map(({ Icon, title }) => (
-            <span key={title}><Icon size={18} weight="duotone" />{title}</span>
-          ))}
-        </div>
-        <EditorialMark className="hero-mark" />
+      </div>
+      <div className="hero-project-rail" aria-label="Ausgewählte Website-Referenzen">
+        {heroProjects.map((project) => (
+          <a className="hero-project-card" href="#projekte" key={project.name}>
+            <img src={project.image} alt={`Website-Referenz ${project.name}`} />
+            <span><strong>{project.name}</strong><small>{project.meta.split(',')[0]}</small></span>
+          </a>
+        ))}
       </div>
     </section>
   )
