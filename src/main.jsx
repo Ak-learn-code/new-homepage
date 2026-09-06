@@ -124,9 +124,6 @@ function Hero() {
       </div>
       <div className="hero-content">
         <div className="hero-heading">
-          <h1>Wir bauen digitale Auftritte,<br />die <em>arbeiten.</em></h1>
-          <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
-          <HeroActions className="hero-copy-actions" />
           <div className="google-rating" aria-label="Google-Bewertungen, Profil wird verknüpft">
             <GoogleLogo size={28} weight="bold" aria-hidden="true" />
             <div>
@@ -134,6 +131,9 @@ function Hero() {
               <small>Profil wird verknüpft</small>
             </div>
           </div>
+          <h1>Wir bauen digitale Auftritte,<br />die <em>arbeiten.</em></h1>
+          <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
+          <HeroActions className="hero-copy-actions" />
         </div>
         <div className="hero-founders" aria-label="Alex und Bilal von CODE²">
           <span className="founder-aura" aria-hidden="true" />
