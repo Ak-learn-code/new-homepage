@@ -1010,3 +1010,83 @@ input { caret-color: var(--accent); }
   .hero-person-bilal,
   .hero-person-alex { animation: none; }
 }
+
+/* Responsive founder photography */
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(2, 12, 18, .93) 0%, rgba(2, 13, 19, .75) 31%, rgba(3, 14, 20, .28) 52%, rgba(3, 14, 20, .03) 72%),
+    linear-gradient(180deg, rgba(3, 13, 19, .1), transparent 50%, rgba(2, 10, 15, .2));
+}
+
+.hero-atmosphere picture,
+.hero-atmosphere picture img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-atmosphere picture img {
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+  filter: none;
+  transform: none;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hero-heading {
+  width: min(650px, 52%);
+  padding-bottom: 0;
+}
+
+@media (max-width: 1024px) and (min-width: 601px) {
+  .hero-atmosphere picture img { object-position: 93% center; }
+  .hero::before {
+    background:
+      linear-gradient(90deg, rgba(2, 12, 18, .94) 0%, rgba(2, 13, 19, .82) 43%, rgba(3, 14, 20, .36) 67%, rgba(3, 14, 20, .08) 100%),
+      linear-gradient(180deg, rgba(3, 13, 19, .08), transparent 48%, rgba(2, 10, 15, .25));
+  }
+  .hero-heading { width: min(470px, 58%); }
+}
+
+@media (max-width: 820px) and (min-width: 601px) {
+  .hero-heading { width: min(390px, 55%); }
+}
+
+@media (max-width: 600px) {
+  .hero-atmosphere picture img {
+    object-position: center center;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .hero::before {
+    background:
+      linear-gradient(180deg, rgba(2, 12, 18, .78) 0%, rgba(2, 12, 18, .44) 38%, rgba(2, 12, 18, .02) 65%),
+      linear-gradient(90deg, rgba(2, 12, 18, .42), transparent 86%);
+  }
+  .hero-content { display: block; }
+  .hero-heading { width: calc(100% - 40px); }
+}
+
+@media (max-width: 390px) {
+  .hero-heading { width: calc(100% - 32px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-atmosphere picture img { animation: founder-photo-settle 1200ms var(--ease-out-expo) both; }
+}
+
+@keyframes founder-photo-settle {
+  from { opacity: .72; transform: scale(1.018); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmosphere picture img { animation: none; }
+}

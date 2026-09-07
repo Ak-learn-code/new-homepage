@@ -117,8 +117,10 @@ function Hero() {
     <section className="hero" id="top">
       <Navigation />
       <div className="hero-atmosphere" aria-hidden="true">
-        <img src={asset('assets/editorial/hero-atmosphere-v2.webp')} alt="" />
-        <span className="hero-light-trace" />
+        <picture>
+          <source media="(max-width: 600px)" srcSet={asset('assets/editorial/hero-founders-portrait.webp')} />
+          <img src={asset('assets/editorial/hero-founders-landscape.webp')} alt="" />
+        </picture>
         <span className="hero-micro hero-micro-top">[SIDE TWO / DIGITAL STUDIO]</span>
         <span className="hero-micro hero-micro-side">[WEBSITES / AUTOMATION / AI]</span>
         <span className="hero-micro hero-micro-bottom">[MANNHEIM / 2026]</span>
@@ -139,13 +141,6 @@ function Hero() {
           </h1>
           <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
           <HeroActions className="hero-copy-actions" />
-        </div>
-        <div className="hero-founders" aria-label="Alex und Bilal von CODE²">
-          <span className="founder-backdrop" aria-hidden="true" />
-          <span className="founder-name founder-name-bilal">Bilal Altuntas</span>
-          <span className="founder-name founder-name-alex">Alex Kodalis</span>
-          <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
-          <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
         </div>
       </div>
     </section>
