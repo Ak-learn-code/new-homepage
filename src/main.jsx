@@ -35,16 +35,16 @@ const serviceItems = [
   { Icon: BracketsCurly, title: 'Interne Tools', text: 'Systeme, die täglich genutzt werden.' },
 ]
 
-const clientReferences = projects.map((project, index) => ({
-  ...project,
-  gradient: [
-    ['#173c42', '#087f76', '#d28a35'],
-    ['#172d38', '#246b74', '#b66a2d'],
-    ['#26333a', '#0d6f68', '#e1a34f'],
-    ['#18363c', '#277d78', '#c47b32'],
-    ['#202f36', '#126d73', '#dd9941'],
-  ][index],
-}))
+const clientLogos = [
+  { name: 'Gardinen Mannheim', type: 'gardinen' },
+  { name: 'AVCI Gerüstbau', type: 'avci' },
+  { name: 'Ingenieurbüro Nuri', type: 'nuri' },
+  { name: 'Campingglück', type: 'camping' },
+  { name: 'Sordillo Erdbau', type: 'sordillo' },
+  { name: 'Michael Noll Handpan', type: 'handpan' },
+  { name: 'MP Dienstleistungen', type: 'mp' },
+  { name: 'Stadtmüller Bedachungen', type: 'stadtmueller' },
+]
 
 const processSteps = [
   ['Verstehen', 'Wir klären, was ihr wirklich braucht.'],
@@ -169,26 +169,38 @@ function ServiceRail() {
 }
 
 function ClientMarquee() {
-  const repeatedReferences = [...clientReferences, ...clientReferences]
+  const repeatedLogos = [...clientLogos, ...clientLogos]
+
+  const renderLogo = (type) => {
+    if (type === 'gardinen') return <><b>GARDINEN</b><span>MANNHEIM</span></>
+    if (type === 'avci') return <><b>AVCI</b><span>GERÜSTBAU</span></>
+    if (type === 'nuri') return <><i>KFZ<br />NURI</i><span>INGENIEURBÜRO <b>NURI</b></span></>
+    if (type === 'camping') return <><b>Camping</b><span>glück</span></>
+    if (type === 'sordillo') return <><i /><b>SORDILLO</b><span>ERDBAU · ABBRUCH</span></>
+    if (type === 'handpan') return <><i>◉</i><b>MICHAEL NOLL</b><span>HANDPAN</span></>
+    if (type === 'mp') return <><b>MP</b><span>DIENSTLEISTUNGEN</span></>
+    return <><b>STADTMÜLLER</b><span>BEDACHUNGEN</span></>
+  }
 
   return (
     <div className="client-marquee" role="region" aria-labelledby="client-marquee-title">
       <div className="client-marquee-head">
-        <h2 id="client-marquee-title">Vertraut von Unternehmen<br />aus der Region.</h2>
-        <p>Digitale Auftritte für Handwerk, Dienstleistung und lokale Marken.</p>
+        <h2 id="client-marquee-title">Digitale Arbeit, die schon läuft.</h2>
+        <p>Eine Auswahl echter Auftritte für Handwerk, Dienstleistung und lokale Unternehmen.</p>
       </div>
       <div className="client-marquee-window">
         <div className="client-marquee-track">
-          {repeatedReferences.map((client, index) => (
-            <div
+          {repeatedLogos.map((client, index) => (
+            <article
               className="client-logo-tile"
-              key={`${client.name}-${index}`}
-              aria-hidden={index >= clientReferences.length ? 'true' : undefined}
-              style={{ '--tile-from': client.gradient[0], '--tile-via': client.gradient[1], '--tile-to': client.gradient[2] }}
+              key={`${client.type}-${index}`}
+              aria-label={index < clientLogos.length ? client.name : undefined}
+              aria-hidden={index >= clientLogos.length ? 'true' : undefined}
             >
-              <img src={client.image} alt="" loading="lazy" />
-              <span>{client.name}</span>
-            </div>
+              <div className={`client-logo-mark logo-${client.type}`} aria-hidden="true">
+                {renderLogo(client.type)}
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -206,7 +218,7 @@ function ProjectCollage() {
       <ClientMarquee />
       <ServiceRail />
       <div className="projects-head reveal-on-scroll">
-        <h2>Digitale Arbeit,<br />die schon <em>läuft.</em></h2>
+        <h2>Ausgewählte<br /><em>Projekte.</em></h2>
         <p>Eine Auswahl echter Auftritte für Handwerk, Dienstleistung und lokale Unternehmen. Von der Idee bis zum fertigen Produkt.</p>
       </div>
       <div className="project-showcase reveal-on-scroll" key={project.name}>

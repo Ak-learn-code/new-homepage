@@ -1095,44 +1095,44 @@ input { caret-color: var(--accent); }
 .client-marquee {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .13);
-  border-radius: 28px;
-  background: rgba(8, 10, 11, .8);
-  box-shadow: 0 24px 58px rgba(0, 0, 0, .2);
+  width: calc(100% + 240px);
+  margin-left: -120px;
+  background: linear-gradient(180deg, rgba(5, 15, 23, .98), rgba(5, 14, 21, .96));
 }
 
 .client-marquee-head {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
   align-items: end;
   gap: 48px;
-  margin: 0 36px;
-  padding: 32px 0 28px;
+  margin: 0 120px;
+  padding: 24px 0 34px;
   border-bottom: 1px solid rgba(255, 255, 255, .11);
 }
 
 .client-marquee-head h2 {
   margin: 0;
   color: #f6f6f3;
-  font-size: clamp(30px, 2.8vw, 42px);
-  font-weight: 570;
+  font-size: clamp(38px, 3.3vw, 48px);
+  font-weight: 500;
   line-height: 1.02;
   letter-spacing: -.035em;
+  white-space: nowrap;
 }
 
 .client-marquee-head p {
   max-width: 420px;
   justify-self: end;
   margin: 0;
-  color: rgba(246, 246, 243, .58);
-  font-size: 13px;
-  line-height: 1.5;
+  color: rgba(246, 246, 243, .54);
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 .client-marquee-window {
   width: 100%;
   overflow: hidden;
-  padding: 22px 0 24px;
+  padding: 32px 0 40px;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
@@ -1141,71 +1141,67 @@ input { caret-color: var(--accent); }
   width: max-content;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding-right: 14px;
-  animation: client-marquee-scroll 36s linear infinite;
+  gap: 18px;
+  padding-right: 18px;
+  animation: client-marquee-scroll 48s linear infinite;
   will-change: transform;
 }
 
 .client-logo-tile {
-  --tile-from: #173c42;
-  --tile-via: #087f76;
-  --tile-to: #d28a35;
-  width: 200px;
-  height: 104px;
+  width: 286px;
+  height: 154px;
   flex: 0 0 auto;
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 15px;
-  background: #202223;
-  isolation: isolate;
+  color: rgba(241, 243, 242, .7);
+  border: 1px solid rgba(177, 192, 198, .19);
+  border-radius: 14px;
+  background: rgba(18, 25, 29, .72);
+  transition: color 220ms ease, border-color 220ms ease, background-color 220ms ease, transform 320ms var(--ease-out-expo);
 }
 
-.client-logo-tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  opacity: 0;
-  background: linear-gradient(135deg, var(--tile-from), var(--tile-via), var(--tile-to));
-  transform: scale(1.12);
-  transition: opacity 220ms ease, transform 360ms var(--ease-out-expo);
+.client-logo-mark {
+  max-width: 82%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: inherit;
+  opacity: .86;
+  transition: opacity 220ms ease, transform 320ms var(--ease-out-expo);
 }
 
-.client-logo-tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(180deg, rgba(5, 8, 9, .38), rgba(5, 8, 9, .82));
-}
+.client-logo-mark b,
+.client-logo-mark span { color: inherit; }
 
-.client-logo-tile img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  object-fit: cover;
-  object-position: top;
-  opacity: .42;
-  filter: grayscale(1) contrast(1.05);
-  transition: opacity 220ms ease, filter 220ms ease, transform 360ms var(--ease-out-expo);
-}
-
-.client-logo-tile span {
-  max-width: 165px;
-  padding: 0 12px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 720;
-  line-height: 1.12;
-  text-align: center;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, .45);
-}
+.logo-gardinen { flex-direction: column; gap: 1px; font-family: Georgia, serif; letter-spacing: .08em; }
+.logo-gardinen b { font-size: 22px; font-weight: 500; }
+.logo-gardinen span { font-family: var(--font); font-size: 9px; font-weight: 700; letter-spacing: .32em; }
+.logo-avci { gap: 10px; }
+.logo-avci b { font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -.08em; }
+.logo-avci span { padding-left: 10px; border-left: 1px solid currentColor; font-size: 9px; font-weight: 700; letter-spacing: .1em; }
+.logo-nuri i { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 8px; font-weight: 800; line-height: 1; text-align: center; font-style: normal; }
+.logo-nuri span { font-size: 14px; font-weight: 560; letter-spacing: .03em; }
+.logo-nuri span b { font-weight: 800; }
+.logo-camping { gap: 0; font-size: 23px; letter-spacing: -.045em; }
+.logo-camping b { font-weight: 800; }
+.logo-camping span { font-weight: 350; }
+.logo-sordillo { display: grid; grid-template-columns: 9px auto; gap: 2px 8px; }
+.logo-sordillo i { width: 9px; height: 9px; grid-row: 1 / 3; margin-top: 4px; background: currentColor; }
+.logo-sordillo b { font-size: 20px; font-weight: 800; line-height: 1; letter-spacing: .05em; }
+.logo-sordillo span { font-size: 7px; font-weight: 700; letter-spacing: .18em; }
+.logo-handpan { display: grid; grid-template-columns: 25px auto; gap: 1px 7px; }
+.logo-handpan i { grid-row: 1 / 3; font-size: 23px; font-style: normal; }
+.logo-handpan b { font-size: 14px; font-weight: 750; letter-spacing: .07em; }
+.logo-handpan span { font-size: 7px; font-weight: 700; letter-spacing: .26em; }
+.logo-mp { gap: 9px; }
+.logo-mp b { font-size: 35px; font-weight: 800; letter-spacing: -.09em; }
+.logo-mp span { max-width: 78px; font-size: 8px; font-weight: 700; line-height: 1.25; letter-spacing: .08em; }
+.logo-stadtmueller { flex-direction: column; align-items: flex-start; gap: 2px; }
+.logo-stadtmueller b { font-size: 18px; font-weight: 800; letter-spacing: .04em; }
+.logo-stadtmueller span { font-size: 8px; font-weight: 700; letter-spacing: .24em; }
 
 .client-marquee + .service-rail { margin-top: 28px; }
 .client-marquee ~ .projects-head { margin-top: 72px; }
@@ -1221,38 +1217,39 @@ input { caret-color: var(--accent); }
     box-shadow: 0 10px 24px rgba(242, 161, 70, .25);
   }
   .client-marquee-window:hover .client-marquee-track { animation-play-state: paused; }
-  .client-logo-tile:hover::before { opacity: .82; transform: none; }
-  .client-logo-tile:hover img { opacity: .28; filter: grayscale(.2) saturate(.8); transform: scale(1.035); }
+  .client-logo-tile:hover { color: #f6f6f3; border-color: rgba(242, 161, 70, .52); background: rgba(30, 37, 40, .9); transform: translateY(-3px); }
+  .client-logo-tile:hover .client-logo-mark { opacity: 1; transform: scale(1.025); }
 }
 
 @media (max-width: 820px) {
+  .client-marquee { width: calc(100% + 60px); margin-left: -30px; }
   .client-marquee-head {
     grid-template-columns: 1fr;
     gap: 12px;
-    margin: 0 24px;
-    padding: 26px 0 22px;
+    margin: 0 30px;
+    padding: 24px 0 26px;
   }
-  .client-marquee-head h2 { font-size: 30px; }
+  .client-marquee-head h2 { font-size: 34px; white-space: normal; }
   .client-marquee-head p { max-width: 360px; justify-self: start; font-size: 12px; }
-  .client-logo-tile { width: 176px; height: 94px; }
+  .client-logo-tile { width: 226px; height: 126px; }
   .client-marquee ~ .projects-head { margin-top: 58px; }
 }
 
 @media (max-width: 600px) {
-  .client-marquee { border-radius: 22px; }
+  .client-marquee { width: calc(100% + 36px); margin-left: -18px; }
   .client-marquee-head { margin: 0 18px; padding: 22px 0 18px; }
-  .client-marquee-head h2 { font-size: 25px; }
+  .client-marquee-head h2 { font-size: 30px; }
   .client-marquee-head p { font-size: 11px; }
   .client-marquee-window { padding: 18px 0 20px; }
   .client-marquee-track { gap: 10px; padding-right: 10px; animation-duration: 30s; }
-  .client-logo-tile { width: 150px; height: 82px; border-radius: 13px; }
-  .client-logo-tile span { max-width: 136px; font-size: 11px; }
+  .client-logo-tile { width: 190px; height: 106px; border-radius: 12px; }
+  .client-logo-mark { transform: scale(.9); }
   .client-marquee + .service-rail { margin-top: 20px; }
   .client-marquee ~ .projects-head { margin-top: 50px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .client-marquee-track { animation: none; transform: translateX(0); }
-  .client-logo-tile::before,
-  .client-logo-tile img { transition: none; }
+  .client-logo-tile,
+  .client-logo-mark { transition: none; }
 }
