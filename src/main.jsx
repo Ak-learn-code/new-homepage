@@ -35,6 +35,17 @@ const serviceItems = [
   { Icon: BracketsCurly, title: 'Interne Tools', text: 'Systeme, die täglich genutzt werden.' },
 ]
 
+const clientReferences = projects.map((project, index) => ({
+  ...project,
+  gradient: [
+    ['#173c42', '#087f76', '#d28a35'],
+    ['#172d38', '#246b74', '#b66a2d'],
+    ['#26333a', '#0d6f68', '#e1a34f'],
+    ['#18363c', '#277d78', '#c47b32'],
+    ['#202f36', '#126d73', '#dd9941'],
+  ][index],
+}))
+
 const processSteps = [
   ['Verstehen', 'Wir klären, was ihr wirklich braucht.'],
   ['Gestalten', 'Wir machen die Idee sichtbar und klar.'],
@@ -157,6 +168,34 @@ function ServiceRail() {
   )
 }
 
+function ClientMarquee() {
+  const repeatedReferences = [...clientReferences, ...clientReferences]
+
+  return (
+    <div className="client-marquee" role="region" aria-labelledby="client-marquee-title">
+      <div className="client-marquee-head">
+        <h2 id="client-marquee-title">Vertraut von Unternehmen<br />aus der Region.</h2>
+        <p>Digitale Auftritte für Handwerk, Dienstleistung und lokale Marken.</p>
+      </div>
+      <div className="client-marquee-window">
+        <div className="client-marquee-track">
+          {repeatedReferences.map((client, index) => (
+            <div
+              className="client-logo-tile"
+              key={`${client.name}-${index}`}
+              aria-hidden={index >= clientReferences.length ? 'true' : undefined}
+              style={{ '--tile-from': client.gradient[0], '--tile-via': client.gradient[1], '--tile-to': client.gradient[2] }}
+            >
+              <img src={client.image} alt="" loading="lazy" />
+              <span>{client.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProjectCollage() {
   const [active, setActive] = useState(0)
   const project = projects[active]
@@ -164,6 +203,7 @@ function ProjectCollage() {
 
   return (
     <section className="projects dark-panel" id="projekte">
+      <ClientMarquee />
       <ServiceRail />
       <div className="projects-head reveal-on-scroll">
         <h2>Digitale Arbeit,<br />die schon <em>läuft.</em></h2>
