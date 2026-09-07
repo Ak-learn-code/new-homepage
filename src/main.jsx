@@ -78,6 +78,18 @@ function EditorialMark({ className = '' }) {
   )
 }
 
+function SideTwoLogo({ className = '' }) {
+  const logoUrl = `url("${asset('assets/sidetwo-logo-currentcolor.svg')}")`
+
+  return (
+    <span
+      className={`sidetwo-logo ${className}`}
+      aria-hidden="true"
+      style={{ WebkitMaskImage: logoUrl, maskImage: logoUrl }}
+    />
+  )
+}
+
 function Navigation() {
   const [open, setOpen] = useState(false)
 
@@ -92,8 +104,8 @@ function Navigation() {
   return (
     <header className="nav-shell">
       <nav className="nav-pill" aria-label="Hauptnavigation">
-        <a className="nav-logo" href="#top" aria-label="CODE² Startseite">
-          <img src={asset('assets/code2-wordmark.png')} alt="CODE²" />
+        <a className="nav-logo" href="#top" aria-label="SideTwo Startseite">
+          <SideTwoLogo />
         </a>
         <div className="nav-links">
           <a href="#ueber-uns">Über uns</a>
@@ -330,7 +342,7 @@ function ProcessCards() {
 function Footer() {
   return (
     <footer className="footer grid-bg" id="ueber-uns">
-      <div className="footer-brand"><img src={asset('assets/code2-wordmark.png')} alt="CODE²" /><p>Digitale Auftritte, Automatisierungen und KI-Lösungen, die im Alltag wirklich arbeiten.</p><span>Alexandros Kodalis & Bilal Altuntas</span></div>
+      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Digitale Auftritte, Automatisierungen und KI-Lösungen, die im Alltag wirklich arbeiten.</p><span>Alexandros Kodalis & Bilal Altuntas</span></div>
       <div className="footer-col"><strong>Sitemap</strong><a href="#top">Start</a><a href="#projekte">Projekte</a><a href="#leistungen">Leistungen</a><a href="#ablauf">Ablauf</a></div>
       <div className="footer-col"><strong>Mehr</strong><a href="#ueber-uns">Über uns</a><a href="#kontakt">Kontakt</a><a href="#kontakt">Projekt anfragen</a></div>
       <div className="footer-contact"><span>Kontakt</span><h2>Lasst uns etwas bauen,<br /><em>das arbeitet.</em></h2><a href="#kontakt">Projekt anfragen <ArrowRight size={18} weight="bold" /></a>{/* TODO: bestätigte E-Mail-Adresse oder Formular-Endpunkt ergänzen. */}</div>
