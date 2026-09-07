@@ -28,7 +28,7 @@ const projects = [
   { name: 'Campingglück', meta: 'Website, UX/UI', image: asset('assets/projects/campingglueck.jpg'), short: 'Freiheit digital erzählt.' },
 ]
 
-const heroProjects = projects.slice(0, 4)
+const heroProjects = projects
 
 const serviceItems = [
   { Icon: Browser, title: 'Webseiten', text: 'Design, Texte, SEO und Hosting.' },
@@ -139,14 +139,12 @@ function Hero() {
           <span className="founder-aura" aria-hidden="true" />
           <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
           <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
-          <div className="founder-signature"><strong>Alex & Bilal</strong><span>CODE²</span></div>
         </div>
       </div>
       <div className="hero-project-rail" aria-label="Ausgewählte Website-Referenzen">
         {heroProjects.map((project) => (
           <a className="hero-project-card" href="#projekte" key={project.name}>
             <img src={project.image} alt={`Website-Referenz ${project.name}`} />
-            <span><strong>{project.name}</strong><small>{project.meta.split(',')[0]}</small></span>
           </a>
         ))}
       </div>
