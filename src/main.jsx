@@ -28,8 +28,6 @@ const projects = [
   { name: 'Campingglück', meta: 'Website, UX/UI', image: asset('assets/projects/campingglueck.jpg'), short: 'Freiheit digital erzählt.' },
 ]
 
-const heroProjects = projects
-
 const serviceItems = [
   { Icon: Browser, title: 'Webseiten', text: 'Design, Texte, SEO und Hosting.' },
   { Icon: FlowArrow, title: 'Automatisierung', text: 'Weniger Routine, mehr Zeit.' },
@@ -119,34 +117,36 @@ function Hero() {
     <section className="hero" id="top">
       <Navigation />
       <div className="hero-atmosphere" aria-hidden="true">
-        <span className="hero-orb hero-orb-one" />
-        <span className="hero-orb hero-orb-two" />
+        <img src={asset('assets/editorial/hero-atmosphere-v2.webp')} alt="" />
+        <span className="hero-light-trace" />
+        <span className="hero-micro hero-micro-top">[SIDE TWO / DIGITAL STUDIO]</span>
+        <span className="hero-micro hero-micro-side">[WEBSITES / AUTOMATION / AI]</span>
+        <span className="hero-micro hero-micro-bottom">[MANNHEIM / 2026]</span>
       </div>
       <div className="hero-content">
         <div className="hero-heading">
           <div className="google-rating" aria-label="Google-Bewertungen, Profil wird verknüpft">
-            <GoogleLogo size={28} weight="bold" aria-hidden="true" />
+            <GoogleLogo size={20} weight="bold" aria-hidden="true" />
             <div>
               <strong>Google-Bewertungen</strong>
               <small>Profil wird verknüpft</small>
             </div>
           </div>
-          <h1>Wir bauen digitale Auftritte,<br />die <em>arbeiten.</em></h1>
+          <h1>
+            <span>Wir bauen</span>
+            <span>digitale Auftritte,</span>
+            <span>die <em>arbeiten.</em></span>
+          </h1>
           <p>Websites, Automatisierung und KI, die euren Alltag einfacher machen.</p>
           <HeroActions className="hero-copy-actions" />
         </div>
         <div className="hero-founders" aria-label="Alex und Bilal von CODE²">
-          <span className="founder-aura" aria-hidden="true" />
+          <span className="founder-backdrop" aria-hidden="true" />
+          <span className="founder-name founder-name-bilal">Bilal Altuntas</span>
+          <span className="founder-name founder-name-alex">Alex Kodalis</span>
           <img className="hero-person hero-person-bilal" src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
           <img className="hero-person hero-person-alex" src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" width="1254" height="1254" />
         </div>
-      </div>
-      <div className="hero-project-rail" aria-label="Ausgewählte Website-Referenzen">
-        {heroProjects.map((project) => (
-          <a className="hero-project-card" href="#projekte" key={project.name}>
-            <img src={project.image} alt={`Website-Referenz ${project.name}`} />
-          </a>
-        ))}
       </div>
     </section>
   )
