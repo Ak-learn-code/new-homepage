@@ -23,7 +23,7 @@ import './styles.css'
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
 
 const projects = [
-  { name: 'Gardinen Mannheim', meta: 'Website, UX/UI, Booking', image: asset('assets/projects/gardinen-mannheim-dark.jpg'), short: 'Räume neu gedacht.' },
+  { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
   { name: 'Avci Gerüstbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/avci-geruestbau.jpg'), short: 'Starker Auftritt fürs Handwerk.' },
   { name: 'Stadtmüller', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/stadtmueller.jpg'), short: 'Klarheit bis ins Detail.' },
   { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.jpg'), short: 'Technik verständlich gemacht.' },
@@ -31,12 +31,12 @@ const projects = [
 ]
 
 const referenceProjects = [
-  { ...projects[0], description: 'Website, UX/UI und Booking für einen klaren digitalen Auftritt.' },
-  { ...projects[1], description: 'Website, UX/UI und Entwicklung für ein starkes Handwerksunternehmen.' },
+  { ...projects[0], description: 'Website mit Backend und Bestellsystem für da nico.', url: 'https://da-nico.de/' },
+  { ...projects[1], description: 'Website, UX/UI und Entwicklung für ein starkes Handwerksunternehmen.', url: 'https://www.avci-geruestbau.de/' },
   { ...projects[2], description: 'Website, UX/UI und Entwicklung mit Fokus auf Klarheit bis ins Detail.' },
-  { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.' },
+  { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.', url: 'https://ing-kaltbrunn.de/' },
   { ...projects[4], description: 'Website und UX/UI für einen digitalen Auftritt mit Gefühl für Freiheit.' },
-  { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.' },
+  { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.', url: 'https://bukkador-handpan.de/' },
   { name: 'Sordillo Erdbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/sordillo.jpg'), description: 'Website und UX/UI für ein regionales Erdbauunternehmen.' },
   { name: 'MP Dienstleistungen', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/mp-dienstleistungen.jpg'), description: 'Website und UX/UI für vielseitige Dienstleistungen aus der Region.' },
 ]
@@ -382,7 +382,7 @@ function ReferencesSequence() {
           <article className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label="Referenz schließen"><X weight="bold" /></button>
             <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} /></div>
-            <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span><a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
+            <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span>{activeProject.url ? <a href={activeProject.url} target="_blank" rel="noreferrer">Website ansehen <ArrowRight size={16} weight="bold" /></a> : null}<a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
           </article>
         </div>
       ) : null}
@@ -456,7 +456,7 @@ function Execution() {
       <div className="showcase-stack reveal-on-scroll" aria-label="Verschiedene Projektansichten">
         <div className="browser-layer"><img src={projects[1].image} alt="Avci Gerüstbau in einer Desktopansicht" loading="lazy" /></div>
         <div className="poster-layer"><img src={projects[2].image} alt="Stadtmüller als Projektplakat" loading="lazy" /><b>Ideen werden Systeme.</b></div>
-        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="Gardinen Mannheim auf einem Smartphone" loading="lazy" /></div>
+        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="da nico auf einem Smartphone" loading="lazy" /></div>
       </div>
     </section>
   )
