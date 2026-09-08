@@ -25,7 +25,7 @@ const asset = (path) => `${import.meta.env.BASE_URL}${path}`
 const projects = [
   { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
   { name: 'Avci Gerüstbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/avci-geruestbau.jpg'), short: 'Starker Auftritt fürs Handwerk.' },
-  { name: 'Stadtmüller', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/stadtmueller.jpg'), short: 'Klarheit bis ins Detail.' },
+  { name: 'Krug – Das Restaurant', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/krug-das-restaurant.jpg'), short: 'Regional genießen.' },
   { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.jpg'), short: 'Technik verständlich gemacht.' },
   { name: 'Campingglück', meta: 'Website, UX/UI', image: asset('assets/projects/campingglueck.jpg'), short: 'Freiheit digital erzählt.' },
 ]
@@ -33,7 +33,7 @@ const projects = [
 const referenceProjects = [
   { ...projects[0], description: 'Website mit Backend und Bestellsystem für da nico.', url: 'https://da-nico.de/' },
   { ...projects[1], description: 'Website, UX/UI und Entwicklung für ein starkes Handwerksunternehmen.', url: 'https://www.avci-geruestbau.de/' },
-  { ...projects[2], description: 'Website, UX/UI und Entwicklung mit Fokus auf Klarheit bis ins Detail.' },
+  { ...projects[2], description: 'Website, UX/UI und Entwicklung für ein Restaurant mit regionaler Küche.', url: 'https://krug-das-restaurant.de/' },
   { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.', url: 'https://ing-kaltbrunn.de/' },
   { ...projects[4], description: 'Website und UX/UI für einen digitalen Auftritt mit Gefühl für Freiheit.' },
   { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.', url: 'https://bukkador-handpan.de/' },
