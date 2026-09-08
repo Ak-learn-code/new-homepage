@@ -166,6 +166,7 @@ function Hero() {
           <HeroActions className="hero-copy-actions" />
         </div>
       </div>
+      <ClientMarquee />
     </section>
   )
 }
@@ -198,7 +199,6 @@ function ClientMarquee() {
     <div className="client-marquee" role="region" aria-labelledby="client-marquee-title">
       <div className="client-marquee-head">
         <h2 id="client-marquee-title"><span>Vertraut von Unternehmen</span><span>aus der Region.</span></h2>
-        <p>Eine Auswahl echter Auftritte für Handwerk, Dienstleistung und lokale Unternehmen.</p>
       </div>
       <div className="client-marquee-window">
         <div className="client-marquee-track">
@@ -227,7 +227,6 @@ function ProjectCollage() {
 
   return (
     <section className="projects dark-panel" id="projekte">
-      <ClientMarquee />
       <ServiceRail />
       <div className="projects-head reveal-on-scroll">
         <h2>Ausgewählte<br /><em>Projekte.</em></h2>
