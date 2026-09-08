@@ -9,7 +9,6 @@ import {
   CaretLeft,
   CaretRight,
   ChartLineUp,
-  Clock,
   EnvelopeSimple,
   FlowArrow,
   GoogleLogo,
@@ -237,23 +236,26 @@ function StudioImpact() {
       </div>
       <div className="studio-impact-grid">
         <article className="impact-card impact-projects">
-          <div className="impact-icon"><Browser size={25} weight="duotone" /></div>
+          <div className="impact-project-mark" aria-hidden="true"><i /><i /><i /></div>
           <strong>10</strong>
           <span>Web-Projekte</span>
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
-        <article className="impact-card impact-team">
-          <div className="impact-team-base">
+        <div className="impact-stack">
+          <article className="impact-card impact-team">
+            <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
+              <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
+              <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
+            </div>
             <strong>Zwei Köpfe.</strong>
             <p>Strategie und Umsetzung, zusammen gedacht.</p>
-          </div>
-          <div className="impact-team-float" aria-label="Alexandros Kodalis und Bilal Altuntas">
-            <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
-            <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
-          </div>
-        </article>
+          </article>
+          <article className="impact-card impact-speed">
+            <strong>2×</strong><span>klarer entscheiden.</span>
+          </article>
+        </div>
         <article className="impact-card impact-time">
-          <div className="impact-clock"><Clock size={30} weight="light" /><i /></div>
+          <div className="impact-time-mark" aria-hidden="true"><i /><i /><i /></div>
           <strong>Mehr Zeit im Alltag.</strong>
           <p>Automatisierung nimmt Routine aus dem System.</p>
         </article>
