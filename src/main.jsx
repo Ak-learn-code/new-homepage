@@ -197,7 +197,7 @@ function ClientMarquee() {
   return (
     <div className="client-marquee" role="region" aria-labelledby="client-marquee-title">
       <div className="client-marquee-head">
-        <h2 id="client-marquee-title">Digitale Arbeit, die schon läuft.</h2>
+        <h2 id="client-marquee-title"><span>Vertraut von Unternehmen</span><span>aus der Region.</span></h2>
         <p>Eine Auswahl echter Auftritte für Handwerk, Dienstleistung und lokale Unternehmen.</p>
       </div>
       <div className="client-marquee-window">

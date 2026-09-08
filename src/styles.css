@@ -49,7 +49,7 @@ input { caret-color: var(--accent); }
 .nav-shell { position: relative; z-index: 20; padding: 34px 120px 0; }
 .nav-pill { height: 66px; display: grid; grid-template-columns: 170px 1fr 142px; align-items: center; padding: 7px 9px 7px 26px; color: #f3f3f1; background: #202020; border-radius: 999px; box-shadow: 0 12px 30px rgba(0,0,0,.16); }
 .nav-logo { height: 52px; display: flex; align-items: center; justify-content: flex-start; position: relative; }
-.sidetwo-logo { width: 118px; aspect-ratio: 4 / 1; display: block; color: inherit; background: currentColor; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; }
+.sidetwo-logo { width: 150px; aspect-ratio: 4 / 1; display: block; color: inherit; background: currentColor; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; }
 .nav-links { display: flex; align-items: center; justify-content: center; gap: clamp(25px, 3.2vw, 52px); }
 .nav-links a { position: relative; padding: 9px 0; font-size: 12px; opacity: .86; transition: color 180ms ease-out, opacity 180ms ease-out; }
 .nav-links a::after { content: ''; height: 2px; position: absolute; right: 0; bottom: 3px; left: 0; background: var(--hero-accent); transform: scaleX(0); transform-origin: right; transition: transform 220ms var(--ease-out-expo); }
@@ -257,7 +257,7 @@ input { caret-color: var(--accent); }
   .hero { height: 100vh; height: 100dvh; border-radius: 0 0 96px 96px; }
   .nav-shell { padding: 32px 42px 0; }
   .nav-pill { grid-template-columns: 130px 1fr 118px; padding-left: 21px; }
-  .nav-logo .sidetwo-logo { width: 108px; }
+  .nav-logo .sidetwo-logo { width: 128px; }
   .nav-links { gap: 19px; }
   .nav-links a, .nav-contact { font-size: 11px; }
   .hero-heading { width: 430px; left: 42px; top: clamp(132px, 18dvh, 154px); margin: 0; }
@@ -1092,7 +1092,7 @@ input { caret-color: var(--accent); }
   overflow: hidden;
   width: calc(100% + 240px);
   margin-left: -120px;
-  background: linear-gradient(180deg, rgba(5, 15, 23, .98), rgba(5, 14, 21, .96));
+  background: transparent;
 }
 
 .client-marquee-head {
@@ -1112,8 +1112,9 @@ input { caret-color: var(--accent); }
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -.035em;
-  white-space: nowrap;
 }
+
+.client-marquee-head h2 span { display: block; white-space: nowrap; }
 
 .client-marquee-head p {
   max-width: 420px;
@@ -1152,7 +1153,7 @@ input { caret-color: var(--accent); }
   overflow: hidden;
   color: rgba(241, 243, 242, .7);
   border: 1px solid rgba(177, 192, 198, .19);
-  border-radius: 14px;
+  border-radius: 28px;
   background: rgba(18, 25, 29, .72);
   transition: color 220ms ease, border-color 220ms ease, background-color 220ms ease, transform 320ms var(--ease-out-expo);
 }
@@ -1224,7 +1225,7 @@ input { caret-color: var(--accent); }
     margin: 0 30px;
     padding: 24px 0 26px;
   }
-  .client-marquee-head h2 { font-size: 34px; white-space: normal; }
+  .client-marquee-head h2 { font-size: 34px; }
   .client-marquee-head p { max-width: 360px; justify-self: start; font-size: 12px; }
   .client-logo-tile { width: 226px; height: 126px; }
   .client-marquee ~ .projects-head { margin-top: 58px; }
@@ -1233,11 +1234,11 @@ input { caret-color: var(--accent); }
 @media (max-width: 600px) {
   .client-marquee { width: calc(100% + 36px); margin-left: -18px; }
   .client-marquee-head { margin: 0 18px; padding: 22px 0 18px; }
-  .client-marquee-head h2 { font-size: 30px; }
+  .client-marquee-head h2 { font-size: clamp(26px, 7.25vw, 29px); }
   .client-marquee-head p { font-size: 11px; }
   .client-marquee-window { padding: 18px 0 20px; }
   .client-marquee-track { gap: 10px; padding-right: 10px; animation-duration: 30s; }
-  .client-logo-tile { width: 190px; height: 106px; border-radius: 12px; }
+  .client-logo-tile { width: 190px; height: 106px; border-radius: 22px; }
   .client-logo-mark { transform: scale(.9); }
   .client-marquee + .service-rail { margin-top: 20px; }
   .client-marquee ~ .projects-head { margin-top: 50px; }
