@@ -319,6 +319,10 @@ function StudioImpact() {
 
 function ReferencesSequence() {
   const [activeProject, setActiveProject] = useState(null)
+  const [isCompact, setIsCompact] = useState(false)
+  const [page, setPage] = useState(0)
+  const swipeStart = useRef(null)
+  const didSwipe = useRef(false)
 
   useEffect(() => {
     const close = (event) => {
@@ -328,15 +332,43 @@ function ReferencesSequence() {
     return () => document.removeEventListener('keydown', close)
   }, [])
 
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 800px)')
+    const sync = () => {
+      setIsCompact(media.matches)
+      setPage(0)
+    }
+    sync()
+    media.addEventListener('change', sync)
+    return () => media.removeEventListener('change', sync)
+  }, [])
+
+  const pageSize = isCompact ? 3 : 6
+  const pageCount = Math.ceil(referenceProjects.length / pageSize)
+  const visibleProjects = referenceProjects.slice(page * pageSize, page * pageSize + pageSize)
+  const changePage = (direction) => setPage((current) => (current + direction + pageCount) % pageCount)
+  const endSwipe = (event) => {
+    if (swipeStart.current === null) return
+    const distance = event.clientX - swipeStart.current
+    swipeStart.current = null
+    if (Math.abs(distance) > 42) {
+      didSwipe.current = true
+      changePage(distance < 0 ? 1 : -1)
+    }
+  }
+
   return (
     <section className="references-sequence" id="referenzen" aria-labelledby="references-title">
       <header className="references-heading">
         <h2 id="references-title">Digitale Arbeit, die<br /><em>sichtbar wirkt.</em></h2>
-        <p>Ein Ausschnitt der Auftritte, die wir für Unternehmen aus der Region gestaltet und umgesetzt haben.</p>
+        <div className="references-heading-side">
+          <p>Ein Ausschnitt der Auftritte, die wir für Unternehmen aus der Region gestaltet und umgesetzt haben.</p>
+          {pageCount > 1 ? <div className="reference-pagination"><span aria-live="polite">{String(page + 1).padStart(2, '0')} / {String(pageCount).padStart(2, '0')}</span><button type="button" onClick={() => changePage(-1)} aria-label="Vorherige Referenzen"><CaretLeft weight="bold" /></button><button type="button" onClick={() => changePage(1)} aria-label="Nächste Referenzen"><CaretRight weight="bold" /></button></div> : null}
+        </div>
       </header>
-      <div className="references-wall">
-        {referenceProjects.map((project) => (
-          <button className="reference-tile" type="button" key={project.name} onClick={() => setActiveProject(project)} aria-label={`Details zu ${project.name} öffnen`}>
+      <div className="references-wall" onPointerDown={(event) => { swipeStart.current = event.clientX }} onPointerUp={endSwipe} onPointerCancel={() => { swipeStart.current = null }}>
+        {visibleProjects.map((project) => (
+          <button className="reference-tile" type="button" key={project.name} onClick={() => { if (didSwipe.current) { didSwipe.current = false; return } setActiveProject(project) }} aria-label={`Details zu ${project.name} öffnen`}>
             <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" />
             <span className="reference-tile-cover">
               <span><b>{project.name}</b><small>{project.meta}</small></span>
