@@ -167,6 +167,70 @@ input { caret-color: var(--accent); }
 .impact-quote > p { margin: 14px 0 auto; font-size: 19px; font-weight: 520; line-height: 1.22; letter-spacing: -.025em; }
 .impact-quote > div { display: flex; align-items: center; gap: 8px; padding-top: 18px; color: #f2a146; font-size: 12px; font-weight: 750; }
 
+/* Scroll-bound reference experience, continued from the impact chapter. */
+.references-sequence {
+  height: 440vh;
+  position: relative;
+  margin: 0 clamp(22px, 4.4vw, 64px);
+  color: #182425;
+  border-radius: 0 0 62px 62px;
+  background: #d9dfdc;
+}
+.references-stage {
+  height: 100svh;
+  min-height: 680px;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  padding: 64px clamp(32px, 3.9vw, 56px) 48px;
+}
+.references-heading { position: relative; z-index: 4; display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; }
+.references-heading h2 { max-width: 590px; margin: 0; font-size: clamp(34px, 3.55vw, 54px); font-weight: 500; line-height: .98; letter-spacing: -.05em; }
+.references-heading h2 em { color: #087f76; }
+.references-heading p { width: min(295px, 30%); margin: 0 0 3px; color: #5c6968; font-size: 13px; line-height: 1.45; }
+.references-visual { width: min(1050px, calc(100% - 120px)); height: min(62vh, 610px); position: absolute; top: 50%; left: 50%; perspective: 1000px; transform: translate(-50%, -42%); }
+.reference-browser { width: 100%; height: 100%; position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; border: 1px solid rgba(24, 36, 37, .19); border-radius: 38px; background: #f5f6f3; box-shadow: 0 28px 58px rgba(24, 36, 37, .16); transition: opacity 520ms var(--ease-out-expo), transform 520ms var(--ease-out-expo); }
+.reference-browser.is-active { z-index: 2; opacity: 1; pointer-events: auto; }
+.reference-browser.is-past { z-index: 1; opacity: 0; }
+.reference-browser-bar { height: 38px; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 0 15px; border-bottom: 1px solid rgba(24, 36, 37, .11); color: #6d7978; background: #edf0ed; }
+.reference-browser-bar span { width: 7px; height: 7px; display: block; border-radius: 50%; background: #9eaaa7; }.reference-browser-bar span:nth-child(2) { background: #d0a066; }.reference-browser-bar span:nth-child(3) { background: #709c8f; }
+.reference-browser-bar b { margin-left: 7px; overflow: hidden; font-size: 10px; font-weight: 700; letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
+.reference-browser img { width: 100%; height: calc(100% - 38px); object-fit: cover; object-position: top center; }
+.reference-card { width: min(340px, 30vw); min-height: 250px; position: absolute; z-index: 5; bottom: 46px; left: clamp(32px, 3.9vw, 56px); display: flex; flex-direction: column; padding: 22px; border-radius: 28px; color: #182425; background: rgba(245, 247, 244, .94); box-shadow: 0 18px 42px rgba(24, 36, 37, .16); }
+.reference-card-top { display: flex; align-items: center; justify-content: space-between; color: #6c7876; font-size: 10px; font-weight: 650; letter-spacing: .1em; }
+.reference-card-top b { color: #182425; }.reference-card-top i { width: 16px; height: 16px; border-radius: 50%; background: #f2a146; }
+.reference-card h3 { max-width: 260px; margin: 22px 0 0; font-size: 24px; line-height: 1.02; letter-spacing: -.04em; }
+.reference-services { margin: 8px 0 0; color: #087f76; font-size: 11px; font-weight: 750; }
+.reference-description { margin: 13px 0 0; color: #5a6765; font-size: 12px; line-height: 1.43; }
+.reference-card-bottom { margin-top: auto; padding-top: 18px; }
+.reference-ticks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.reference-ticks > i { height: 3px; overflow: hidden; border-radius: 999px; background: #d6dcda; }.reference-ticks > i b { width: 100%; height: 100%; display: block; background: #f2a146; transform-origin: left; transition: transform 100ms linear; }
+.reference-card-bottom a { display: inline-flex; align-items: center; gap: 7px; margin-top: 14px; color: #182425; font-size: 12px; font-weight: 750; }
+
+@media (max-width: 1024px) {
+  .references-sequence { margin: 0 30px; border-radius: 0 0 52px 52px; }
+  .references-stage { padding: 54px 40px 38px; }
+  .references-visual { width: calc(100% - 80px); height: min(57vh, 510px); transform: translate(-50%, -39%); }
+  .reference-card { bottom: 36px; left: 40px; }
+}
+
+@media (max-width: 600px) {
+  .references-sequence { height: 420vh; margin: 0 18px; border-radius: 0 0 36px 36px; }
+  .references-stage { min-height: 650px; padding: 46px 18px 26px; }
+  .references-heading { display: block; }
+  .references-heading h2 { max-width: 310px; font-size: 33px; }
+  .references-heading p { width: auto; max-width: 270px; margin: 13px 0 0; font-size: 12px; }
+  .references-visual { width: calc(100% - 36px); height: min(38vh, 325px); top: 30%; transform: translate(-50%, 0); }
+  .reference-browser { border-radius: 24px; }
+  .reference-browser-bar { height: 31px; padding: 0 11px; }.reference-browser img { height: calc(100% - 31px); }
+  .reference-card { width: calc(100% - 36px); min-height: 218px; bottom: 26px; left: 18px; padding: 18px; border-radius: 22px; }
+  .reference-card h3 { margin-top: 16px; font-size: 22px; }.reference-description { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reference-browser, .reference-ticks > i b { transition: none; }
+}
+
 .projects { min-height: 1110px; position: relative; z-index: 1; margin-top: -164px; padding: 228px 120px 70px; border-radius: 0 0 60px 60px; box-shadow: var(--shadow); }
 .service-rail { height: 130px; display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; padding: 0 10px; border: 1px solid rgba(255,255,255,.26); border-radius: 29px; background: linear-gradient(110deg, rgba(255,255,255,.29), rgba(255,255,255,.12)); box-shadow: inset 0 1px rgba(255,255,255,.18); backdrop-filter: blur(12px); }
 .service-rail > div { min-height: 68px; display: flex; align-items: center; justify-content: center; gap: 13px; text-align: left; padding: 12px 24px; border-right: 1px solid rgba(255,255,255,.55); }
@@ -1489,4 +1553,24 @@ input { caret-color: var(--accent); }
   .menu-button { color: #edf1ec; }
   .mobile-menu { color: #edf1ec; background: #1b2f2f; box-shadow: 0 15px 30px rgba(9, 18, 19, .26); }
   .hero > .client-marquee .client-logo-tile { background: rgba(35, 56, 56, .78); }
+}
+
+/* The references sequence owns its spacing before the existing project collage. */
+.references-sequence + .projects {
+  margin-top: 0;
+  padding-top: 72px;
+}
+
+@media (max-width: 1024px) {
+  .references-sequence + .projects {
+    margin-top: 0;
+    padding-top: 62px;
+  }
+}
+
+@media (max-width: 600px) {
+  .references-sequence + .projects {
+    margin-top: 0;
+    padding-top: 48px;
+  }
 }
