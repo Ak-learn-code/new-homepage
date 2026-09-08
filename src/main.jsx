@@ -390,6 +390,35 @@ function ReferencesSequence() {
   )
 }
 
+function ServiceShowcase() {
+  return (
+    <section className="service-showcase" id="leistungen" aria-labelledby="service-showcase-title">
+      <div className="service-showcase-head">
+        <h2 id="service-showcase-title">Was euren Alltag<br /><em>leichter macht.</em></h2>
+        <p>Vier Leistungen, die aus einem guten Auftritt ein System machen, das täglich mitarbeitet.</p>
+      </div>
+      <div className="service-showcase-grid">
+        <article className="showcase-service showcase-websites">
+          <div className="showcase-copy"><Browser weight="duotone" /><span>Webseiten</span><strong>Der digitale Auftritt.</strong><p>Klare Websites, die eure Leistung sichtbar machen und Anfragen in Bewegung bringen.</p><ul><li>Design & Entwicklung</li><li>SEO & Google Business</li><li>Texte & Bildsprache</li><li>Hosting & Wartung</li></ul></div>
+          <div className="website-visual" aria-hidden="true"><div className="website-dots"><i /><i /><i /></div><div className="website-hero-block" /><div className="website-copy-lines"><i /><i /><i /></div><div className="website-form" /></div>
+        </article>
+        <article className="showcase-service showcase-automation">
+          <div className="showcase-copy"><FlowArrow weight="duotone" /><span>Automatisierung</span><strong>Der Büro-Autopilot.</strong><p>Wiederkehrende Abläufe laufen verlässlich im Hintergrund – vom Angebot bis zum Nachfassen.</p><ul><li>Angebote & Rechnungen</li><li>Termin-Erinnerungen</li><li>E-Mail-Vorlagen</li><li>Tool-Anbindungen</li></ul></div>
+          <div className="automation-visual" aria-hidden="true"><div className="automation-line" /><i className="automation-node node-one" /><i className="automation-node node-two" /><i className="automation-node node-three" /><i className="automation-node node-four" /><b>Anfrage</b><b>Angebot</b><b>Termin</b><b>Erledigt</b></div>
+        </article>
+        <article className="showcase-service showcase-agents">
+          <div className="showcase-copy"><Robot weight="duotone" /><span>KI-Agenten</span><strong>Der digitale Mitarbeiter.</strong><p>Ein Agent nimmt Anfragen an, sortiert Informationen und antwortet, wenn ihr gerade arbeitet.</p><ul><li>Telefon-Assistent</li><li>E-Mail-Beantwortung</li><li>Anfragen qualifizieren</li><li>Rund um die Uhr erreichbar</li></ul></div>
+          <div className="agent-visual" aria-hidden="true"><div className="agent-orbit orbit-one" /><div className="agent-orbit orbit-two" /><div className="agent-core">AI</div><span>Anruf</span><span>E-Mail</span><span>Termin</span></div>
+        </article>
+        <article className="showcase-service showcase-tools">
+          <div className="showcase-copy"><BracketsCurly weight="duotone" /><span>Interne Tools</span><strong>Weniger Suchen. Mehr Tun.</strong><p>Eigene kleine Systeme, die Informationen bündeln und Entscheidungen einfacher machen.</p><ul><li>Klare Prozesse</li><li>Team-Übersichten</li><li>Passgenau gebaut</li><li>Einfach zu bedienen</li></ul></div>
+          <div className="tools-visual" aria-hidden="true"><div className="tool-window"><i /><i /><i /><b /></div><div className="tool-stat"><strong>24h</strong><span>klarer Überblick</span></div></div>
+        </article>
+      </div>
+    </section>
+  )
+}
+
 function ProjectCollage() {
   const [active, setActive] = useState(0)
   const project = projects[active]
@@ -426,7 +455,7 @@ function ProjectCollage() {
 
 function Services() {
   return (
-    <section className="services grid-bg" id="leistungen">
+    <section className="services grid-bg" id="leistungen-archiv">
       <div className="services-visual reveal-on-scroll">
         <div className="services-halo" />
         <img src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" loading="lazy" width="1254" height="1254" />
@@ -540,7 +569,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ProjectCollage /><Services /><Execution /><Contact /><ProcessCards /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><ProjectCollage /><Services /><Execution /><Contact /><ProcessCards /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)
