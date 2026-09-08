@@ -1393,3 +1393,52 @@ input { caret-color: var(--accent); }
   .client-logo-tile,
   .client-logo-mark { transition: none; }
 }
+
+/* Shared hero / impact palette */
+.hero {
+  --hero-accent: #f2a146;
+  color: #182425;
+  background: #d9dfdc;
+  box-shadow: 0 22px 54px rgba(24, 36, 37, .14);
+}
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(238, 241, 238, .96) 0%, rgba(231, 237, 233, .88) 33%, rgba(222, 230, 226, .48) 57%, rgba(211, 221, 217, .08) 78%),
+    linear-gradient(180deg, rgba(236, 240, 237, .16), transparent 54%, rgba(218, 224, 220, .36));
+}
+.hero::after { background: linear-gradient(180deg, transparent, rgba(217, 223, 220, .68)); }
+.hero-atmosphere { background: #d9dfdc; }
+.hero-atmosphere::after { opacity: .05; mix-blend-mode: multiply; }
+.hero-light-trace { border-color: rgba(24, 36, 37, .16); }
+.hero-heading h1 { color: #182425; }
+.hero-heading h1 em { color: #087f76; text-shadow: none; }
+.hero-heading p { color: rgba(24, 36, 37, .7); }
+.hero-micro { color: rgba(24, 36, 37, .48); }
+.google-rating { color: rgba(24, 36, 37, .78); }
+.google-rating > svg { color: #087f76; border-color: rgba(24, 36, 37, .16); background: rgba(255,255,255,.74); }
+.google-rating small { color: rgba(24, 36, 37, .55); }
+.hero-copy-actions .button:first-child { color: #1a2526; background: #f2a146; box-shadow: 0 14px 30px rgba(134, 82, 22, .2); }
+.hero-copy-actions .button-secondary { color: #f4f6f3; background: #1b292a; border-color: transparent; box-shadow: 0 14px 30px rgba(24, 36, 37, .16); }
+.nav-pill { color: #182425; background: rgba(244, 246, 243, .93); box-shadow: 0 12px 30px rgba(24, 36, 37, .12); }
+.nav-links a:hover { color: #182425; }
+.nav-links a::after { background: #f2a146; }
+.nav-contact { color: #f4f6f3; background: #1b292a; }
+.hero > .client-marquee { color: #182425; }
+.hero > .client-marquee .client-marquee-head h2 { color: #182425; }
+.hero > .client-marquee .client-logo-tile { color: rgba(24, 36, 37, .72); border-color: rgba(24, 36, 37, .16); background: rgba(245, 247, 244, .76); box-shadow: 0 12px 24px rgba(24, 36, 37, .08); }
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-contact:hover { color: #182425; background: #f2a146; }
+  .hero > .client-marquee .client-logo-tile:hover { color: #182425; border-color: rgba(242, 161, 70, .72); background: rgba(255,255,255,.92); }
+}
+
+@media (max-width: 600px) {
+  .hero::before {
+    background:
+      linear-gradient(180deg, rgba(238, 241, 238, .92) 0%, rgba(230, 236, 232, .72) 38%, rgba(218, 225, 221, .18) 69%, rgba(216, 223, 219, .36) 100%),
+      linear-gradient(90deg, rgba(238, 241, 238, .44), transparent 80%);
+  }
+  .menu-button { color: #182425; }
+  .mobile-menu { color: #182425; background: #f4f6f3; box-shadow: 0 15px 30px rgba(24, 36, 37, .14); }
+  .hero > .client-marquee .client-logo-tile { background: rgba(245, 247, 244, .82); }
+}
