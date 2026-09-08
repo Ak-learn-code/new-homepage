@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   ArrowBendDownRight,
@@ -223,13 +223,40 @@ function ClientMarquee() {
 
 function StudioImpact() {
   const headline = 'Wir machen digitale Arbeit leichter. Damit ihr wieder Zeit für Kunden, Entscheidungen und das Wesentliche habt.'
+  const sectionRef = useRef(null)
+  const [headingProgress, setHeadingProgress] = useState(0)
+
+  useEffect(() => {
+    let frame = 0
+    const updateProgress = () => {
+      frame = 0
+      const section = sectionRef.current
+      if (!section) return
+      const bounds = section.getBoundingClientRect()
+      const start = window.innerHeight * .76
+      const travel = Math.min(620, Math.max(360, bounds.height * .62))
+      const nextProgress = Math.min(1, Math.max(0, (start - bounds.top) / travel))
+      setHeadingProgress((current) => Math.abs(current - nextProgress) > .002 ? nextProgress : current)
+    }
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateProgress)
+    }
+    updateProgress()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+    return () => {
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [])
 
   return (
-    <section className="studio-impact" id="impact" aria-labelledby="studio-impact-title">
+    <section className="studio-impact" id="impact" ref={sectionRef} aria-labelledby="studio-impact-title">
       <div className="studio-impact-copy">
-        <h2 className="impact-scroll-title reveal-on-scroll" id="studio-impact-title" aria-label={headline}>
+        <h2 className="impact-scroll-title" id="studio-impact-title" aria-label={headline}>
           {headline.split('').map((character, index) => (
-            <span className="impact-letter" style={{ '--letter-index': index }} key={`${character}-${index}`}>{character === ' ' ? '\u00a0' : character}</span>
+            <span className="impact-letter" style={{ '--letter-index': index, '--letter-fill': Math.min(1, Math.max(0, headingProgress * (headline.length + 8) - index)) }} key={`${character}-${index}`}>{character === ' ' ? '\u00a0' : character}</span>
           ))}
         </h2>
         <p>Websites, Automatisierungen und KI, die nicht mehr Arbeit machen — sondern sie abnehmen.</p>

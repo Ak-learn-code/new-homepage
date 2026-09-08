@@ -18,13 +18,13 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #f2f5f4; }
+body { margin: 0; background: #fff; }
 body, button, input { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 button { color: inherit; }
-main { width: 100%; max-width: none; margin: 0; overflow: clip; background: var(--dark); }
+main { width: 100%; max-width: none; margin: 0; overflow: clip; background: #fff; }
 em { color: var(--accent); font-style: italic; font-weight: 700; }
 ::selection { color: #fff; background: var(--accent); }
 * { scrollbar-color: var(--accent) #202020; scrollbar-width: thin; }
@@ -95,7 +95,7 @@ input { caret-color: var(--accent); }
   padding: 82px clamp(32px, 3.9vw, 56px) 64px;
   color: #182425;
   border-radius: 62px;
-  background: #dbe2df;
+  background: #eef0ed;
   box-shadow: 0 22px 54px rgba(1, 24, 29, .12);
 }
 .studio-impact::before {
@@ -120,8 +120,7 @@ input { caret-color: var(--accent); }
   line-height: .98;
   letter-spacing: -.055em;
 }
-.impact-letter { color: rgba(24, 36, 37, .18); transition: color 560ms var(--ease-out-expo); transition-delay: calc(var(--letter-index) * 18ms); }
-.impact-scroll-title.is-visible .impact-letter { color: #182425; }
+.impact-letter { color: color-mix(in srgb, #182425 calc(var(--letter-fill) * 100%), rgba(24, 36, 37, .2)); }
 .studio-impact-copy > p { max-width: 510px; margin: 22px 0 0; color: #5d6968; font-size: 14px; line-height: 1.55; }
 .studio-impact-grid {
   position: relative;
@@ -1192,6 +1191,7 @@ input { caret-color: var(--accent); }
   .impact-team p, .impact-time p { margin-top: 8px; font-size: 10px; }
   .impact-time-mark { width: 54px; height: 54px; top: 17px; right: 17px; border-radius: 18px; }
   .impact-time-mark i { width: 9px; height: 9px; }
+  .impact-time { grid-column: 1 / -1; min-height: 170px; }
   .impact-quote { grid-column: 1 / -1; min-height: 190px; }
   .impact-quote-mark { height: 42px; font-size: 54px; }
   .impact-quote > p { margin-top: 9px; font-size: 18px; max-width: 30ch; }
@@ -1314,7 +1314,7 @@ input { caret-color: var(--accent); }
   left: 0;
   margin: 0;
   color: #f6f6f3;
-  background: linear-gradient(180deg, transparent, rgba(2, 12, 18, .48));
+  background: transparent;
 }
 .hero > .client-marquee .client-marquee-head {
   margin: 0 clamp(46px, 5vw, 84px) 0 max(120px, calc((100% - 1440px) / 2 + 120px));
@@ -1330,7 +1330,7 @@ input { caret-color: var(--accent); }
   text-align: right;
 }
 .hero > .client-marquee .client-marquee-window { padding: 7px 0 0; }
-.hero > .client-marquee .client-logo-tile { width: 238px; height: 104px; background: rgba(7, 20, 27, .72); }
+.hero > .client-marquee .client-logo-tile { width: 238px; height: 104px; background: rgba(17, 54, 57, .46); }
 .hero > .client-marquee .client-logo-mark { transform: scale(.88); }
 .hero .hero-content { padding-bottom: 185px; }
 
@@ -1375,7 +1375,7 @@ input { caret-color: var(--accent); }
   .client-logo-tile { width: 190px; height: 106px; border-radius: 22px; }
   .client-logo-mark { transform: scale(.9); }
   .projects > .projects-head { margin-top: 50px; }
-  .hero > .client-marquee { width: 100%; bottom: 18px; margin: 0; }
+  .hero > .client-marquee { width: 100%; bottom: 32px; margin: 0; }
   .hero > .client-marquee .client-marquee-head { display: block; margin: 0 18px; padding: 5px 0 4px; }
   .hero > .client-marquee .client-marquee-head h2 { width: 100%; max-width: none; margin-left: 0; font-size: 19px; text-align: left; }
   .hero > .client-marquee .client-marquee-head h2 span { white-space: nowrap; }
