@@ -8,6 +8,8 @@ import {
   Browser,
   CaretLeft,
   CaretRight,
+  ChartLineUp,
+  Clock,
   EnvelopeSimple,
   FlowArrow,
   GoogleLogo,
@@ -220,6 +222,49 @@ function ClientMarquee() {
   )
 }
 
+function StudioImpact() {
+  const headline = 'Wir machen digitale Arbeit leichter — damit mehr Zeit für das bleibt, was euer Unternehmen voranbringt.'
+
+  return (
+    <section className="studio-impact" id="impact" aria-labelledby="studio-impact-title">
+      <div className="studio-impact-copy">
+        <h2 className="impact-scroll-title reveal-on-scroll" id="studio-impact-title" aria-label={headline}>
+          {headline.split('').map((character, index) => (
+            <span className="impact-letter" style={{ '--letter-index': index }} key={`${character}-${index}`}>{character === ' ' ? '\u00a0' : character}</span>
+          ))}
+        </h2>
+        <p>Websites, Automatisierungen und KI, die nicht mehr Arbeit machen — sondern sie abnehmen.</p>
+      </div>
+      <div className="studio-impact-grid">
+        <article className="impact-card impact-projects">
+          <div className="impact-icon"><Browser size={25} weight="duotone" /></div>
+          <strong>10</strong>
+          <span>Web-Projekte</span>
+          <p>für Unternehmen aus der Region realisiert.</p>
+        </article>
+        <article className="impact-card impact-team">
+          <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
+            <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
+            <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
+          </div>
+          <strong>Zwei Köpfe.</strong>
+          <p>Strategie und Umsetzung, zusammen gedacht.</p>
+        </article>
+        <article className="impact-card impact-time">
+          <div className="impact-clock"><Clock size={30} weight="light" /><i /></div>
+          <strong>Mehr Zeit im Alltag.</strong>
+          <p>Automatisierung nimmt Routine aus dem System.</p>
+        </article>
+        <article className="impact-card impact-quote">
+          <span className="impact-quote-mark">„</span>
+          <p>Wir sind die zweite Seite eures Unternehmens — die digitale, die mitdenkt.</p>
+          <div><ChartLineUp size={18} weight="bold" /> <span>SideTwo</span></div>
+        </article>
+      </div>
+    </section>
+  )
+}
+
 function ProjectCollage() {
   const [active, setActive] = useState(0)
   const project = projects[active]
@@ -370,7 +415,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><ProjectCollage /><Services /><Execution /><Contact /><ProcessCards /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ProjectCollage /><Services /><Execution /><Contact /><ProcessCards /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

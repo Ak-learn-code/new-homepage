@@ -88,6 +88,79 @@ input { caret-color: var(--accent); }
 .hero-project-card img { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: top; }
 
 /* Projects */
+.studio-impact {
+  position: relative;
+  z-index: 3;
+  margin-top: -46px;
+  padding: 112px 120px 78px;
+  color: var(--ink);
+  border-radius: 72px;
+  background: var(--paper);
+  box-shadow: 0 22px 54px rgba(1, 24, 29, .16);
+}
+.studio-impact::before {
+  content: '';
+  position: absolute;
+  width: 40%;
+  height: 54%;
+  top: 7%;
+  right: -10%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(var(--accent-rgb), .11), transparent 69%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+.studio-impact-copy { position: relative; z-index: 1; max-width: 1280px; }
+.studio-impact-copy h2 {
+  max-width: 1240px;
+  margin: 0;
+  color: #d2d6d5;
+  font-size: clamp(43px, 5vw, 76px);
+  font-weight: 500;
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+.impact-letter { color: #cbd0cf; transition: color 560ms var(--ease-out-expo); transition-delay: calc(var(--letter-index) * 18ms); }
+.impact-scroll-title.is-visible .impact-letter { color: var(--ink); }
+.studio-impact-copy > p { max-width: 530px; margin: 26px 0 0; color: #5c6261; font-size: 15px; line-height: 1.55; }
+.studio-impact-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr 1.05fr 1.15fr;
+  gap: 14px;
+  margin-top: 46px;
+}
+.impact-card {
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  padding: 25px;
+  border-radius: 34px;
+}
+.impact-projects { justify-content: space-between; color: #f6fbfa; background: #173436; }
+.impact-icon { width: 50px; height: 50px; display: grid; place-items: center; border-radius: 17px; color: #153436; background: #c4f2e9; }
+.impact-projects strong { margin-top: 30px; font-size: clamp(72px, 7vw, 106px); font-weight: 450; letter-spacing: -.075em; line-height: .8; }
+.impact-projects > span { margin-top: 8px; color: #c4f2e9; font-size: 15px; font-weight: 750; }
+.impact-projects p { margin: auto 0 0; color: rgba(246, 251, 250, .69); font-size: 12px; line-height: 1.4; }
+.impact-team { justify-content: center; color: #202b2b; border: 1px solid rgba(23, 52, 54, .18); background: #eff2f1; }
+.impact-portraits { display: flex; align-items: center; margin-bottom: 20px; }
+.impact-portraits img { width: 66px; height: 66px; object-fit: cover; border: 4px solid #eff2f1; border-radius: 50%; background: #c4f2e9; }
+.impact-portraits img + img { margin-left: -17px; }
+.impact-team strong, .impact-time strong { font-size: 22px; line-height: 1.05; letter-spacing: -.035em; }
+.impact-team p, .impact-time p { margin: 12px 0 0; color: #5b6564; font-size: 13px; line-height: 1.45; }
+.impact-time { justify-content: flex-end; color: #183d3e; background: #c4f2e9; }
+.impact-clock { width: 126px; height: 126px; position: absolute; top: 28px; left: 50%; display: grid; place-items: center; border: 1px solid rgba(24, 61, 62, .36); border-radius: 50%; transform: translateX(-50%); }
+.impact-clock::before, .impact-clock::after { content: ''; position: absolute; inset: -11px; border: 1px dashed rgba(24, 61, 62, .26); border-radius: 50%; }
+.impact-clock::after { inset: 20px; border-style: solid; border-color: rgba(24, 61, 62, .12); }
+.impact-clock i { width: 7px; height: 7px; position: absolute; bottom: 17px; border-radius: 50%; background: #183d3e; }
+.impact-quote { justify-content: space-between; color: #173436; background: #fff; box-shadow: 0 14px 32px rgba(15, 50, 53, .08); }
+.impact-quote-mark { height: 58px; font-size: 74px; font-weight: 700; line-height: .9; }
+.impact-quote > p { margin: 14px 0 auto; font-size: 19px; font-weight: 520; line-height: 1.22; letter-spacing: -.025em; }
+.impact-quote > div { display: flex; align-items: center; gap: 8px; padding-top: 18px; color: var(--accent); font-size: 12px; font-weight: 750; }
+
 .projects { min-height: 1110px; position: relative; z-index: 1; margin-top: -164px; padding: 228px 120px 70px; border-radius: 0 0 60px 60px; box-shadow: var(--shadow); }
 .service-rail { height: 130px; display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; padding: 0 10px; border: 1px solid rgba(255,255,255,.26); border-radius: 29px; background: linear-gradient(110deg, rgba(255,255,255,.29), rgba(255,255,255,.12)); box-shadow: inset 0 1px rgba(255,255,255,.18); backdrop-filter: blur(12px); }
 .service-rail > div { min-height: 68px; display: flex; align-items: center; justify-content: center; gap: 13px; text-align: left; padding: 12px 24px; border-right: 1px solid rgba(255,255,255,.55); }
@@ -1085,6 +1158,40 @@ input { caret-color: var(--accent); }
 }
 
 .hero-atmosphere picture img { animation: none; }
+
+/* The impact section intentionally bridges the hero and the project work without overlap. */
+.studio-impact + .projects { margin-top: 0; padding-top: 72px; }
+
+@media (max-width: 1024px) {
+  .studio-impact { margin-top: -34px; padding: 92px 42px 60px; border-radius: 58px; }
+  .studio-impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-card { min-height: 270px; }
+  .studio-impact + .projects { margin-top: 0; padding-top: 62px; }
+}
+
+@media (max-width: 600px) {
+  .studio-impact { margin-top: -28px; padding: 70px 18px 48px; border-radius: 42px; }
+  .studio-impact-copy h2 { font-size: clamp(37px, 10.2vw, 44px); line-height: .99; }
+  .studio-impact-copy > p { margin-top: 20px; font-size: 14px; }
+  .studio-impact-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 32px; }
+  .impact-card { min-height: 205px; padding: 17px; border-radius: 24px; }
+  .impact-icon { width: 40px; height: 40px; border-radius: 13px; }
+  .impact-projects strong { margin-top: 18px; font-size: 64px; }
+  .impact-projects > span { font-size: 12px; }
+  .impact-projects p { font-size: 10px; }
+  .impact-portraits { margin-bottom: 13px; }
+  .impact-portraits img { width: 48px; height: 48px; border-width: 3px; }
+  .impact-team strong, .impact-time strong { font-size: 16px; }
+  .impact-team p, .impact-time p { margin-top: 8px; font-size: 10px; }
+  .impact-clock { width: 82px; height: 82px; top: 17px; }
+  .impact-clock::before { inset: -7px; }
+  .impact-clock::after { inset: 13px; }
+  .impact-clock i { bottom: 10px; }
+  .impact-quote { grid-column: 1 / -1; min-height: 190px; }
+  .impact-quote-mark { height: 42px; font-size: 54px; }
+  .impact-quote > p { margin-top: 9px; font-size: 18px; max-width: 30ch; }
+  .studio-impact + .projects { margin-top: 0; padding-top: 48px; }
+}
 
 /* Regional client marquee */
 .client-marquee {
