@@ -223,6 +223,8 @@ function ClientMarquee() {
 
 function StudioImpact() {
   const headline = 'Wir machen digitale Arbeit leichter. Damit ihr wieder Zeit für Kunden, Entscheidungen und das Wesentliche habt.'
+  const headlineWords = headline.split(' ')
+  let letterIndex = 0
   const sectionRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
 
@@ -255,8 +257,15 @@ function StudioImpact() {
     <section className="studio-impact" id="impact" ref={sectionRef} aria-labelledby="studio-impact-title">
       <div className="studio-impact-copy">
         <h2 className="impact-scroll-title" id="studio-impact-title" aria-label={headline}>
-          {headline.split('').map((character, index) => (
-            <span className="impact-letter" style={{ '--letter-index': index, '--letter-fill': Math.min(1, Math.max(0, headingProgress * (headline.length + 8) - index)) }} key={`${character}-${index}`}>{character === ' ' ? '\u00a0' : character}</span>
+          {headlineWords.map((word, wordIndex) => (
+            <React.Fragment key={`${word}-${wordIndex}`}>
+              {[...word].map((character) => {
+                const currentIndex = letterIndex++
+                return <span className="impact-letter" style={{ '--letter-fill': Math.min(1, Math.max(0, headingProgress * (headline.length + 8) - currentIndex)) }} key={`${character}-${currentIndex}`}>{character}</span>
+              })}
+              {wordIndex < headlineWords.length - 1 ? ' ' : null}
+              {letterIndex++ && null}
+            </React.Fragment>
           ))}
         </h2>
         <p>Websites, Automatisierungen und KI, die nicht mehr Arbeit machen — sondern sie abnehmen.</p>

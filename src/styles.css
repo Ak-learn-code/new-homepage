@@ -95,7 +95,7 @@ input { caret-color: var(--accent); }
   padding: 82px clamp(32px, 3.9vw, 56px) 64px;
   color: #182425;
   border-radius: 62px;
-  background: #eef0ed;
+  background: #d9dfdc;
   box-shadow: 0 22px 54px rgba(1, 24, 29, .12);
 }
 .studio-impact::before {
@@ -112,13 +112,16 @@ input { caret-color: var(--accent); }
 }
 .studio-impact-copy { position: relative; z-index: 1; max-width: 1280px; }
 .studio-impact-copy h2 {
-  max-width: 1240px;
+  max-width: 1040px;
   margin: 0;
   color: rgba(24, 36, 37, .18);
   font-size: clamp(36px, 3.7vw, 56px);
   font-weight: 500;
   line-height: .98;
   letter-spacing: -.055em;
+  overflow: visible;
+  overflow-wrap: normal;
+  text-wrap: pretty;
 }
 .impact-letter { color: color-mix(in srgb, #182425 calc(var(--letter-fill) * 100%), rgba(24, 36, 37, .2)); }
 .studio-impact-copy > p { max-width: 510px; margin: 22px 0 0; color: #5d6968; font-size: 14px; line-height: 1.55; }
