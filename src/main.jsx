@@ -13,6 +13,7 @@ import {
   FlowArrow,
   GoogleLogo,
   List,
+  Plus,
   Robot,
   X,
 } from '@phosphor-icons/react'
@@ -30,10 +31,14 @@ const projects = [
 ]
 
 const referenceProjects = [
-  { ...projects[0], number: '01', description: 'Website, UX/UI und Booking für einen klaren digitalen Auftritt.' },
-  { ...projects[1], number: '02', description: 'Website, UX/UI und Entwicklung für ein starkes Handwerksunternehmen.' },
-  { ...projects[2], number: '03', description: 'Website, UX/UI und Entwicklung mit Fokus auf Klarheit bis ins Detail.' },
-  { ...projects[3], number: '04', description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.' },
+  { ...projects[0], description: 'Website, UX/UI und Booking für einen klaren digitalen Auftritt.' },
+  { ...projects[1], description: 'Website, UX/UI und Entwicklung für ein starkes Handwerksunternehmen.' },
+  { ...projects[2], description: 'Website, UX/UI und Entwicklung mit Fokus auf Klarheit bis ins Detail.' },
+  { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.' },
+  { ...projects[4], description: 'Website und UX/UI für einen digitalen Auftritt mit Gefühl für Freiheit.' },
+  { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.' },
+  { name: 'Sordillo Erdbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/sordillo.jpg'), description: 'Website und UX/UI für ein regionales Erdbauunternehmen.' },
+  { name: 'MP Dienstleistungen', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/mp-dienstleistungen.jpg'), description: 'Website und UX/UI für vielseitige Dienstleistungen aus der Region.' },
 ]
 
 const serviceItems = [
@@ -313,85 +318,42 @@ function StudioImpact() {
 }
 
 function ReferencesSequence() {
-  const sequenceRef = useRef(null)
-  const [sequenceState, setSequenceState] = useState({ progress: 0, active: 0, local: 0 })
+  const [activeProject, setActiveProject] = useState(null)
 
   useEffect(() => {
-    let frame = 0
-    const update = () => {
-      frame = 0
-      const section = sequenceRef.current
-      if (!section) return
-      const rect = section.getBoundingClientRect()
-      const scrollRange = Math.max(1, section.offsetHeight - window.innerHeight)
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollRange))
-      const step = Math.min(referenceProjects.length - 1, Math.floor(progress * referenceProjects.length))
-      const local = Math.min(1, Math.max(0, progress * referenceProjects.length - step))
-      setSequenceState((current) => (
-        Math.abs(current.progress - progress) > .002 || current.active !== step
-          ? { progress, active: step, local }
-          : current
-      ))
+    const close = (event) => {
+      if (event.key === 'Escape') setActiveProject(null)
     }
-    const requestUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(update)
-    }
-    referenceProjects.slice(1).forEach((project) => {
-      const image = new Image()
-      image.src = project.image
-    })
-    update()
-    window.addEventListener('scroll', requestUpdate, { passive: true })
-    window.addEventListener('resize', requestUpdate)
-    return () => {
-      window.removeEventListener('scroll', requestUpdate)
-      window.removeEventListener('resize', requestUpdate)
-      if (frame) window.cancelAnimationFrame(frame)
-    }
+    document.addEventListener('keydown', close)
+    return () => document.removeEventListener('keydown', close)
   }, [])
 
-  const activeProject = referenceProjects[sequenceState.active]
-
   return (
-    <section className="references-sequence" id="referenzen" ref={sequenceRef} aria-labelledby="references-title">
-      <div className="references-stage">
-        <header className="references-heading">
-          <h2 id="references-title">Arbeit, die man <em>sehen</em> kann.</h2>
-          <p>Vier digitale Auftritte, entwickelt für Unternehmen aus der Region.</p>
-        </header>
-        <div className="references-visual" aria-live="polite">
-          {referenceProjects.map((project, index) => {
-            const isActive = index === sequenceState.active
-            const isPast = index < sequenceState.active
-            const transform = isActive
-              ? `translateY(${(1 - sequenceState.local) * 12}px) scale(${.985 + sequenceState.local * .015})`
-              : isPast ? 'translateY(-12px) scale(1.018)' : 'translateY(16px) scale(.972)'
-            return (
-              <figure
-                className={`reference-browser${isActive ? ' is-active' : ''}${isPast ? ' is-past' : ''}`}
-                style={{ transform }}
-                key={project.name}
-                aria-hidden={!isActive}
-              >
-                <div className="reference-browser-bar"><span /><span /><span /><b>{project.name}</b></div>
-                <img src={project.image} alt={isActive ? `${project.name}: Website-Referenz` : ''} loading={index > 0 ? 'lazy' : 'eager'} />
-              </figure>
-            )
-          })}
-        </div>
-        <aside className="reference-card">
-          <div className="reference-card-top"><span><b>{activeProject.number}</b> / 04</span><i aria-hidden="true" /></div>
-          <h3>{activeProject.name}</h3>
-          <p className="reference-services">{activeProject.meta}</p>
-          <p className="reference-description">{activeProject.description}</p>
-          <div className="reference-card-bottom">
-            <div className="reference-ticks" aria-label={`Projekt ${activeProject.number} von 04`}>
-              {referenceProjects.map((project, index) => <i className={index < sequenceState.active ? 'is-done' : index === sequenceState.active ? 'is-current' : ''} key={project.number}><b style={{ transform: `scaleX(${index < sequenceState.active ? 1 : index === sequenceState.active ? sequenceState.local : 0})` }} /></i>)}
-            </div>
-            <a href="#kontakt">Referenz anfragen <ArrowRight size={16} weight="bold" /></a>
-          </div>
-        </aside>
+    <section className="references-sequence" id="referenzen" aria-labelledby="references-title">
+      <header className="references-heading">
+        <h2 id="references-title">Digitale Arbeit, die<br /><em>sichtbar wirkt.</em></h2>
+        <p>Ein Ausschnitt der Auftritte, die wir für Unternehmen aus der Region gestaltet und umgesetzt haben.</p>
+      </header>
+      <div className="references-wall">
+        {referenceProjects.map((project) => (
+          <button className="reference-tile" type="button" key={project.name} onClick={() => setActiveProject(project)} aria-label={`Details zu ${project.name} öffnen`}>
+            <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" />
+            <span className="reference-tile-cover">
+              <span><b>{project.name}</b><small>{project.meta}</small></span>
+              <i><Plus weight="bold" /></i>
+            </span>
+          </button>
+        ))}
       </div>
+      {activeProject ? (
+        <div className="reference-modal-backdrop" role="presentation" onMouseDown={() => setActiveProject(null)}>
+          <article className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+            <button className="reference-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label="Referenz schließen"><X weight="bold" /></button>
+            <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} /></div>
+            <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span><a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
+          </article>
+        </div>
+      ) : null}
     </section>
   )
 }
