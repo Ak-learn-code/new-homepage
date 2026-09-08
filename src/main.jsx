@@ -223,7 +223,7 @@ function ClientMarquee() {
 }
 
 function StudioImpact() {
-  const headline = 'Wir machen digitale Arbeit leichter — damit mehr Zeit für das bleibt, was euer Unternehmen voranbringt.'
+  const headline = 'Wir machen digitale Arbeit leichter. Damit ihr wieder Zeit für Kunden, Entscheidungen und das Wesentliche habt.'
 
   return (
     <section className="studio-impact" id="impact" aria-labelledby="studio-impact-title">
@@ -243,12 +243,14 @@ function StudioImpact() {
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
         <article className="impact-card impact-team">
-          <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
+          <div className="impact-team-base">
+            <strong>Zwei Köpfe.</strong>
+            <p>Strategie und Umsetzung, zusammen gedacht.</p>
+          </div>
+          <div className="impact-team-float" aria-label="Alexandros Kodalis und Bilal Altuntas">
             <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
             <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
           </div>
-          <strong>Zwei Köpfe.</strong>
-          <p>Strategie und Umsetzung, zusammen gedacht.</p>
         </article>
         <article className="impact-card impact-time">
           <div className="impact-clock"><Clock size={30} weight="light" /><i /></div>
