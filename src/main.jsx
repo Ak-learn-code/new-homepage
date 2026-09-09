@@ -287,6 +287,15 @@ function StudioImpact() {
   let letterIndex = 0
   const sectionRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
+  const [profileOpen, setProfileOpen] = useState(false)
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setProfileOpen(false)
+    }
+    document.addEventListener('keydown', closeOnEscape)
+    return () => document.removeEventListener('keydown', closeOnEscape)
+  }, [])
 
   useEffect(() => {
     let frame = 0
@@ -338,14 +347,15 @@ function StudioImpact() {
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
         <div className="impact-stack">
-          <article className="impact-card impact-team">
+          <button className="impact-card impact-team" type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profil von Alexandros Kodalis öffnen">
             <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
               <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
               <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
             </div>
             <strong>Zwei Köpfe.</strong>
             <p>Strategie und Umsetzung, zusammen gedacht.</p>
-          </article>
+            <span className="impact-team-plus" aria-hidden="true"><Plus weight="bold" /></span>
+          </button>
           <article className="impact-card impact-speed">
             <strong>2×</strong><span>klarer entscheiden.</span>
           </article>
@@ -361,6 +371,34 @@ function StudioImpact() {
           <div><ChartLineUp size={18} weight="bold" /> <span>SideTwo</span></div>
         </article>
       </div>
+      {profileOpen ? (
+        <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
+          <article className="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+            <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
+            <div className="team-modal-portrait"><img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" /></div>
+            <div className="team-modal-copy">
+              <p>Alexandros Kodalis · SideTwo</p>
+              <h3 id="team-modal-title">Marketing, Design und digitale Systeme.</h3>
+              <div className="team-facts">
+                <span>Ausbildung zum Kaufmann für Marketingkommunikation</span>
+                <span>Fokus auf Web Development &amp; Frontend Engineering</span>
+                <span>Spezialisierung auf KI-Workflows und Automatisierung</span>
+                <span>Leidenschaft für UI/UX und digitales Design</span>
+                <span>Performance-, SEO- und Conversion-orientierte Entwicklung</span>
+              </div>
+              <div className="team-experience" aria-label="Erfahrung von Alexandros Kodalis">
+                <strong>Erfahrung</strong>
+                <p><span>2024–2026</span> Kaufmann für Marketingkommunikation (Ausbildung)</p>
+                <p><span>Marketing</span> Webentwicklung &amp; E-Commerce</p>
+                <p><span>Frontend</span> Responsive Websites &amp; UI-Systeme</p>
+                <p><span>Automation</span> n8n, APIs &amp; KI-Workflows</p>
+                <p><span>Design</span> Corporate Design &amp; digitale Markenauftritte</p>
+              </div>
+              <a href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn-Profil ansehen <ArrowRight size={16} weight="bold" /></a>
+            </div>
+          </article>
+        </div>
+      ) : null}
     </section>
   )
 }
