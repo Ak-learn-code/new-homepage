@@ -793,12 +793,14 @@ function ProcessCards() {
 
 function Footer() {
   return (
-    <footer className="footer grid-bg" id="ueber-uns">
-      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Digitale Auftritte, Automatisierungen und KI-Lösungen, die im Alltag wirklich arbeiten.</p><span>Alexandros Kodalis & Bilal Altuntas</span></div>
-      <div className="footer-col"><strong>Sitemap</strong><a href="#top">Start</a><a href="#referenzen">Projekte</a><a href="#leistungen">Leistungen</a><a href="#fallstudien">Fallstudien</a></div>
-      <div className="footer-col"><strong>Mehr</strong><a href="#ueber-uns">Über uns</a><a href="#kontakt">Kontakt</a><a href="#kontakt">Projekt anfragen</a></div>
-      <div className="footer-contact"><span>Kontakt</span><h2>Lasst uns etwas bauen,<br /><em>das arbeitet.</em></h2><a href="#kontakt">Projekt anfragen <ArrowRight size={18} weight="bold" /></a>{/* TODO: bestätigte E-Mail-Adresse oder Formular-Endpunkt ergänzen. */}</div>
-      <div className="footer-bottom"><span>© 2026 CODE². Alle Rechte vorbehalten.</span><span>Direkt. Klar. Persönlich.</span></div>
+    <footer className="footer" id="ueber-uns">
+      <div className="footer-inner">
+        <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
+        <div className="footer-col"><strong>Leistungen</strong><a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a></div>
+        <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#kontakt">Kontakt</a></div>
+        <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('datenschutz')}>Datenschutz</a></div>
+      </div>
+      <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
     </footer>
   )
 }
