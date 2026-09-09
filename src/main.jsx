@@ -9,7 +9,6 @@ import {
   CaretLeft,
   CaretRight,
   ChartLineUp,
-  EnvelopeSimple,
   FlowArrow,
   GoogleLogo,
   List,
@@ -614,26 +613,43 @@ function Execution() {
 
 function Contact() {
   const [notice, setNotice] = useState(false)
+  const [step, setStep] = useState(1)
+  const [projectType, setProjectType] = useState('Webseite')
 
   return (
-    <section className="contact grid-bg" id="kontakt">
-      <div className="contact-person reveal-on-scroll">
-        <div className="portrait-halo" />
-        <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" width="1254" height="1254" />
-        <EditorialMark className="contact-mark" />
-      </div>
-      <div className="contact-copy reveal-on-scroll">
-        <h2>Bringt eure Idee<br />zum <em>Leben.</em></h2>
-        <p>Ihr habt eine Idee oder wisst noch nicht, welche Lösung passt? Erzählt uns davon. Wir melden uns persönlich mit einer ersten Einschätzung.</p>
-        <form onSubmit={(event) => { event.preventDefault(); setNotice(true) }}>
-          <div className="field-group">
-            <label htmlFor="contact-email">E-Mail-Adresse</label>
-            <div className="input-shell"><EnvelopeSimple size={18} /><input id="contact-email" name="email" type="email" required placeholder="name@firma.de" /></div>
-            <small>Wir verwenden die Adresse nur für eure Anfrage.</small>
-          </div>
-          <button className="button" type="submit"><span>Projekt anfragen</span><ArrowRight size={17} weight="bold" /></button>
-        </form>
-        {notice ? <p className="contact-notice" role="status">Noch nichts gesendet. Eine bestätigte Empfängeradresse muss zuerst hinterlegt werden.</p> : null}
+    <section className="project-start" id="kontakt" aria-labelledby="project-start-title">
+      <div className="project-start-inner">
+        <div className="project-start-copy">
+          <h2 id="project-start-title">Lasst uns herausfinden,<br />was wir für euch <em>umsetzen können.</em></h2>
+          <p>Ihr habt eine Idee, ein konkretes Projekt oder wisst noch nicht genau, welche Lösung passt? Beantwortet ein paar kurze Fragen – wir melden uns mit einer ehrlichen ersten Einschätzung.</p>
+          <div className="project-start-trust" aria-label="Hinweise zur Anfrage"><span>Unverbindlich</span><span>Persönliche Rückmeldung</span><span>In der Regel innerhalb von 24 Stunden</span></div>
+          <div className="project-start-image" aria-hidden="true"><img src={asset('assets/contact/project-start-placeholder.jpg')} alt="" /><span>Bildplatzhalter</span></div>
+        </div>
+        <div className="project-start-form-wrap">
+          <form className="project-start-form" onSubmit={(event) => { event.preventDefault(); if (step === 1) setStep(2); else setNotice(true) }}>
+            <div className="project-start-progress"><div><span>Schritt {step} von 2</span><strong>{step === 1 ? 'Leistung auswählen' : 'Kontakt teilen'}</strong></div><small>Dauert ungefähr 60 Sekunden</small></div>
+            {step === 1 ? (
+              <fieldset className="project-service-choices">
+                <legend>Wobei können wir euch unterstützen?</legend>
+                {['Webseite', 'Automatisierung', 'KI-Agenten', 'Social Media Betreuung', 'Noch nicht sicher'].map((choice) => (
+                  <label key={choice} className={projectType === choice ? 'is-selected' : ''}><input type="radio" name="projectType" value={choice} checked={projectType === choice} onChange={() => setProjectType(choice)} /><span>{choice}</span><i>✓</i></label>
+                ))}
+              </fieldset>
+            ) : (
+              <div className="project-contact-fields">
+                <label htmlFor="contact-name">Name<input id="contact-name" name="name" required placeholder="Vor- und Nachname" /></label>
+                <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required placeholder="name@firma.de" /></label>
+                <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" rows="3" placeholder="Worum geht es?" /></label>
+              </div>
+            )}
+            <div className="project-start-actions">
+              {step === 2 ? <button className="project-back" type="button" onClick={() => setStep(1)}>Zurück</button> : <span />}
+              <button className="project-next" type="submit"><span>{step === 1 ? 'Weiter' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
+            </div>
+          </form>
+          <aside className="project-start-summary"><span>So geht es weiter</span><div><small>Leistung</small><strong>{projectType}</strong></div><div><small>Nächster Schritt</small><strong>{step === 1 ? 'Kontakt teilen' : 'Anfrage vorbereiten'}</strong></div><div><small>Kontakt</small><strong>{step === 1 ? 'Noch offen' : 'Fast geschafft'}</strong></div></aside>
+          {notice ? <p className="contact-notice" role="status">Die Anfrage ist vorbereitet. Für den Versand fehlt nur noch die Empfängeradresse des Kontaktformulars.</p> : null}
+        </div>
       </div>
     </section>
   )
