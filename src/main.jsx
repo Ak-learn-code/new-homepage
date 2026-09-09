@@ -398,6 +398,7 @@ function StudioImpact() {
             <div className="team-modal-portrait"><img src={asset(founder.portrait)} alt={founder.name} /></div>
             <div className="team-modal-copy">
               <div className="team-modal-tabs" role="tablist" aria-label="Profile der Gründer">
+                <div className="team-profile-orbit" aria-hidden="true"><span><img src={asset('assets/people/alex-kodalis.png')} alt="" /><img src={asset('assets/people/bilal-altuntas.png')} alt="" /></span></div>
                 {Object.entries(founderProfiles).map(([key, item]) => <button key={key} type="button" role="tab" aria-selected={activeFounder === key} onClick={() => setActiveFounder(key)}><img src={asset(item.portrait)} alt="" /><span>{item.name.split(' ')[0]}<small>{activeFounder === key ? 'Aktives Profil' : 'Profil ansehen'}</small></span></button>)}
               </div>
               <p>{founder.name} · SideTwo</p>
@@ -744,7 +745,7 @@ function Contact() {
         </div>
         <div className="project-start-form-wrap">
           <form className="project-start-form" onSubmit={(event) => { event.preventDefault(); if (step === 1) setStep(2); else setNotice(true) }}>
-            <div className="project-start-progress"><div><span>Schritt {step} von 2</span><strong>{step === 1 ? 'Leistung auswählen' : 'Kontakt teilen'}</strong></div><small>Dauert ungefähr 60 Sekunden</small></div>
+            <div className="project-start-progress"><div><span>Schritt {step} von 2</span><strong>{step === 1 ? 'Leistung auswählen' : 'Kontakt teilen'}</strong></div></div>
             {step === 1 ? (
               <fieldset className="project-service-choices">
                 <legend>Wobei können wir euch unterstützen?</legend>

@@ -2008,6 +2008,18 @@ input { caret-color: var(--accent); }
 .team-modal-tabs span { min-width: 0; display: grid; gap: 2px; }
 .team-modal-tabs small { color: currentColor; opacity: .68; font-size: 9px; font-weight: 650; }
 
+/* The profile selection echoes the compact founder card instead of enlarging faces. */
+.team-modal { grid-template-columns: 210px minmax(0, 1.25fr); }
+.team-modal-portrait { min-height: 0; display: grid; place-items: center; padding: 26px; background: radial-gradient(circle at 48% 38%, rgba(242,161,70,.38), transparent 28%), #102021; }
+.team-modal-portrait::before { content: ''; width: 168px; height: 168px; position: absolute; border: 1px solid rgba(242,161,70,.66); border-radius: 50%; }
+.team-modal-portrait::after { inset: 0; background: linear-gradient(0deg, rgba(8,23,24,.64), transparent 58%); }
+.team-modal-portrait img { width: 158px; height: 158px; position: relative; z-index: 1; border: 4px solid #f2a146; border-radius: 50%; object-fit: cover; object-position: center top; }
+.team-profile-orbit { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; color: rgba(232,239,235,.65); font-size: 10px; font-weight: 750; }
+.team-profile-orbit::after { content: 'Profile der Gründer'; }
+.team-profile-orbit > span { width: 54px; height: 54px; position: relative; display: block; border: 3px solid #f2a146; border-radius: 50%; background: #f2a146; }
+.team-profile-orbit img { width: 33px; height: 33px; position: absolute; top: 8px; object-fit: cover; border: 2px solid #f2a146; border-radius: 50%; background: #143030; }.team-profile-orbit img:first-child { left: 4px; }.team-profile-orbit img:last-child { right: 4px; top: 15px; }
+@media (max-width: 800px) { .team-modal { grid-template-columns: 1fr; }.team-modal-portrait { height: 184px; padding: 18px; }.team-modal-portrait::before { width: 132px; height: 132px; }.team-modal-portrait img { width: 124px; height: 124px; }.team-profile-orbit { margin-bottom: 2px; } }
+
 /* Footer: a composed studio close, inspired by the reference's split hierarchy. */
 .footer { height: auto; display: block; margin: 18px clamp(18px, 3vw, 42px); padding: 0; overflow: hidden; border: 1px solid rgba(185,226,216,.12); border-radius: 34px; color: #eff4f1; background: radial-gradient(circle at 87% 100%, rgba(242,161,70,.14), transparent 34%), radial-gradient(circle at 9% 7%, rgba(8,127,118,.34), transparent 38%), #102727; box-shadow: 0 24px 52px rgba(4,27,27,.18); }
 .footer-inner { max-width: 1260px; display: grid; grid-template-columns: minmax(280px, 1.55fr) repeat(3, minmax(125px, .72fr)); gap: clamp(26px, 5vw, 78px); padding: 68px clamp(28px, 5vw, 78px) 58px; margin: 0 auto; }
