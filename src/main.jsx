@@ -403,25 +403,26 @@ function ServiceShowcase() {
       name: 'Automatisierung',
       Icon: FlowArrow,
       description: 'Wiederkehrende Abläufe laufen verlässlich im Hintergrund. Euer Team gewinnt Zeit zurück.',
+      image: asset('assets/services/automation-showcase.jpg'),
       type: 'automation',
     },
     {
       name: 'KI-Agenten',
       Icon: Robot,
       description: 'Digitale Mitarbeitende, die Anfragen sortieren, zuhören und zuverlässig antworten.',
+      image: asset('assets/services/agents-showcase.jpg'),
       type: 'agent',
     },
     {
       name: 'Interne Tools',
       Icon: BracketsCurly,
       description: 'Eigene kleine Systeme, die Informationen bündeln und eure tägliche Arbeit klar machen.',
+      image: asset('assets/services/tools-showcase.jpg'),
       type: 'tools',
     },
   ]
   const [activeIndex, setActiveIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-  const activeSlide = serviceSlides[activeIndex]
-
   useEffect(() => {
     if (paused) return undefined
     const interval = window.setInterval(() => {
@@ -441,7 +442,7 @@ function ServiceShowcase() {
   return (
     <section className="service-carousel" id="leistungen" aria-labelledby="service-carousel-title">
       <div className="service-carousel-head">
-        <h2 id="service-carousel-title">Digital, das<br /><em>mitarbeitet.</em></h2>
+        <h2 id="service-carousel-title">Das sind unsere<br /><em>Dienstleistungen.</em></h2>
         <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
       </div>
       <div className="service-carousel-shell" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -455,12 +456,7 @@ function ServiceShowcase() {
         <div className="service-carousel-stage" aria-live="polite">
           {serviceSlides.map((slide, index) => (
             <article className={`service-carousel-card ${cardClassName(index)}`} key={slide.name} aria-hidden={index !== activeIndex}>
-              <div className={`service-carousel-media service-carousel-media-${slide.type}`}>
-                {slide.type === 'website' ? <img src={slide.image} alt="" /> : null}
-                {slide.type === 'automation' ? <><div className="automation-route"><i /><i /><i /><i /></div><strong>Wenn etwas reinkommt,<br />läuft der Rest mit.</strong></> : null}
-                {slide.type === 'agent' ? <><div className="agent-signal"><Robot weight="thin" /></div><span className="agent-tag tag-one">Anfrage</span><span className="agent-tag tag-two">Antwort</span><span className="agent-tag tag-three">Termin</span></> : null}
-                {slide.type === 'tools' ? <><div className="tool-board"><i /><i /><i /><b /></div><span className="tool-status">alles an einem Ort</span></> : null}
-              </div>
+              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" /></div>
               <div className="service-carousel-caption"><span>{slide.name}</span><h3>{slide.description}</h3><ArrowRight size={22} weight="light" /></div>
             </article>
           ))}

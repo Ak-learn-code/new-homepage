@@ -1656,7 +1656,7 @@ input { caret-color: var(--accent); }
   background: #102727;
 }
 .service-carousel-head {
-  max-width: 1320px;
+  max-width: 1440px;
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -1679,7 +1679,7 @@ input { caret-color: var(--accent); }
   line-height: 1.5;
 }
 .service-carousel-shell {
-  max-width: 1320px;
+  max-width: 1440px;
   min-height: 514px;
   display: grid;
   grid-template-columns: minmax(285px, .78fr) minmax(0, 1.22fr);
@@ -1786,12 +1786,11 @@ input { caret-color: var(--accent); }
   .service-carousel-head { display: block; margin-bottom: 30px; }
   .service-carousel-head h2 { font-size: clamp(40px, 11.2vw, 53px); }
   .service-carousel-head p { margin-top: 17px; font-size: 12px; }
-  .service-carousel-shell { min-height: 625px; display: block; border-radius: 28px; }
-  .service-carousel-list { flex-direction: row; justify-content: flex-start; gap: 8px; overflow-x: auto; padding: 15px; scrollbar-width: none; }
-  .service-carousel-list::-webkit-scrollbar { display: none; }
-  .service-carousel-list button { min-width: max-content; gap: 8px; padding: 10px 13px; font-size: 11px; }
+  .service-carousel-shell { min-height: 606px; display: block; border-radius: 28px; }
+  .service-carousel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; gap: 8px; overflow: visible; padding: 14px; }
+  .service-carousel-list button { width: 100%; min-width: 0; justify-content: flex-start; gap: 8px; padding: 11px 12px; font-size: 11px; white-space: nowrap; }
   .service-carousel-list button svg { width: 16px; height: 16px; }
-  .service-carousel-stage { height: 541px; padding: 26px 20px 30px; }
+  .service-carousel-stage { height: 478px; padding: 24px 20px 26px; }
   .service-carousel-card { width: calc(100% - 40px); height: 422px; border-radius: 25px; }
   .service-carousel-card.is-next { transform: translateX(19%) scale(.91) rotate(2deg); }
   .service-carousel-card.is-previous { transform: translateX(-18%) scale(.88) rotate(-2deg); }
