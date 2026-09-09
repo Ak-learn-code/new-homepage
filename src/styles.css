@@ -124,6 +124,7 @@ input { caret-color: var(--accent); }
   text-wrap: pretty;
 }
 .impact-letter { color: color-mix(in srgb, #182425 calc(var(--letter-fill) * 100%), rgba(24, 36, 37, .2)); }
+.scroll-fill-letter { color: color-mix(in srgb, var(--scroll-fill) calc(var(--letter-fill) * 100%), var(--scroll-muted)); }
 .studio-impact-copy > p { max-width: 510px; margin: 22px 0 0; color: #5d6968; font-size: 14px; line-height: 1.55; }
 .studio-impact-grid {
   position: relative;
@@ -1714,6 +1715,9 @@ input { caret-color: var(--accent); }
   cursor: pointer;
   transition: color 220ms ease, background 220ms ease, border-color 220ms ease, transform 180ms ease;
 }
+.service-carousel-list.is-visible button { animation: service-option-in 420ms var(--ease-out-expo) both; animation-delay: calc(var(--option-index) * 54ms); }
+.service-carousel-list.is-visible button:hover { animation: none; opacity: 1; }
+@keyframes service-option-in { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
 .service-carousel-list button svg { flex: 0 0 auto; opacity: .78; }
 .service-carousel-list button:hover { color: #fff; border-color: rgba(239, 247, 242, .5); }
 .service-carousel-list button.is-active { color: #24403e; border-color: #f5f6f0; background: #f5f6f0; box-shadow: 0 12px 22px rgba(8, 31, 30, .13); }
@@ -1789,6 +1793,7 @@ input { caret-color: var(--accent); }
   .service-carousel-shell { min-height: 606px; display: block; border-radius: 28px; }
   .service-carousel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; gap: 8px; overflow: visible; padding: 14px; }
   .service-carousel-list button { width: 100%; min-width: 0; justify-content: flex-start; gap: 8px; padding: 11px 12px; font-size: 11px; white-space: nowrap; }
+  .service-carousel-list button:last-child { grid-column: span 2; justify-content: center; }
   .service-carousel-list button svg { width: 16px; height: 16px; }
   .service-carousel-stage { height: 478px; padding: 24px 20px 26px; }
   .service-carousel-card { width: calc(100% - 40px); height: 422px; border-radius: 25px; }
@@ -1804,5 +1809,5 @@ input { caret-color: var(--accent); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .service-carousel-card, .service-carousel-list button { transition: none; }
+  .service-carousel-card, .service-carousel-list button { transition: none; animation: none; opacity: 1; transform: none; }
 }

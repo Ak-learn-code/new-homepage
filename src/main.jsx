@@ -15,6 +15,7 @@ import {
   List,
   Plus,
   Robot,
+  ShareNetwork,
   X,
 } from '@phosphor-icons/react'
 import '@fontsource-variable/manrope'
@@ -46,6 +47,7 @@ const serviceItems = [
   { Icon: FlowArrow, title: 'Automatisierung', text: 'Weniger Routine, mehr Zeit.' },
   { Icon: Robot, title: 'KI-Agenten', text: 'Erreichbar, wenn ihr es nicht seid.' },
   { Icon: BracketsCurly, title: 'Interne Tools', text: 'Systeme, die täglich genutzt werden.' },
+  { Icon: ShareNetwork, title: 'Social Media', text: 'Content, der sichtbar bleibt.' },
 ]
 
 const clientLogos = [
@@ -233,6 +235,53 @@ function ClientMarquee() {
   )
 }
 
+function ScrollFillHeading({ id, className = '', text, fillColor, mutedColor }) {
+  const sectionRef = useRef(null)
+  const [progress, setProgress] = useState(0)
+  const words = text.split(' ')
+  let letterIndex = 0
+
+  useEffect(() => {
+    let frame = 0
+    const updateProgress = () => {
+      frame = 0
+      const section = sectionRef.current
+      if (!section) return
+      const bounds = section.getBoundingClientRect()
+      const start = window.innerHeight * .78
+      const travel = Math.min(620, Math.max(330, bounds.height * .56))
+      const nextProgress = Math.min(1, Math.max(0, (start - bounds.top) / travel))
+      setProgress((current) => Math.abs(current - nextProgress) > .002 ? nextProgress : current)
+    }
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateProgress)
+    }
+    updateProgress()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+    return () => {
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  return (
+    <h2 ref={sectionRef} id={id} className={`scroll-fill-title ${className}`} style={{ '--scroll-fill': fillColor, '--scroll-muted': mutedColor }} aria-label={text}>
+      {words.map((word, wordIndex) => (
+        <React.Fragment key={`${word}-${wordIndex}`}>
+          {[...word].map((character) => {
+            const currentIndex = letterIndex++
+            return <span className="scroll-fill-letter" style={{ '--letter-fill': Math.min(1, Math.max(0, progress * (text.length + 8) - currentIndex)) }} key={`${character}-${currentIndex}`}>{character}</span>
+          })}
+          {wordIndex < words.length - 1 ? ' ' : null}
+          {letterIndex++ && null}
+        </React.Fragment>
+      ))}
+    </h2>
+  )
+}
+
 function StudioImpact() {
   const headline = 'Wir machen digitale Arbeit leichter. Damit ihr wieder Zeit für Kunden, Entscheidungen und das Wesentliche habt.'
   const headlineWords = headline.split(' ')
@@ -360,7 +409,7 @@ function ReferencesSequence() {
   return (
     <section className="references-sequence" id="referenzen" aria-labelledby="references-title">
       <header className="references-heading">
-        <h2 id="references-title">Digitale Arbeit, die<br /><em>sichtbar wirkt.</em></h2>
+        <ScrollFillHeading id="references-title" className="references-scroll-title" text="Digitale Arbeit, die sichtbar wirkt." fillColor="#182425" mutedColor="rgba(24, 36, 37, .19)" />
         <div className="references-heading-side">
           <p>Ein Ausschnitt der Auftritte, die wir für Unternehmen aus der Region gestaltet und umgesetzt haben.</p>
           {pageCount > 1 ? <div className="reference-pagination"><span aria-live="polite">{String(page + 1).padStart(2, '0')} / {String(pageCount).padStart(2, '0')}</span><button type="button" onClick={() => changePage(-1)} aria-label="Vorherige Referenzen"><CaretLeft weight="bold" /></button><button type="button" onClick={() => changePage(1)} aria-label="Nächste Referenzen"><CaretRight weight="bold" /></button></div> : null}
@@ -420,9 +469,34 @@ function ServiceShowcase() {
       image: asset('assets/services/tools-showcase.jpg'),
       type: 'tools',
     },
+    {
+      name: 'Social Media',
+      Icon: ShareNetwork,
+      description: 'Content und Betreuung, die euren Auftritt konsistent sichtbar und relevant hält.',
+      image: asset('assets/services/social-media-showcase.jpg'),
+      type: 'social',
+    },
   ]
   const [activeIndex, setActiveIndex] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [hasEntered, setHasEntered] = useState(false)
+  const sectionRef = useRef(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || !('IntersectionObserver' in window)) {
+      setHasEntered(true)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setHasEntered(true)
+      observer.disconnect()
+    }, { threshold: .22 })
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
   useEffect(() => {
     if (paused) return undefined
     const interval = window.setInterval(() => {
@@ -440,15 +514,15 @@ function ServiceShowcase() {
   }
 
   return (
-    <section className="service-carousel" id="leistungen" aria-labelledby="service-carousel-title">
+    <section className="service-carousel" id="leistungen" ref={sectionRef} aria-labelledby="service-carousel-title">
       <div className="service-carousel-head">
-        <h2 id="service-carousel-title">Das sind unsere<br /><em>Dienstleistungen.</em></h2>
+        <ScrollFillHeading id="service-carousel-title" className="service-scroll-title" text="Das sind unsere Dienstleistungen." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .3)" />
         <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
       </div>
       <div className="service-carousel-shell" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-        <div className="service-carousel-list" aria-label="Leistungsbereiche">
+        <div className={`service-carousel-list${hasEntered ? ' is-visible' : ''}`} aria-label="Leistungsbereiche">
           {serviceSlides.map(({ name, Icon }, index) => (
-            <button key={name} className={index === activeIndex ? 'is-active' : ''} type="button" onClick={() => setActiveIndex(index)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)} aria-pressed={index === activeIndex}>
+            <button key={name} style={{ '--option-index': index }} className={index === activeIndex ? 'is-active' : ''} type="button" onClick={() => setActiveIndex(index)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)} aria-pressed={index === activeIndex}>
               <Icon size={19} weight="regular" aria-hidden="true" /><span>{name}</span>
             </button>
           ))}
