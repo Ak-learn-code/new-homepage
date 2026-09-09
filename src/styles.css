@@ -1663,25 +1663,16 @@ input { caret-color: var(--accent); }
 }
 .service-carousel > :not(.service-scroll-orbit) { position: relative; z-index: 1; }
 .service-scroll-orbit {
-  width: min(1470px, 124vw);
-  height: 370px;
+  width: min(1760px, 122vw);
+  height: 480px;
   position: absolute;
-  top: 42%;
+  top: 30%;
   left: 50%;
-  border: 2px solid rgba(242, 161, 70, .24);
-  border-radius: 50%;
   pointer-events: none;
-  transform: translateX(calc(-50% + var(--service-line-shift, 0px))) rotate(-11deg);
-  transition: transform 90ms linear;
-  will-change: transform;
+  transform: translateX(-50%);
 }
-.service-scroll-orbit::before {
-  content: '';
-  position: absolute;
-  inset: 38px -118px;
-  border: 1px solid rgba(185, 226, 216, .12);
-  border-radius: 50%;
-}
+.service-scroll-orbit svg { width: 100%; height: 100%; overflow: visible; }
+.service-scroll-orbit path { fill: none; stroke: url(#service-loop-amber); stroke-width: 38; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2860px; stroke-dashoffset: var(--service-line-dash, 2860px); opacity: .68; transition: stroke-dashoffset 90ms linear; will-change: stroke-dashoffset; }
 .service-carousel-head {
   max-width: 1440px;
   display: flex;
@@ -1813,7 +1804,8 @@ input { caret-color: var(--accent); }
 
 @media (max-width: 600px) {
   .service-carousel { padding: 68px 18px 74px; }
-  .service-scroll-orbit { width: 192%; height: 246px; top: 46%; border-width: 1px; }
+  .service-scroll-orbit { width: 230%; height: 300px; top: 38%; }
+  .service-scroll-orbit path { stroke-width: 28; opacity: .54; }
   .service-carousel-head { display: block; margin-bottom: 30px; }
   .service-carousel-head h2 { font-size: clamp(40px, 11.2vw, 53px); }
   .service-carousel-head p { margin-top: 17px; font-size: 12px; }
@@ -1837,7 +1829,7 @@ input { caret-color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   .service-carousel-card, .service-carousel-list button { transition: none; animation: none; opacity: 1; transform: none; }
-  .service-scroll-orbit { transition: none; transform: translateX(-50%) rotate(-11deg); }
+  .service-scroll-orbit path { transition: none; stroke-dashoffset: 2860px; }
 }
 
 /* Reserved proof space: deliberately calm until real case studies and client quotes arrive. */

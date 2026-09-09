@@ -558,12 +558,12 @@ function ServiceShowcase() {
       const line = serviceLineRef.current
       if (!section || !line) return
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        line.style.setProperty('--service-line-shift', '0px')
+        line.style.setProperty('--service-line-dash', '2860px')
         return
       }
       const bounds = section.getBoundingClientRect()
       const progress = Math.min(1, Math.max(0, (window.innerHeight * .82 - bounds.top) / (bounds.height + window.innerHeight * .35)))
-      line.style.setProperty('--service-line-shift', `${Math.round(progress * 150 - 75)}px`)
+      line.style.setProperty('--service-line-dash', `${Math.round(2860 * (1 - progress))}px`)
     }
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(updateLine)
@@ -596,7 +596,18 @@ function ServiceShowcase() {
 
   return (
     <section className="service-carousel" id="leistungen" ref={sectionRef} aria-labelledby="service-carousel-title">
-      <div className="service-scroll-orbit" ref={serviceLineRef} aria-hidden="true" />
+      <div className="service-scroll-orbit" ref={serviceLineRef} aria-hidden="true">
+        <svg viewBox="0 0 1600 560" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="service-loop-amber" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stopColor="#f4a24d" />
+              <stop offset=".55" stopColor="#ffb16a" />
+              <stop offset="1" stopColor="#ee8e39" />
+            </linearGradient>
+          </defs>
+          <path d="M -96 414 C 155 267 331 558 622 426 C 858 319 835 177 1085 125 C 1348 71 1481 219 1369 359 C 1260 495 1044 448 1053 324 C 1062 202 1251 191 1415 277 C 1532 338 1646 401 1710 345" />
+        </svg>
+      </div>
       <div className="service-carousel-head">
         <ScrollFillHeading id="service-carousel-title" className="service-scroll-title" text="Das sind unsere Dienstleistungen." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .3)" />
         <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
