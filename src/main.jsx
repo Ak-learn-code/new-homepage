@@ -67,6 +67,24 @@ const processSteps = [
   ['Verbessern', 'Wir bleiben dran, wenn ihr wachst.'],
 ]
 
+const founderProfiles = {
+  alex: {
+    name: 'Alexandros Kodalis',
+    portrait: 'assets/people/alex-kodalis.png',
+    intro: 'Marketing, Design und digitale Systeme.',
+    facts: ['Ausbildung zum Kaufmann für Marketingkommunikation', 'Fokus auf Web Development & Frontend Engineering', 'Spezialisierung auf KI-Workflows und Automatisierung', 'Leidenschaft für UI/UX und digitales Design', 'Performance-, SEO- und Conversion-orientierte Entwicklung'],
+    experience: [['2024–2026', 'Kaufmann für Marketingkommunikation (Ausbildung)'], ['Marketing', 'Webentwicklung & E-Commerce'], ['Frontend', 'Responsive Websites & UI-Systeme'], ['Automation', 'n8n, APIs & KI-Workflows'], ['Design', 'Corporate Design & digitale Markenauftritte']],
+    linkedin: 'https://www.linkedin.com/in/alexandros-kodalis-42a908334/',
+  },
+  bilal: {
+    name: 'Bilal Altuntas',
+    portrait: 'assets/people/bilal-altuntas.png',
+    intro: 'Profil und Lebenslauf folgen.',
+    facts: ['Quick Facts werden ergänzt.', 'Fokus und Spezialisierung folgen.', 'Berufliche Stationen werden ergänzt.'],
+    experience: [['Profil', 'Wird aktuell ergänzt.']],
+  },
+}
+
 function Button({ href = '#kontakt', children, secondary = false }) {
   return (
     <a className={`button${secondary ? ' button-secondary' : ''}`} href={href}>
@@ -288,6 +306,8 @@ function StudioImpact() {
   const sectionRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [activeFounder, setActiveFounder] = useState('alex')
+  const founder = founderProfiles[activeFounder]
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -347,7 +367,7 @@ function StudioImpact() {
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
         <div className="impact-stack">
-          <button className="impact-card impact-team" type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profil von Alexandros Kodalis öffnen">
+          <button className="impact-card impact-team" type="button" onClick={() => { setActiveFounder('alex'); setProfileOpen(true) }} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
             <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
               <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
               <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
@@ -375,26 +395,21 @@ function StudioImpact() {
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
           <article className="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
-            <div className="team-modal-portrait"><img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" /></div>
+            <div className="team-modal-portrait"><img src={asset(founder.portrait)} alt={founder.name} /></div>
             <div className="team-modal-copy">
-              <p>Alexandros Kodalis · SideTwo</p>
-              <h3 id="team-modal-title">Marketing, Design und digitale Systeme.</h3>
+              <div className="team-modal-tabs" role="tablist" aria-label="Profile der Gründer">
+                {Object.entries(founderProfiles).map(([key, item]) => <button key={key} type="button" role="tab" aria-selected={activeFounder === key} onClick={() => setActiveFounder(key)}>{item.name.split(' ')[0]}</button>)}
+              </div>
+              <p>{founder.name} · SideTwo</p>
+              <h3 id="team-modal-title">{founder.intro}</h3>
               <div className="team-facts">
-                <span>Ausbildung zum Kaufmann für Marketingkommunikation</span>
-                <span>Fokus auf Web Development &amp; Frontend Engineering</span>
-                <span>Spezialisierung auf KI-Workflows und Automatisierung</span>
-                <span>Leidenschaft für UI/UX und digitales Design</span>
-                <span>Performance-, SEO- und Conversion-orientierte Entwicklung</span>
+                {founder.facts.map((fact) => <span key={fact}>{fact}</span>)}
               </div>
-              <div className="team-experience" aria-label="Erfahrung von Alexandros Kodalis">
+              <div className="team-experience" aria-label={`Erfahrung von ${founder.name}`}>
                 <strong>Erfahrung</strong>
-                <p><span>2024–2026</span> Kaufmann für Marketingkommunikation (Ausbildung)</p>
-                <p><span>Marketing</span> Webentwicklung &amp; E-Commerce</p>
-                <p><span>Frontend</span> Responsive Websites &amp; UI-Systeme</p>
-                <p><span>Automation</span> n8n, APIs &amp; KI-Workflows</p>
-                <p><span>Design</span> Corporate Design &amp; digitale Markenauftritte</p>
+                {founder.experience.map(([label, text]) => <p key={label}><span>{label}</span> {text}</p>)}
               </div>
-              <a href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn-Profil ansehen <ArrowRight size={16} weight="bold" /></a>
+              {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noreferrer">LinkedIn-Profil ansehen <ArrowRight size={16} weight="bold" /></a> : <span className="team-profile-note">Weitere Angaben folgen.</span>}
             </div>
           </article>
         </div>
