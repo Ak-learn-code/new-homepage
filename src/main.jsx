@@ -398,7 +398,7 @@ function StudioImpact() {
             <div className="team-modal-portrait"><img src={asset(founder.portrait)} alt={founder.name} /></div>
             <div className="team-modal-copy">
               <div className="team-modal-tabs" role="tablist" aria-label="Profile der Gründer">
-                {Object.entries(founderProfiles).map(([key, item]) => <button key={key} type="button" role="tab" aria-selected={activeFounder === key} onClick={() => setActiveFounder(key)}>{item.name.split(' ')[0]}</button>)}
+                {Object.entries(founderProfiles).map(([key, item]) => <button key={key} type="button" role="tab" aria-selected={activeFounder === key} onClick={() => setActiveFounder(key)}><img src={asset(item.portrait)} alt="" /><span>{item.name.split(' ')[0]}<small>{activeFounder === key ? 'Aktives Profil' : 'Profil ansehen'}</small></span></button>)}
               </div>
               <p>{founder.name} · SideTwo</p>
               <h3 id="team-modal-title">{founder.intro}</h3>
@@ -558,12 +558,12 @@ function ServiceShowcase() {
       const line = serviceLineRef.current
       if (!section || !line) return
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        line.style.setProperty('--service-line-dash', '2860px')
+        line.style.setProperty('--service-line-dash', '2200px')
         return
       }
       const bounds = section.getBoundingClientRect()
-      const progress = Math.min(1, Math.max(0, (window.innerHeight * .82 - bounds.top) / (bounds.height + window.innerHeight * .35)))
-      line.style.setProperty('--service-line-dash', `${Math.round(2860 * (1 - progress))}px`)
+      const progress = Math.min(1, Math.max(0, (window.innerHeight * .98 - bounds.top) / (bounds.height + window.innerHeight * .08)))
+      line.style.setProperty('--service-line-dash', `${Math.round(2200 * (1 - progress))}px`)
     }
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(updateLine)
@@ -823,7 +823,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><ProcessCards /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

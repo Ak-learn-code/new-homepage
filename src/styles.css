@@ -1672,7 +1672,7 @@ input { caret-color: var(--accent); }
   transform: translateX(-50%);
 }
 .service-scroll-orbit svg { width: 100%; height: 100%; overflow: visible; }
-.service-scroll-orbit path { fill: none; stroke: url(#service-loop-amber); stroke-width: 38; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2860px; stroke-dashoffset: var(--service-line-dash, 2860px); opacity: .68; transition: stroke-dashoffset 90ms linear; will-change: stroke-dashoffset; }
+.service-scroll-orbit path { fill: none; stroke: url(#service-loop-amber); stroke-width: 52; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2200px; stroke-dashoffset: var(--service-line-dash, 2200px); opacity: .9; filter: drop-shadow(0 8px 18px rgba(242,161,70,.22)); transition: stroke-dashoffset 90ms linear; will-change: stroke-dashoffset; }
 .service-carousel-head {
   max-width: 1440px;
   display: flex;
@@ -1805,7 +1805,7 @@ input { caret-color: var(--accent); }
 @media (max-width: 600px) {
   .service-carousel { padding: 68px 18px 74px; }
   .service-scroll-orbit { width: 230%; height: 300px; top: 38%; }
-  .service-scroll-orbit path { stroke-width: 28; opacity: .54; }
+  .service-scroll-orbit path { stroke-width: 37; opacity: .78; }
   .service-carousel-head { display: block; margin-bottom: 30px; }
   .service-carousel-head h2 { font-size: clamp(40px, 11.2vw, 53px); }
   .service-carousel-head p { margin-top: 17px; font-size: 12px; }
@@ -1829,7 +1829,7 @@ input { caret-color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   .service-carousel-card, .service-carousel-list button { transition: none; animation: none; opacity: 1; transform: none; }
-  .service-scroll-orbit path { transition: none; stroke-dashoffset: 2860px; }
+  .service-scroll-orbit path { transition: none; stroke-dashoffset: 2200px; }
 }
 
 /* Reserved proof space: deliberately calm until real case studies and client quotes arrive. */
@@ -1994,8 +1994,16 @@ input { caret-color: var(--accent); }
 @media (max-width: 680px) { .project-start { padding: 72px 18px 78px; }.project-start-inner { display: flex; flex-direction: column; gap: 34px; }.project-start-copy h2 { font-size: clamp(39px, 10.6vw, 52px); }.project-start-copy > p { margin-top: 19px; font-size: 13px; }.project-start-trust { display: grid; gap: 9px; margin-top: 22px; }.project-start-image { width: 100%; margin-top: 33px; border-radius: 25px; }.project-start-form-wrap { width: 100%; }.project-start-form { padding: 24px 18px 19px; border-radius: 25px; }.project-start-progress { padding-bottom: 20px; }.project-start-progress strong { font-size: 19px; }.project-start-progress small { font-size: 9px; }.project-service-choices { margin-top: 21px; }.project-service-choices label { min-height: 49px; border-radius: 13px; font-size: 12px; } }
 
 /* Founder profile: reuses the reference dialog language for a single, factual detail layer. */
-.team-modal { width: min(920px, 100%); max-height: min(760px, calc(100dvh - 60px)); position: relative; display: grid; grid-template-columns: minmax(260px, .75fr) minmax(0, 1.25fr); overflow: auto; border-radius: 24px; color: #e8efeb; background: #1b2e2f; box-shadow: 0 28px 80px rgba(0,0,0,.38); animation: reference-modal-in 360ms var(--ease-out-expo) both; }
+.team-modal { width: min(920px, 100%); height: min(760px, calc(100dvh - 60px)); position: relative; display: grid; grid-template-columns: minmax(260px, .75fr) minmax(0, 1.25fr); overflow: auto; border-radius: 24px; color: #e8efeb; background: #1b2e2f; box-shadow: 0 28px 80px rgba(0,0,0,.38); animation: reference-modal-in 360ms var(--ease-out-expo) both; }
 .team-modal-portrait { min-height: 540px; position: relative; overflow: hidden; background: #102021; }.team-modal-portrait::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,23,24,.55), transparent 52%); }.team-modal-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; filter: saturate(.78) contrast(1.04); }
 .team-modal-copy { min-width: 0; padding: 42px 40px 34px; }.team-modal-tabs { display: flex; gap: 7px; margin-bottom: 24px; }.team-modal-tabs button { border: 1px solid rgba(232,239,235,.22); border-radius: 999px; padding: 8px 13px; color: rgba(232,239,235,.7); background: transparent; font-size: 11px; font-weight: 750; cursor: pointer; transition: background 160ms ease, color 160ms ease, border-color 160ms ease; }.team-modal-tabs button[aria-selected="true"] { border-color: #b9e2d8; color: #193334; background: #b9e2d8; }.team-modal-copy > p { margin: 0; color: #f2a146; font-size: 11px; font-weight: 750; }.team-modal-copy h3 { max-width: 490px; margin: 13px 0 0; font-size: clamp(29px, 3vw, 42px); font-weight: 520; line-height: 1.05; letter-spacing: -.04em; }.team-facts { display: grid; gap: 8px; margin-top: 25px; }.team-facts span { position: relative; padding-left: 17px; color: rgba(232,239,235,.72); font-size: 12px; line-height: 1.38; }.team-facts span::before { content: ''; width: 6px; height: 6px; position: absolute; top: .45em; left: 0; border-radius: 50%; background: #b9e2d8; }
 .team-experience { margin-top: 27px; padding-top: 20px; border-top: 1px solid rgba(232,239,235,.16); }.team-experience strong { color: #b9e2d8; font-size: 12px; }.team-experience p { display: grid; grid-template-columns: 92px minmax(0,1fr); gap: 13px; margin: 11px 0 0; color: rgba(232,239,235,.76); font-size: 11px; line-height: 1.35; }.team-experience p span { color: rgba(185,226,216,.68); font-weight: 750; }.team-modal-copy > a, .team-profile-note { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; color: #fff; font-size: 12px; font-weight: 750; }.team-profile-note { color: rgba(232,239,235,.56); }
 @media (max-width: 800px) { .team-modal-backdrop { padding: 16px; }.team-modal { max-height: calc(100dvh - 32px); grid-template-columns: 1fr; border-radius: 20px; }.team-modal-portrait { min-height: 0; height: min(31dvh, 250px); }.team-modal-copy { padding: 28px 24px 26px; }.team-modal-copy h3 { font-size: 30px; }.team-experience p { grid-template-columns: 82px minmax(0,1fr); gap: 10px; } }
+
+/* Make both founder profiles equally explicit and keep the dialog geometry stable. */
+.team-modal-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.team-modal-tabs button { min-width: 0; display: flex; align-items: center; gap: 9px; border-radius: 15px; padding: 9px; text-align: left; }
+.team-modal-tabs button:hover { border-color: rgba(185,226,216,.72); transform: translateY(-1px); }
+.team-modal-tabs img { width: 34px; height: 34px; flex: 0 0 auto; object-fit: cover; border-radius: 10px; }
+.team-modal-tabs span { min-width: 0; display: grid; gap: 2px; }
+.team-modal-tabs small { color: currentColor; opacity: .68; font-size: 9px; font-weight: 650; }
