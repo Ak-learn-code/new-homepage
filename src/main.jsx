@@ -79,7 +79,7 @@ function HeroActions({ className = '' }) {
   return (
     <div className={`hero-actions ${className}`}>
       <Button>Projekt anfragen</Button>
-      <Button href="#projekte" secondary>Projekte ansehen</Button>
+      <Button href="#referenzen" secondary>Projekte ansehen</Button>
     </div>
   )
 }
@@ -124,8 +124,8 @@ function Navigation() {
         <div className="nav-links">
           <a href="#ueber-uns">Über uns</a>
           <a href="#leistungen">Leistungen</a>
-          <a href="#projekte">Projekte</a>
-          <a href="#ablauf">Ablauf</a>
+          <a href="#referenzen">Projekte</a>
+          <a href="#fallstudien">Fallstudien</a>
         </div>
         <a className="nav-contact" href="#kontakt">Kontakt</a>
         <button
@@ -140,7 +140,7 @@ function Navigation() {
       </nav>
       {open ? (
         <div className="mobile-menu" id="mobile-navigation">
-          {[['projekte', 'Projekte'], ['leistungen', 'Leistungen'], ['ablauf', 'Ablauf'], ['ueber-uns', 'Über uns'], ['kontakt', 'Kontakt']].map(([item, label]) => (
+          {[['referenzen', 'Projekte'], ['leistungen', 'Leistungen'], ['ueber-uns', 'Über uns'], ['kontakt', 'Kontakt']].map(([item, label]) => (
             <a key={item} href={`#${item}`} onClick={() => setOpen(false)}>{label}</a>
           ))}
         </div>
@@ -480,6 +480,7 @@ function ServiceShowcase() {
   const [paused, setPaused] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
   const sectionRef = useRef(null)
+  const serviceLineRef = useRef(null)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -494,6 +495,34 @@ function ServiceShowcase() {
     }, { threshold: .22 })
     observer.observe(section)
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    let frame = 0
+    const updateLine = () => {
+      frame = 0
+      const section = sectionRef.current
+      const line = serviceLineRef.current
+      if (!section || !line) return
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        line.style.setProperty('--service-line-shift', '0px')
+        return
+      }
+      const bounds = section.getBoundingClientRect()
+      const progress = Math.min(1, Math.max(0, (window.innerHeight * .82 - bounds.top) / (bounds.height + window.innerHeight * .35)))
+      line.style.setProperty('--service-line-shift', `${Math.round(progress * 150 - 75)}px`)
+    }
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateLine)
+    }
+    updateLine()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+    return () => {
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   useEffect(() => {
@@ -514,6 +543,7 @@ function ServiceShowcase() {
 
   return (
     <section className="service-carousel" id="leistungen" ref={sectionRef} aria-labelledby="service-carousel-title">
+      <div className="service-scroll-orbit" ref={serviceLineRef} aria-hidden="true" />
       <div className="service-carousel-head">
         <ScrollFillHeading id="service-carousel-title" className="service-scroll-title" text="Das sind unsere Dienstleistungen." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .3)" />
         <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
@@ -534,6 +564,29 @@ function ServiceShowcase() {
             </article>
           ))}
         </div>
+      </div>
+    </section>
+  )
+}
+
+function CaseStudiesPlaceholder() {
+  return (
+    <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
+      <div className="proof-placeholder-head">
+        <h2 id="proof-placeholder-title">Fallstudien und Stimmen,<br />die bald <em>mehr erzählen.</em></h2>
+        <p>Hier entsteht Raum für ausführliche Einblicke in Projekte und für echte Rückmeldungen unserer Kundinnen und Kunden.</p>
+      </div>
+      <div className="proof-placeholder-grid">
+        <article className="case-study-placeholder">
+          <div className="case-study-art" aria-hidden="true"><i /><i /><i /><b /></div>
+          <div><span>Fallstudien</span><h3>Wie aus Anforderungen funktionierende digitale Auftritte werden.</h3><p>In Vorbereitung</p></div>
+        </article>
+        <article className="reviews-placeholder">
+          <div className="review-quote" aria-hidden="true">„</div>
+          <h3>Echte Kundenstimmen folgen hier.</h3>
+          <div className="review-lines" aria-hidden="true"><i /><i /><i /></div>
+          <p>In Vorbereitung</p>
+        </article>
       </div>
     </section>
   )
@@ -678,7 +731,7 @@ function Footer() {
   return (
     <footer className="footer grid-bg" id="ueber-uns">
       <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Digitale Auftritte, Automatisierungen und KI-Lösungen, die im Alltag wirklich arbeiten.</p><span>Alexandros Kodalis & Bilal Altuntas</span></div>
-      <div className="footer-col"><strong>Sitemap</strong><a href="#top">Start</a><a href="#projekte">Projekte</a><a href="#leistungen">Leistungen</a><a href="#ablauf">Ablauf</a></div>
+      <div className="footer-col"><strong>Sitemap</strong><a href="#top">Start</a><a href="#referenzen">Projekte</a><a href="#leistungen">Leistungen</a><a href="#fallstudien">Fallstudien</a></div>
       <div className="footer-col"><strong>Mehr</strong><a href="#ueber-uns">Über uns</a><a href="#kontakt">Kontakt</a><a href="#kontakt">Projekt anfragen</a></div>
       <div className="footer-contact"><span>Kontakt</span><h2>Lasst uns etwas bauen,<br /><em>das arbeitet.</em></h2><a href="#kontakt">Projekt anfragen <ArrowRight size={18} weight="bold" /></a>{/* TODO: bestätigte E-Mail-Adresse oder Formular-Endpunkt ergänzen. */}</div>
       <div className="footer-bottom"><span>© 2026 CODE². Alle Rechte vorbehalten.</span><span>Direkt. Klar. Persönlich.</span></div>
@@ -706,7 +759,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><ProjectCollage /><Services /><Execution /><Contact /><ProcessCards /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><ProcessCards /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

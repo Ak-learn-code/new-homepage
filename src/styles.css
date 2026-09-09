@@ -1652,9 +1652,33 @@ input { caret-color: var(--accent); }
 
 /* Interactive service selection: the dark studio language of the hero, in a calmer compact module. */
 .service-carousel {
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
   padding: 88px clamp(22px, 4.4vw, 64px) 94px;
   color: #edf1ec;
   background: #102727;
+}
+.service-carousel > :not(.service-scroll-orbit) { position: relative; z-index: 1; }
+.service-scroll-orbit {
+  width: min(1470px, 124vw);
+  height: 370px;
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  border: 2px solid rgba(242, 161, 70, .24);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translateX(calc(-50% + var(--service-line-shift, 0px))) rotate(-11deg);
+  transition: transform 90ms linear;
+  will-change: transform;
+}
+.service-scroll-orbit::before {
+  content: '';
+  position: absolute;
+  inset: 38px -118px;
+  border: 1px solid rgba(185, 226, 216, .12);
+  border-radius: 50%;
 }
 .service-carousel-head {
   max-width: 1440px;
@@ -1787,6 +1811,7 @@ input { caret-color: var(--accent); }
 
 @media (max-width: 600px) {
   .service-carousel { padding: 68px 18px 74px; }
+  .service-scroll-orbit { width: 192%; height: 246px; top: 46%; border-width: 1px; }
   .service-carousel-head { display: block; margin-bottom: 30px; }
   .service-carousel-head h2 { font-size: clamp(40px, 11.2vw, 53px); }
   .service-carousel-head p { margin-top: 17px; font-size: 12px; }
@@ -1810,6 +1835,144 @@ input { caret-color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   .service-carousel-card, .service-carousel-list button { transition: none; animation: none; opacity: 1; transform: none; }
+  .service-scroll-orbit { transition: none; transform: translateX(-50%) rotate(-11deg); }
+}
+
+/* Reserved proof space: deliberately calm until real case studies and client quotes arrive. */
+.proof-placeholder {
+  padding: 104px clamp(22px, 4.4vw, 64px) 112px;
+  color: #1d3030;
+  background: #e4e9e6;
+}
+.proof-placeholder-head,
+.proof-placeholder-grid {
+  max-width: 1440px;
+  margin-inline: auto;
+}
+.proof-placeholder-head {
+  max-width: 1080px;
+  margin-left: 0;
+  margin-bottom: 44px;
+}
+.proof-placeholder-head h2 {
+  max-width: 930px;
+  margin: 0;
+  font-size: clamp(39px, 4.4vw, 64px);
+  font-weight: 500;
+  line-height: .98;
+  letter-spacing: -.05em;
+}
+.proof-placeholder-head h2 em { color: #087f76; }
+.proof-placeholder-head p {
+  max-width: 485px;
+  margin: 22px 0 0;
+  color: #62726e;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.proof-placeholder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.32fr) minmax(300px, .68fr);
+  gap: 16px;
+}
+.case-study-placeholder,
+.reviews-placeholder {
+  min-height: 342px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+}
+.case-study-placeholder {
+  display: grid;
+  grid-template-columns: minmax(0, .94fr) minmax(245px, 1.06fr);
+  color: #edf3ef;
+  background: #193334;
+}
+.case-study-placeholder > div:last-child {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 34px 37px;
+}
+.case-study-placeholder span,
+.reviews-placeholder > p {
+  color: #b9e2d8;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.case-study-placeholder h3,
+.reviews-placeholder h3 {
+  max-width: 375px;
+  margin: 13px 0 0;
+  font-size: clamp(23px, 2vw, 31px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.04em;
+}
+.case-study-placeholder p { margin: 21px 0 0; color: rgba(237,243,239,.57); font-size: 12px; }
+.case-study-art {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(148deg, #84aaa3 0%, #b8d4ca 47%, #517875 100%);
+}
+.case-study-art::after {
+  content: '';
+  width: 150%;
+  height: 61%;
+  position: absolute;
+  bottom: -31%;
+  left: -22%;
+  border: 1px solid rgba(23,55,55,.26);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+.case-study-art i,
+.case-study-art b {
+  position: absolute;
+  display: block;
+  border-radius: 18px;
+  background: #e6efea;
+  box-shadow: 0 18px 30px rgba(17, 49, 49, .2);
+}
+.case-study-art i:nth-child(1) { width: 52%; height: 49%; top: 17%; left: 18%; transform: rotate(-8deg); }
+.case-study-art i:nth-child(2) { width: 38%; height: 37%; top: 36%; right: -5%; background: #2e6563; transform: rotate(11deg); }
+.case-study-art i:nth-child(3) { width: 37%; height: 23%; bottom: 7%; left: 7%; background: #f2a146; transform: rotate(9deg); }
+.case-study-art b { width: 13px; height: 13px; top: 16%; right: 16%; border-radius: 50%; background: #f2a146; box-shadow: none; }
+.reviews-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 34px 37px;
+  color: #1d3030;
+  background: #f4f6f3;
+  box-shadow: 0 18px 38px rgba(32, 58, 55, .09);
+}
+.review-quote { position: absolute; top: 18px; right: 31px; color: #f2a146; font-family: Georgia, serif; font-size: 105px; line-height: 1; }
+.reviews-placeholder h3 { max-width: 250px; }
+.review-lines { display: grid; gap: 7px; width: min(100%, 250px); margin-top: 22px; }
+.review-lines i { height: 6px; display: block; border-radius: 999px; background: #d0d8d4; }
+.review-lines i:nth-child(2) { width: 76%; }.review-lines i:nth-child(3) { width: 51%; }
+.reviews-placeholder > p { margin: 24px 0 0; color: #6a7a76; }
+
+@media (max-width: 760px) {
+  .proof-placeholder { padding: 78px 18px 82px; }
+  .proof-placeholder-head { margin-bottom: 31px; }
+  .proof-placeholder-head h2 { font-size: clamp(38px, 10.5vw, 52px); }
+  .proof-placeholder-head p { margin-top: 18px; font-size: 13px; }
+  .proof-placeholder-grid { grid-template-columns: 1fr; gap: 10px; }
+  .case-study-placeholder,
+  .reviews-placeholder { min-height: 310px; border-radius: 25px; }
+  .case-study-placeholder { grid-template-columns: 1fr; }
+  .case-study-art { min-height: 166px; }
+  .case-study-placeholder > div:last-child { min-height: 194px; padding: 25px 23px; }
+  .case-study-placeholder h3,
+  .reviews-placeholder h3 { max-width: 315px; font-size: 25px; }
+  .reviews-placeholder { min-height: 282px; padding: 28px 23px; }
+  .review-quote { top: 9px; right: 20px; font-size: 88px; }
 }
 
 /* Project start: a clear, personal contact journey rather than a generic form. */
