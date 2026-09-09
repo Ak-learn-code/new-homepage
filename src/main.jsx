@@ -623,7 +623,7 @@ function Contact() {
           <h2 id="project-start-title">Lasst uns herausfinden,<br />was wir für euch <em>umsetzen können.</em></h2>
           <p>Ihr habt eine Idee, ein konkretes Projekt oder wisst noch nicht genau, welche Lösung passt? Beantwortet ein paar kurze Fragen – wir melden uns mit einer ehrlichen ersten Einschätzung.</p>
           <div className="project-start-trust" aria-label="Hinweise zur Anfrage"><span>Unverbindlich</span><span>Persönliche Rückmeldung</span><span>In der Regel innerhalb von 24 Stunden</span></div>
-          <div className="project-start-image" aria-hidden="true"><img src={asset('assets/contact/project-start-placeholder.jpg')} alt="" /><span>Bildplatzhalter</span></div>
+          <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /></div>
         </div>
         <div className="project-start-form-wrap">
           <form className="project-start-form" onSubmit={(event) => { event.preventDefault(); if (step === 1) setStep(2); else setNotice(true) }}>
@@ -640,6 +640,7 @@ function Contact() {
                 <label htmlFor="contact-name">Name<input id="contact-name" name="name" required placeholder="Vor- und Nachname" /></label>
                 <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required placeholder="name@firma.de" /></label>
                 <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" rows="3" placeholder="Worum geht es?" /></label>
+                <label className="privacy-consent"><input type="checkbox" name="privacy" required /><span>Ich habe die <a href={asset('datenschutz')}>Datenschutzerklärung</a> gelesen und akzeptiere sie.</span></label>
               </div>
             )}
             <div className="project-start-actions">
@@ -647,7 +648,6 @@ function Contact() {
               <button className="project-next" type="submit"><span>{step === 1 ? 'Weiter' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
             </div>
           </form>
-          <aside className="project-start-summary"><span>So geht es weiter</span><div><small>Leistung</small><strong>{projectType}</strong></div><div><small>Nächster Schritt</small><strong>{step === 1 ? 'Kontakt teilen' : 'Anfrage vorbereiten'}</strong></div><div><small>Kontakt</small><strong>{step === 1 ? 'Noch offen' : 'Fast geschafft'}</strong></div></aside>
           {notice ? <p className="contact-notice" role="status">Die Anfrage ist vorbereitet. Für den Versand fehlt nur noch die Empfängeradresse des Kontaktformulars.</p> : null}
         </div>
       </div>
