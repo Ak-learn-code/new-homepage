@@ -391,29 +391,80 @@ function ReferencesSequence() {
 }
 
 function ServiceShowcase() {
+  const serviceSlides = [
+    {
+      name: 'Webseiten',
+      Icon: Browser,
+      description: 'Ein Auftritt, der eure Leistung verständlich macht – und die passenden Anfragen auslöst.',
+      image: asset('assets/services/websites-showcase.jpg'),
+      type: 'website',
+    },
+    {
+      name: 'Automatisierung',
+      Icon: FlowArrow,
+      description: 'Wiederkehrende Abläufe laufen verlässlich im Hintergrund. Euer Team gewinnt Zeit zurück.',
+      type: 'automation',
+    },
+    {
+      name: 'KI-Agenten',
+      Icon: Robot,
+      description: 'Digitale Mitarbeitende, die Anfragen sortieren, zuhören und zuverlässig antworten.',
+      type: 'agent',
+    },
+    {
+      name: 'Interne Tools',
+      Icon: BracketsCurly,
+      description: 'Eigene kleine Systeme, die Informationen bündeln und eure tägliche Arbeit klar machen.',
+      type: 'tools',
+    },
+  ]
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const activeSlide = serviceSlides[activeIndex]
+
+  useEffect(() => {
+    if (paused) return undefined
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % serviceSlides.length)
+    }, 4600)
+    return () => window.clearInterval(interval)
+  }, [paused, serviceSlides.length])
+
+  const cardClassName = (index) => {
+    const distance = (index - activeIndex + serviceSlides.length) % serviceSlides.length
+    if (distance === 0) return 'is-active'
+    if (distance === 1) return 'is-next'
+    if (distance === serviceSlides.length - 1) return 'is-previous'
+    return 'is-hidden'
+  }
+
   return (
-    <section className="service-showcase" id="leistungen" aria-labelledby="service-showcase-title">
-      <div className="service-showcase-head">
-        <h2 id="service-showcase-title">Digital, das<br /><em>für euch arbeitet.</em></h2>
-        <p>Vier Bausteine. Ein System, das sichtbar macht, verbindet und Zeit zurückgibt.</p>
+    <section className="service-carousel" id="leistungen" aria-labelledby="service-carousel-title">
+      <div className="service-carousel-head">
+        <h2 id="service-carousel-title">Digital, das<br /><em>mitarbeitet.</em></h2>
+        <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
       </div>
-      <div className="service-showcase-grid">
-        <article className="showcase-service showcase-websites">
-          <div className="service-visual website-visual" aria-hidden="true"><div className="browser-ring"><Browser weight="thin" /></div><i /><i /></div>
-          <div className="showcase-copy"><span>Webseiten</span><p>Klare Auftritte, die Leistungen verständlich machen und Anfragen auslösen.</p></div>
-        </article>
-        <article className="showcase-service showcase-automation">
-          <div className="service-visual automation-visual" aria-hidden="true"><span>01</span><b>Automatisch.</b><div className="automation-wave"><i /><i /><i /><i /><i /><i /><i /><i /></div></div>
-          <div className="showcase-copy"><span>Automatisierung</span><p>Routine läuft im Hintergrund. Euer Team bleibt bei den Dingen, die wirklich zählen.</p></div>
-        </article>
-        <article className="showcase-service showcase-agents">
-          <div className="service-visual agent-visual" aria-hidden="true"><div className="agent-orbit orbit-one" /><div className="agent-orbit orbit-two" /><div className="agent-core"><Robot weight="thin" /></div><i /><i /></div>
-          <div className="showcase-copy"><span>KI-Agenten</span><p>Digitale Mitarbeitende, die zuhören, sortieren und antworten – auch wenn ihr gerade im Termin seid.</p></div>
-        </article>
-        <article className="showcase-service showcase-tools">
-          <div className="showcase-copy"><span>Interne Tools</span><p>Eigene kleine Systeme, die Informationen bündeln und eure Prozesse endlich klar machen.</p></div>
-          <div className="service-visual tools-visual" aria-hidden="true"><div className="tool-window"><i /><i /><i /><b /></div><div className="tool-stat"><strong>klar</strong><span>ein Ort für alles</span></div><div className="tool-label label-one">Aufgaben</div><div className="tool-label label-two">Team</div><div className="tool-label label-three">Anfragen</div></div>
-        </article>
+      <div className="service-carousel-shell" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="service-carousel-list" aria-label="Leistungsbereiche">
+          {serviceSlides.map(({ name, Icon }, index) => (
+            <button key={name} className={index === activeIndex ? 'is-active' : ''} type="button" onClick={() => setActiveIndex(index)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)} aria-pressed={index === activeIndex}>
+              <Icon size={19} weight="regular" aria-hidden="true" /><span>{name}</span>
+            </button>
+          ))}
+        </div>
+        <div className="service-carousel-stage" aria-live="polite">
+          {serviceSlides.map((slide, index) => (
+            <article className={`service-carousel-card ${cardClassName(index)}`} key={slide.name} aria-hidden={index !== activeIndex}>
+              <div className={`service-carousel-media service-carousel-media-${slide.type}`}>
+                {slide.type === 'website' ? <img src={slide.image} alt="" /> : null}
+                {slide.type === 'automation' ? <><div className="automation-route"><i /><i /><i /><i /></div><strong>Wenn etwas reinkommt,<br />läuft der Rest mit.</strong></> : null}
+                {slide.type === 'agent' ? <><div className="agent-signal"><Robot weight="thin" /></div><span className="agent-tag tag-one">Anfrage</span><span className="agent-tag tag-two">Antwort</span><span className="agent-tag tag-three">Termin</span></> : null}
+                {slide.type === 'tools' ? <><div className="tool-board"><i /><i /><i /><b /></div><span className="tool-status">alles an einem Ort</span></> : null}
+              </div>
+              <div className="service-carousel-caption"><span>{slide.name}</span><h3>{slide.description}</h3><ArrowRight size={22} weight="light" /></div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )
