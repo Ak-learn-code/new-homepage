@@ -85,6 +85,37 @@ const founderProfiles = {
   },
 }
 
+const faqItems = [
+  {
+    question: 'Welche digitalen Leistungen bietet SideTwo?',
+    answer: 'Wir entwickeln Websites, Automatisierungen, KI-gestützte Workflows, interne Tools und Social-Media-Auftritte. Entscheidend ist nicht das einzelne Tool, sondern eine Lösung, die eure Arbeit und eure Anfragen wirklich leichter macht.',
+  },
+  {
+    question: 'Für welche Unternehmen arbeitet ihr?',
+    answer: 'Wir arbeiten besonders gern mit Handwerksbetrieben, Dienstleistungsunternehmen, Gastronomie und lokalen Marken aus der Region Mannheim, Worms, Bergstraße und darüber hinaus. Wichtig ist ein echtes Vorhaben, kein bestimmtes Unternehmensalter oder eine bestimmte Größe.',
+  },
+  {
+    question: 'Kann SideTwo eine bestehende Website verbessern?',
+    answer: 'Ja. Wir schauen zuerst auf Struktur, Inhalte, Geschwindigkeit, mobile Nutzung und Anfragen. Danach entscheiden wir gemeinsam, ob ein gezieltes Update reicht oder ein neuer digitaler Auftritt sinnvoller ist.',
+  },
+  {
+    question: 'Unterstützt ihr bei SEO und lokaler Sichtbarkeit?',
+    answer: 'Bei neuen Websites legen wir eine saubere technische Basis für Suchmaschinen an: klare Seitenstruktur, relevante Inhalte, schnelle mobile Darstellung und lokale Signale. Konkrete Rankings versprechen wir nicht, aber wir bauen die Voraussetzungen dafür.',
+  },
+  {
+    question: 'Wann sind Automatisierung oder KI-Agenten sinnvoll?',
+    answer: 'Wenn wiederkehrende Anfragen, Terminabstimmungen, Nachfassaktionen oder interne Informationen Zeit kosten, prüfen wir den Ablauf mit euch. Dann automatisieren wir nur die Schritte, die eurem Team zuverlässig Arbeit abnehmen.',
+  },
+  {
+    question: 'Könnt ihr Website, Backend und Bestellsystem zusammen umsetzen?',
+    answer: 'Ja. Wenn ein Projekt es braucht, verbinden wir den sichtbaren Auftritt mit den Prozessen dahinter, zum Beispiel Anfragen, Bestellungen, Formulare oder interne Abläufe. So entsteht kein schöner Auftritt ohne funktionierendes System.',
+  },
+  {
+    question: 'Wie startet ein Projekt mit SideTwo?',
+    answer: 'Ihr beschreibt kurz euer Vorhaben über das Kontaktformular. Danach sprechen wir persönlich über Ziel, Ausgangslage und Prioritäten. Erst wenn klar ist, was sinnvoll ist, schlagen wir den nächsten konkreten Schritt vor.',
+  },
+]
+
 function Button({ href = '#kontakt', children, secondary = false }) {
   return (
     <a className={`button${secondary ? ' button-secondary' : ''}`} href={href}>
@@ -395,7 +426,10 @@ function StudioImpact() {
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
           <article className="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
-            <div className="team-modal-portrait"><img src={asset(founder.portrait)} alt={founder.name} /></div>
+            <div className="team-modal-portrait">
+              <div className="team-modal-identity"><span>SideTwo</span><strong>{founder.name}</strong><small>Gründer · Digital Studio</small></div>
+              <img src={asset(founder.portrait)} alt={founder.name} />
+            </div>
             <div className="team-modal-copy">
               <div className="team-modal-tabs" role="tablist" aria-label="Profile der Gründer">
                 <div className="team-profile-orbit" aria-hidden="true"><span><img src={asset('assets/people/alex-kodalis.png')} alt="" /><img src={asset('assets/people/bilal-altuntas.png')} alt="" /></span></div>
@@ -773,6 +807,45 @@ function Contact() {
   )
 }
 
+function FAQ() {
+  const [openIndex, setOpenIndex] = useState(0)
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+
+  return (
+    <section className="faq" id="faq" aria-labelledby="faq-title">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <div className="faq-intro">
+        <h2 id="faq-title">Fragen, die vor dem<br /><em>Start wichtig sind.</em></h2>
+        <p>Hier findet ihr klare Antworten zu Websites, Automatisierung, KI und der Zusammenarbeit mit SideTwo.</p>
+        <a href="#kontakt" className="faq-contact-link">Etwas anderes vor? <span>Projekt anfragen</span><ArrowRight size={16} weight="bold" /></a>
+      </div>
+      <div className="faq-list">
+        {faqItems.map((item, index) => {
+          const open = index === openIndex
+          return (
+            <article className={`faq-item${open ? ' is-open' : ''}`} key={item.question}>
+              <h3>
+                <button type="button" aria-expanded={open} aria-controls={`faq-answer-${index}`} onClick={() => setOpenIndex(open ? -1 : index)}>
+                  <span>{item.question}</span><i aria-hidden="true"><Plus size={19} weight="bold" /></i>
+                </button>
+              </h3>
+              <div className="faq-answer" id={`faq-answer-${index}`} hidden={!open}><p>{item.answer}</p></div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
 function ProcessCards() {
   const processImage = asset('assets/editorial/process-motifs.png')
 
@@ -798,7 +871,7 @@ function Footer() {
       <div className="footer-inner">
         <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
         <div className="footer-col"><strong>Leistungen</strong><a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a></div>
-        <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#kontakt">Kontakt</a></div>
+        <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#faq">Fragen &amp; Antworten</a><a href="#kontakt">Kontakt</a></div>
         <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('datenschutz')}>Datenschutz</a></div>
       </div>
       <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
@@ -826,7 +899,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)
