@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { getLatestPosts } from './lib/sanity'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -114,6 +115,12 @@ const faqItems = [
     question: 'Wie startet ein Projekt mit SideTwo?',
     answer: 'Ihr beschreibt kurz euer Vorhaben über das Kontaktformular. Danach sprechen wir persönlich über Ziel, Ausgangslage und Prioritäten. Erst wenn klar ist, was sinnvoll ist, schlagen wir den nächsten konkreten Schritt vor.',
   },
+]
+
+const fallbackPosts = [
+  { title: 'Was eine Website heute wirklich leisten muss', excerpt: 'Wie ein digitaler Auftritt verständlich führt, Vertrauen aufbaut und die passenden Anfragen auslöst.', readTime: '5 Min. Lesezeit', image: asset('assets/blog/digital-strategy.jpg') },
+  { title: 'Digitalisierung für lokale Unternehmen: Wo anfangen?', excerpt: 'Drei konkrete Stellschrauben, mit denen aus Routine wieder Zeit für Kundinnen und Kunden wird.', readTime: '4 Min. Lesezeit', image: asset('assets/blog/local-business.jpg') },
+  { title: 'Automatisierung mit Haltung statt Tool-Sammlung', excerpt: 'Warum ein guter Ablauf zuerst verstanden werden muss, bevor er automatisiert wird.', readTime: '6 Min. Lesezeit', image: asset('assets/blog/digital-workflow.jpg') },
 ]
 
 function Button({ href = '#kontakt', children, secondary = false }) {
@@ -663,7 +670,7 @@ function CaseStudiesPlaceholder() {
   return (
     <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
       <div className="proof-placeholder-head">
-        <h2 id="proof-placeholder-title">Fallstudien und Stimmen,<br />die bald <em>mehr erzählen.</em></h2>
+        <ScrollFillHeading id="proof-placeholder-title" className="proof-scroll-title" text="Fallstudien und Stimmen, die bald mehr erzählen." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
         <p>Hier entsteht Raum für ausführliche Einblicke in Projekte und für echte Rückmeldungen unserer Kundinnen und Kunden.</p>
       </div>
       <div className="proof-placeholder-grid">
@@ -763,7 +770,7 @@ function Contact() {
     <section className="project-start" id="kontakt" aria-labelledby="project-start-title">
       <div className="project-start-inner">
         <div className="project-start-copy">
-          <h2 id="project-start-title">Lasst uns herausfinden,<br />was wir für euch <em>umsetzen können.</em></h2>
+          <ScrollFillHeading id="project-start-title" className="contact-scroll-title" text="Lasst uns herausfinden, was wir für euch umsetzen können." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .28)" />
           <p>Ihr habt eine Idee, ein konkretes Projekt oder wisst noch nicht genau, welche Lösung passt? Beantwortet ein paar kurze Fragen – wir melden uns mit einer ehrlichen ersten Einschätzung.</p>
           <div className="project-start-trust" aria-label="Hinweise zur Anfrage"><span>Unverbindlich</span><span>Persönliche Rückmeldung</span><span>In der Regel innerhalb von 24 Stunden</span></div>
           <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /></div>
@@ -814,9 +821,14 @@ function FAQ() {
     <section className="faq" id="faq" aria-labelledby="faq-title">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div className="faq-intro">
-        <h2 id="faq-title">Fragen, die vor dem<br /><em>Start wichtig sind.</em></h2>
+        <ScrollFillHeading id="faq-title" className="faq-scroll-title" text="Fragen, die vor dem Start wichtig sind." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" />
         <p>Hier findet ihr klare Antworten zu Websites, Automatisierung, KI und der Zusammenarbeit mit SideTwo.</p>
         <a href="#kontakt" className="faq-contact-link">Etwas anderes vor? <span>Projekt anfragen</span><ArrowRight size={16} weight="bold" /></a>
+        <aside className="faq-personal-card">
+          <div className="faq-personal-portraits"><img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" /><img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" /></div>
+          <strong>Alex und Bilal von SideTwo</strong><p>Ihr habt einen Sonderfall oder möchtet einfach kurz sprechen? Schreibt uns.</p>
+          <a href="#kontakt">Projekt anfragen <ArrowRight size={16} weight="bold" /></a>
+        </aside>
       </div>
       <div className="faq-list">
         {faqItems.map((item, index) => {
@@ -832,6 +844,33 @@ function FAQ() {
             </article>
           )
         })}
+      </div>
+    </section>
+  )
+}
+
+function Blog() {
+  const [posts, setPosts] = useState(fallbackPosts)
+
+  useEffect(() => {
+    let current = true
+    getLatestPosts().then((sanityPosts) => {
+      if (!current || !sanityPosts.length) return
+      setPosts(sanityPosts.map((post, index) => ({
+        title: post.title,
+        excerpt: post.excerpt,
+        readTime: post.readTime || '4 Min. Lesezeit',
+        image: post.image || fallbackPosts[index % fallbackPosts.length].image,
+      })))
+    }).catch(() => undefined)
+    return () => { current = false }
+  }, [])
+
+  return (
+    <section className="blog" id="blog" aria-labelledby="blog-title">
+      <div className="blog-head"><span>Journal</span><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href="#kontakt">Mehr Insights folgen <ArrowRight size={16} weight="bold" /></a></div>
+      <div className="blog-grid">
+        {posts.map((post) => <article className="blog-card" key={post.title}><img src={post.image} alt="" loading="lazy" /><div><span>{post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p></div></article>)}
       </div>
     </section>
   )
@@ -890,7 +929,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Footer /></main>
+  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main>
 }
 
 createRoot(document.getElementById('root')).render(<App />)
