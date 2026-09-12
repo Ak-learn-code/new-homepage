@@ -337,8 +337,6 @@ function StudioImpact() {
   const sectionRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [activeFounder, setActiveFounder] = useState('alex')
-  const founder = founderProfiles[activeFounder]
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -398,7 +396,7 @@ function StudioImpact() {
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
         <div className="impact-stack">
-          <button className="impact-card impact-team" type="button" onClick={() => { setActiveFounder('alex'); setProfileOpen(true) }} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
+          <button className="impact-card impact-team" type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
             <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
               <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
               <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
@@ -424,27 +422,20 @@ function StudioImpact() {
       </div>
       {profileOpen ? (
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
-          <article className="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className="team-modal team-overview-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
-            <div className="team-modal-portrait">
-              <div className="team-modal-identity"><span>SideTwo</span><strong>{founder.name}</strong><small>Gründer · Digital Studio</small></div>
-              <img src={asset(founder.portrait)} alt={founder.name} />
-            </div>
-            <div className="team-modal-copy">
-              <div className="team-modal-tabs" role="tablist" aria-label="Profile der Gründer">
-                <div className="team-profile-orbit" aria-hidden="true"><span><img src={asset('assets/people/alex-kodalis.png')} alt="" /><img src={asset('assets/people/bilal-altuntas.png')} alt="" /></span></div>
-                {Object.entries(founderProfiles).map(([key, item]) => <button key={key} type="button" role="tab" aria-selected={activeFounder === key} onClick={() => setActiveFounder(key)}><img src={asset(item.portrait)} alt="" /><span>{item.name.split(' ')[0]}<small>{activeFounder === key ? 'Aktives Profil' : 'Profil ansehen'}</small></span></button>)}
-              </div>
-              <p>{founder.name} · SideTwo</p>
-              <h3 id="team-modal-title">{founder.intro}</h3>
-              <div className="team-facts">
-                {founder.facts.map((fact) => <span key={fact}>{fact}</span>)}
-              </div>
-              <div className="team-experience" aria-label={`Erfahrung von ${founder.name}`}>
-                <strong>Erfahrung</strong>
-                {founder.experience.map(([label, text]) => <p key={label}><span>{label}</span> {text}</p>)}
-              </div>
-              {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noreferrer">LinkedIn-Profil ansehen <ArrowRight size={16} weight="bold" /></a> : <span className="team-profile-note">Weitere Angaben folgen.</span>}
+            <header className="team-overview-head"><span>SideTwo</span><h3 id="team-modal-title">Zwei Köpfe. Eine digitale Seite.</h3><p>Strategie, Gestaltung und technische Umsetzung direkt aus einer Hand.</p></header>
+            <div className="team-overview-grid">
+              {Object.entries(founderProfiles).map(([key, founder]) => (
+                <article className={`team-profile-card team-profile-card-${key}`} key={key}>
+                  <div className="team-profile-image"><img src={asset(founder.portrait)} alt={founder.name} /></div>
+                  <div className="team-profile-content">
+                    <p>Gründer · SideTwo</p><h4>{founder.name}</h4><strong>{founder.intro}</strong>
+                    <ul>{founder.facts.slice(0, key === 'alex' ? 3 : 2).map((fact) => <li key={fact}>{fact}</li>)}</ul>
+                    {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noreferrer">LinkedIn-Profil <ArrowRight size={15} weight="bold" /></a> : <span>Profil wird ergänzt.</span>}
+                  </div>
+                </article>
+              ))}
             </div>
           </article>
         </div>
