@@ -2201,3 +2201,42 @@ input { caret-color: var(--accent); }
   .blog-card h3, .blog-card p { min-height: 0; }
   .blog-card b { margin-top: 18px; padding-top: 0; }
 }
+
+/* One card language for the homepage and the full Insights archive. */
+.blog-grid { gap: clamp(18px, 2.1vw, 30px); }
+.blog-card { overflow: hidden; border: 1px solid rgba(185, 226, 216, .14); border-radius: 24px; background: #173435; box-shadow: 0 18px 36px rgba(21, 52, 52, .12); }
+.blog-card > a { color: #edf5f1; }
+.blog-card > a > img { border-radius: 0; filter: saturate(.8) contrast(1.03); }
+.blog-card > a > div { padding: 22px 23px 24px; }
+.blog-card span { color: #b9e2d8; }
+.blog-card h3 { color: #f2f6f2; }
+.blog-card p { color: rgba(237, 245, 241, .7); }
+.blog-card b { color: #f2a146; }
+.blog-card:hover h3, .blog-card:hover b { color: #b9e2d8; }
+.blog-page-card { border: 1px solid rgba(185, 226, 216, .14); background: #173435; box-shadow: 0 18px 36px rgba(21, 52, 52, .1); }
+.blog-page-card img { filter: saturate(.8) contrast(1.03); }
+.blog-page-card span { color: #b9e2d8; }
+.blog-page-card h2 { color: #f2f6f2; }
+.blog-page-card p { color: rgba(237, 245, 241, .7); }
+.blog-page-card b { color: #f2a146; }
+.blog-page-card:hover h2 { color: #b9e2d8; }
+
+/* A compact, image-aligned reading header. */
+.blog-article { padding-top: clamp(38px, 4.25vw, 62px); }
+.blog-article-head { max-width: 1240px; margin-top: 0; }
+.blog-article-topline { display: flex; align-items: center; gap: 16px; min-height: 34px; }
+.blog-article-topline > span { margin: 0; color: #f2a146; font-size: 12px; font-weight: 780; }
+.blog-article-back { padding: 8px 12px 8px 8px; border: 1px solid rgba(185, 226, 216, .25); border-radius: 999px; color: #b9e2d8; }
+.blog-article-back:hover { color: #173435; background: #b9e2d8; }
+.blog-article h1 { max-width: 1240px; margin-top: 28px; }
+.blog-article-head > p { max-width: 760px; margin-top: 23px; }
+.blog-article-head small { margin-top: 16px; }
+.blog-article-image { margin-top: clamp(34px, 4vw, 52px); }
+.blog-article-body { max-width: 760px; margin-right: auto; margin-left: 0; }
+@media (max-width: 560px) {
+  .blog-card { border-radius: 20px; }
+  .blog-card > a > div { padding: 21px; }
+  .blog-article { padding-top: 32px; }
+  .blog-article-topline { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .blog-article h1 { margin-top: 24px; }
+}
