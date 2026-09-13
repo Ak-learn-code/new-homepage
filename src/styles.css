@@ -2241,9 +2241,9 @@ input { caret-color: var(--accent); }
   .blog-article h1 { margin-top: 24px; }
 }
 
-/* Insight articles read top-down from the image; cards reserve teal for the action only. */
-.blog-article-visual { position: relative; overflow: hidden; border-radius: 26px; }
-.blog-article-visual .blog-article-image { width: 100%; margin-top: 0; border-radius: 0; }
+/* Insight articles read top-down from a quiet metadata row into the visual. */
+.blog-article-image { margin-top: 0; }
+.blog-article-prelude { margin-bottom: clamp(16px, 2vw, 24px); }
 .blog-article-head { margin-top: clamp(30px, 3.35vw, 48px); }
 .blog-article-body { max-width: 1240px; margin-inline: auto; }
 .blog-article-body > p,
@@ -2266,12 +2266,6 @@ input { caret-color: var(--accent); }
 .blog-featured:hover b,
 .blog-related button:hover i { color: #087f76; }
 
-.blog-article-visual-meta { position: absolute; left: clamp(16px, 2vw, 30px); bottom: clamp(16px, 2vw, 30px); width: fit-content; max-width: calc(100% - 32px); padding: 9px 11px; border: 1px solid rgba(237, 245, 241, .22); border-radius: 999px; color: #f2a146; background: rgba(15, 43, 43, .84); box-shadow: 0 10px 24px rgba(6, 23, 23, .18); backdrop-filter: blur(12px); }
-.blog-article-visual-meta .blog-article-back { padding: 4px 7px; border-color: transparent; color: #edf5f1; }
-.blog-article-visual-meta .blog-article-back:hover { color: #173435; background: #edf5f1; }
-
 @media (max-width: 560px) {
   .blog-article-head { margin-top: 28px; }
-  .blog-article-visual { border-radius: 20px; }
-  .blog-article-visual-meta { align-items: flex-start; flex-direction: column; gap: 6px; padding: 8px; border-radius: 16px; }
 }
