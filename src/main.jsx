@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { getLatestPosts } from './lib/sanity'
+import { fallbackPosts, normalisePost } from './lib/posts'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -115,12 +116,6 @@ const faqItems = [
     question: 'Wie startet ein Projekt mit SideTwo?',
     answer: 'Ihr beschreibt kurz euer Vorhaben über das Kontaktformular. Danach sprechen wir persönlich über Ziel, Ausgangslage und Prioritäten. Erst wenn klar ist, was sinnvoll ist, schlagen wir den nächsten konkreten Schritt vor.',
   },
-]
-
-const fallbackPosts = [
-  { title: 'Was eine Website heute wirklich leisten muss', excerpt: 'Wie ein digitaler Auftritt verständlich führt, Vertrauen aufbaut und die passenden Anfragen auslöst.', readTime: '5 Min. Lesezeit', image: asset('assets/blog/digital-strategy.jpg') },
-  { title: 'Digitalisierung für lokale Unternehmen: Wo anfangen?', excerpt: 'Drei konkrete Stellschrauben, mit denen aus Routine wieder Zeit für Kundinnen und Kunden wird.', readTime: '4 Min. Lesezeit', image: asset('assets/blog/local-business.jpg') },
-  { title: 'Automatisierung mit Haltung statt Tool-Sammlung', excerpt: 'Warum ein guter Ablauf zuerst verstanden werden muss, bevor er automatisiert wird.', readTime: '6 Min. Lesezeit', image: asset('assets/blog/digital-workflow.jpg') },
 ]
 
 function Button({ href = '#kontakt', children, secondary = false }) {
@@ -497,7 +492,7 @@ function ReferencesSequence() {
         <ScrollFillHeading id="references-title" className="references-scroll-title" text="Digitale Arbeit, die sichtbar wirkt." fillColor="#182425" mutedColor="rgba(24, 36, 37, .19)" />
         <div className="references-heading-side">
           <p>Ein Ausschnitt der Auftritte, die wir für Unternehmen aus der Region gestaltet und umgesetzt haben.</p>
-          {pageCount > 1 ? <div className="reference-pagination"><span aria-live="polite">{String(page + 1).padStart(2, '0')} / {String(pageCount).padStart(2, '0')}</span><button type="button" onClick={() => changePage(-1)} aria-label="Vorherige Referenzen"><CaretLeft weight="bold" /></button><button type="button" onClick={() => changePage(1)} aria-label="Nächste Referenzen"><CaretRight weight="bold" /></button></div> : null}
+          {pageCount > 1 ? <div className="reference-pagination"><button type="button" onClick={() => changePage(-1)} aria-label="Vorherige Referenzen"><CaretLeft weight="bold" /></button><button type="button" onClick={() => changePage(1)} aria-label="Nächste Referenzen"><CaretRight weight="bold" /></button></div> : null}
         </div>
       </header>
       <div className="references-wall" onPointerDown={(event) => { swipeStart.current = event.clientX }} onPointerUp={endSwipe} onPointerCancel={() => { swipeStart.current = null }}>
@@ -823,7 +818,6 @@ function FAQ() {
       <div className="faq-intro">
         <ScrollFillHeading id="faq-title" className="faq-scroll-title" text="Fragen, die vor dem Start wichtig sind." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" />
         <p>Hier findet ihr klare Antworten zu Websites, Automatisierung, KI und der Zusammenarbeit mit SideTwo.</p>
-        <a href="#kontakt" className="faq-contact-link">Etwas anderes vor? <span>Projekt anfragen</span><ArrowRight size={16} weight="bold" /></a>
         <aside className="faq-personal-card">
           <div className="faq-personal-portraits"><img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" /><img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" /></div>
           <strong>Alex und Bilal von SideTwo</strong><p>Ihr habt einen Sonderfall oder möchtet einfach kurz sprechen? Schreibt uns.</p>
@@ -856,21 +850,16 @@ function Blog() {
     let current = true
     getLatestPosts().then((sanityPosts) => {
       if (!current || !sanityPosts.length) return
-      setPosts(sanityPosts.map((post, index) => ({
-        title: post.title,
-        excerpt: post.excerpt,
-        readTime: post.readTime || '4 Min. Lesezeit',
-        image: post.image || fallbackPosts[index % fallbackPosts.length].image,
-      })))
+      setPosts(sanityPosts.map(normalisePost))
     }).catch(() => undefined)
     return () => { current = false }
   }, [])
 
   return (
     <section className="blog" id="blog" aria-labelledby="blog-title">
-      <div className="blog-head"><span>Journal</span><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href="#kontakt">Mehr Insights folgen <ArrowRight size={16} weight="bold" /></a></div>
+      <div className="blog-head"><span>Journal</span><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('blog.html')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.map((post) => <article className="blog-card" key={post.title}><img src={post.image} alt="" loading="lazy" /><div><span>{post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p></div></article>)}
+        {posts.map((post) => <article className="blog-card" key={post.slug || post.title}><a href={`${asset('blog.html')}#${post.slug}`} aria-label={`${post.title} lesen`}><img src={post.image} alt="" loading="lazy" /><div><span>{post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
       </div>
     </section>
   )

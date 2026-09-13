@@ -12,14 +12,31 @@ export const sanityClient = projectId && dataset
     })
   : null
 
-const latestPostsQuery = `*[_type == "post" && defined(slug.current) && defined(publishedAt)] | order(publishedAt desc)[0...3] {
+const postProjection = `{
   title,
   "slug": slug.current,
   excerpt,
   "image": mainImage.asset->url,
   publishedAt,
-  readTime
+  readTime,
+  body
 }`
+
+const latestPostsQuery = `*[_type == "post" && defined(slug.current) && defined(publishedAt)] | order(publishedAt desc)[0...3] ${postProjection}`
+
+const allPostsQuery = `*[_type == "post" && defined(slug.current) && defined(publishedAt)] | order(publishedAt desc) ${postProjection}`
+
+const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] ${postProjection}`
+
+export async function getAllPosts() {
+  if (!sanityClient) return []
+  return sanityClient.fetch(allPostsQuery)
+}
+
+export async function getPostBySlug(slug) {
+  if (!sanityClient || !slug) return null
+  return sanityClient.fetch(postBySlugQuery, { slug })
+}
 
 export async function getLatestPosts() {
   if (!sanityClient) return []
