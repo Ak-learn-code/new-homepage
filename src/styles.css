@@ -1844,8 +1844,8 @@ input { caret-color: var(--accent); }
   margin-inline: auto;
 }
 .proof-placeholder-head {
-  max-width: 1080px;
-  margin-left: 0;
+  max-width: 1440px;
+  margin-inline: auto;
   margin-bottom: 44px;
 }
 .proof-placeholder-head h2 {
