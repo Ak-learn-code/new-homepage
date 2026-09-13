@@ -2189,3 +2189,15 @@ input { caret-color: var(--accent); }
   .blog-loading { min-height: 452px; grid-template-rows: 235px 1fr; }
   .blog-loading i:last-child { margin: 28px 22px; }
 }
+
+/* Home insight cards share a deliberate editorial baseline instead of inheriting title length. */
+.blog-grid { align-items: stretch; }
+.blog-card > a { height: 100%; display: flex; flex-direction: column; }
+.blog-card > a > div { flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding-top: 18px; }
+.blog-card h3 { min-height: calc(2 * 1.05em); font-size: clamp(20px, 1.55vw, 25px); text-wrap: balance; }
+.blog-card p { min-height: calc(3 * 1.5em); }
+.blog-card b { margin-top: auto; padding-top: 18px; }
+@media (max-width: 560px) {
+  .blog-card h3, .blog-card p { min-height: 0; }
+  .blog-card b { margin-top: 18px; padding-top: 0; }
+}
