@@ -86,18 +86,24 @@ function BlogFooter() {
   </footer>
 }
 
-function ArticleIndex({ posts, onOpen }) {
+const CATEGORY_ORDER = ['Websites', 'Automatisierung', 'KI', 'Marketing', 'Design', 'Strategie', 'Sichtbarkeit']
+
+function ArticleIndex({ posts, onOpen, isLoading = false }) {
   const [category, setCategory] = useState('Alle')
   const [query, setQuery] = useState('')
-  const categories = ['Alle', ...Array.from(new Set(posts.map((post) => post.category).filter(Boolean)))]
+  const foundCategories = Array.from(new Set(posts.map((post) => post.category).filter(Boolean)))
+  const categories = ['Alle', ...CATEGORY_ORDER.filter((item) => foundCategories.includes(item)), ...foundCategories.filter((item) => !CATEGORY_ORDER.includes(item)).sort((a, b) => a.localeCompare(b, 'de'))]
   const featured = posts[0]
   const visiblePosts = posts.filter((post) => post.slug !== featured?.slug && (category === 'Alle' || post.category === category) && `${post.title} ${post.excerpt}`.toLocaleLowerCase('de').includes(query.toLocaleLowerCase('de')))
 
   return <section className="blog-page-index" aria-labelledby="blog-page-title">
     <div className="blog-page-index-head"><span className="blog-page-kicker">SIDETWO INSIGHTS</span><h1 id="blog-page-title">Gedanken, Strategien &amp; digitale Ideen.</h1><p>Praktische Insights rund um Websites, Marketing, Automatisierung und KI, ohne unnötiges Agentur-Blabla.</p></div>
-    {featured ? <article className="blog-featured"><button type="button" onClick={() => onOpen(featured.slug)}><img src={postImageUrl(featured, { width: 1400, height: 900 })} alt={featured.mainImage?.alt || featured.title} /><div><span>{featured.category} · {formatPublishedAt(featured.publishedAt)} · {featured.readTime}</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><b>Artikel lesen <ArrowRight size={17} weight="bold" /></b></div></button></article> : null}
+    {isLoading ? <div className="blog-loading" aria-live="polite" aria-label="Insights werden geladen"><i /><i /></div> : null}
+    {!isLoading && featured ? <article className="blog-featured"><button type="button" onClick={() => onOpen(featured.slug)}><img src={postImageUrl(featured, { width: 1400, height: 900 })} alt={featured.mainImage?.alt || featured.title} /><div className="blog-featured-copy"><span>{featured.category} · {formatPublishedAt(featured.publishedAt)} · {featured.readTime}</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><b>Artikel lesen <ArrowRight size={17} weight="bold" /></b></div></button></article> : null}
+    {isLoading ? null : <>
     <div className="blog-controls"><div className="blog-categories" aria-label="Blog-Kategorien">{categories.map((item) => <button key={item} className={item === category ? 'is-active' : ''} type="button" onClick={() => setCategory(item)}>{item}</button>)}</div><label className="blog-search"><MagnifyingGlass size={17} weight="bold" /><input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" /></label></div>
     {visiblePosts.length ? <div className="blog-page-list" aria-live="polite">{visiblePosts.map((post) => <article className="blog-page-card" key={post.slug}><button type="button" onClick={() => onOpen(post.slug)}><img src={postImageUrl(post, { width: 900, height: 650 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category || 'Digital'} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h2>{post.title}</h2><p>{post.excerpt}</p><b>Weiterlesen <ArrowRight size={16} weight="bold" /></b></div></button></article>)}</div> : <p className="blog-empty">Zu dieser Auswahl gibt es noch keinen weiteren Artikel.</p>}
+    </>}
   </section>
 }
 
@@ -107,24 +113,33 @@ function ArticleDetail({ post, posts, onBack, onOpen }) {
 }
 
 function BlogPage() {
-  const [posts, setPosts] = useState(fallbackPosts)
+  const [posts, setPosts] = useState([])
   const [activePost, setActivePost] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
     const load = async () => {
-      const slug = window.location.hash.slice(1)
+      const slug = window.location.hash.slice(1).replace(/[.]+$/, '')
       const sanityPosts = await getAllPosts()
       const resolved = sanityPosts.length ? sanityPosts.map(normalisePost) : fallbackPosts
       if (!mounted) return
       setPosts(resolved)
       if (slug) {
-        const sanityPost = await getPostBySlug(slug)
+        let sanityPost = null
+        try { sanityPost = await getPostBySlug(slug) } catch { sanityPost = null }
         if (!mounted) return
         setActivePost(sanityPost ? normalisePost(sanityPost, resolved.findIndex((post) => post.slug === slug)) : resolved.find((post) => post.slug === slug) || null)
       }
+      if (mounted) setIsLoading(false)
     }
-    load().catch(() => undefined)
+    load().catch(() => {
+      if (!mounted) return
+      const fallbackSlug = window.location.hash.slice(1).replace(/[.]+$/, '')
+      setPosts(fallbackPosts)
+      setActivePost(fallbackPosts.find((post) => post.slug === fallbackSlug) || null)
+      setIsLoading(false)
+    })
     return () => { mounted = false }
   }, [])
 
@@ -135,7 +150,7 @@ function BlogPage() {
   const open = (slug) => { window.location.hash = slug; setActivePost(posts.find((post) => post.slug === slug) || null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const back = () => { window.history.replaceState(null, '', window.location.pathname); setActivePost(null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
-  return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} />}<BlogFooter /></main>
+  return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} />}<BlogFooter /></main>
 }
 
 createRoot(document.getElementById('root')).render(<BlogPage />)

@@ -2,6 +2,20 @@ const asset = (path) => `${import.meta.env.BASE_URL}${path}`
 
 export const fallbackPosts = [
   {
+    slug: 'warum-eine-gute-website-2026-mehr-koennen-muss-als-nur-gut-aussehen',
+    title: 'Warum eine gute Website 2026 mehr können muss als nur gut aussehen',
+    excerpt: 'Eine moderne Website braucht mehr als gutes Design. Erfahre, warum Performance, SEO, Nutzerführung und Automatisierung über den Erfolg deiner Website entscheiden.',
+    readTime: '4 Min. Lesezeit',
+    category: 'Design',
+    image: asset('assets/blog/digital-strategy.jpg'),
+    publishedAt: '2026-09-13T15:10:45.797Z',
+    author: 'SideTwo',
+    body: [
+      'Eine gute Website ist längst mehr als eine digitale Visitenkarte. Sie bringt eure Leistungen auf den Punkt, macht Vertrauen sichtbar und hilft Menschen, die richtige nächste Entscheidung zu treffen.',
+      'Dafür müssen Design, Inhalte, Technik und Prozesse zusammenarbeiten. Gute Performance, verständliche Nutzerführung und ein klarer Kontaktweg sorgen dafür, dass ein Auftritt nicht nur gut aussieht, sondern im Alltag wirkt.',
+    ],
+  },
+  {
     slug: 'was-eine-website-heute-wirklich-leisten-muss',
     title: 'Was eine Website heute wirklich leisten muss',
     excerpt: 'Wie ein digitaler Auftritt verständlich führt, Vertrauen aufbaut und die passenden Anfragen auslöst.',
