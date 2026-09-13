@@ -859,7 +859,7 @@ function Blog() {
     <section className="blog" id="blog" aria-labelledby="blog-title">
       <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('blog.html')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.map((post) => <article className="blog-card" key={post.slug || post.title}><a href={`${asset('blog.html')}#${post.slug}`} aria-label={`${post.title} lesen`}><img src={post.image} alt="" loading="lazy" /><div><span>{post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={`${asset('blog.html')}#${post.slug}`} aria-label={`${post.title} lesen`}><img src={post.image} alt="" loading="lazy" /><div><span>{post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
       </div>
     </section>
   )
