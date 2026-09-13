@@ -1,7 +1,8 @@
 import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
 
-const projectId = import.meta.env.VITE_SANITY_PROJECT_ID
-const dataset = import.meta.env.VITE_SANITY_DATASET
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 't29qpo9b'
+const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 
 export const sanityClient = projectId && dataset
   ? createClient({
@@ -12,14 +13,36 @@ export const sanityClient = projectId && dataset
     })
   : null
 
+const imageBuilder = sanityClient ? imageUrlBuilder(sanityClient) : null
+
+export function sanityImageUrl(source, { width, height } = {}) {
+  if (!source || !imageBuilder) return ''
+  let builder = imageBuilder.image(source).auto('format').fit('crop')
+  if (width) builder = builder.width(width)
+  if (height) builder = builder.height(height)
+  return builder.url()
+}
+
+export function postImageUrl(post, dimensions) {
+  return sanityImageUrl(post?.mainImage, dimensions) || post?.image || ''
+}
+
+export function formatPublishedAt(value) {
+  if (!value) return 'Vorschau'
+  return new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(value))
+}
+
 const postProjection = `{
   title,
   "slug": slug.current,
   excerpt,
-  "image": mainImage.asset->url,
+  mainImage,
   publishedAt,
   readTime,
   category,
+  author,
+  seoTitle,
+  seoDescription,
   body
 }`
 
