@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ArrowLeft, ArrowRight } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, MagnifyingGlass } from '@phosphor-icons/react'
 import { getAllPosts, getPostBySlug } from './lib/sanity'
 import { fallbackPosts, normalisePost } from './lib/posts'
 import '@fontsource-variable/manrope'
@@ -18,7 +18,18 @@ function BlogHeader() {
 }
 
 function ArticleIndex({ posts, onOpen }) {
-  return <section className="blog-page-index" aria-labelledby="blog-page-title"><div className="blog-page-index-head"><div><span>SideTwo Journal</span><h1 id="blog-page-title">Gedanken für digitale Arbeit, die im Alltag ankommt.</h1></div><p>Praktische Einblicke zu Websites, Automatisierung, KI und digitalen Prozessen für regionale Unternehmen.</p></div><div className="blog-page-list">{posts.map((post) => <article className="blog-page-card" key={post.slug}><button type="button" onClick={() => onOpen(post.slug)}><img src={post.image} alt="" /><div><span>{post.readTime}</span><h2>{post.title}</h2><p>{post.excerpt}</p><b>Weiterlesen <ArrowRight size={16} weight="bold" /></b></div></button></article>)}</div></section>
+  const [category, setCategory] = useState('Alle')
+  const [query, setQuery] = useState('')
+  const categories = ['Alle', ...Array.from(new Set(posts.map((post) => post.category).filter(Boolean)))]
+  const visiblePosts = posts.filter((post) => (category === 'Alle' || post.category === category) && `${post.title} ${post.excerpt}`.toLocaleLowerCase('de').includes(query.toLocaleLowerCase('de')))
+  const featured = posts[0]
+
+  return <section className="blog-page-index" aria-labelledby="blog-page-title">
+    <div className="blog-page-index-head"><h1 id="blog-page-title">Wissen, das digitale Arbeit leichter macht.</h1><p>Praktische Einblicke zu Websites, Automatisierung, KI und digitaler Sichtbarkeit.</p></div>
+    {featured ? <article className="blog-featured"><button type="button" onClick={() => onOpen(featured.slug)}><img src={featured.image} alt="" /><div><span>{featured.category} · {featured.readTime}</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><b>Artikel lesen <ArrowRight size={17} weight="bold" /></b></div></button></article> : null}
+    <div className="blog-controls"><div className="blog-categories" aria-label="Blog-Kategorien">{categories.map((item) => <button key={item} className={item === category ? 'is-active' : ''} type="button" onClick={() => setCategory(item)}>{item}</button>)}</div><label className="blog-search"><MagnifyingGlass size={17} weight="bold" /><input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" /></label></div>
+    {visiblePosts.length ? <div className="blog-page-list">{visiblePosts.map((post) => <article className="blog-page-card" key={post.slug}><button type="button" onClick={() => onOpen(post.slug)}><img src={post.image} alt="" /><div><span>{post.category || 'Digital'} · {post.readTime}</span><h2>{post.title}</h2><p>{post.excerpt}</p><b>Weiterlesen <ArrowRight size={16} weight="bold" /></b></div></button></article>)}</div> : <p className="blog-empty">Zu dieser Suche gibt es noch keinen Artikel.</p>}
+  </section>
 }
 
 function ArticleDetail({ post, onBack }) {

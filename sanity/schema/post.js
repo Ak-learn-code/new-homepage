@@ -9,6 +9,7 @@ export default {
     { name: 'mainImage', title: 'Titelbild', type: 'image', options: { hotspot: true } },
     { name: 'publishedAt', title: 'Veröffentlicht am', type: 'datetime', validation: (Rule) => Rule.required() },
     { name: 'readTime', title: 'Lesezeit', type: 'string', initialValue: '4 Min. Lesezeit' },
+    { name: 'category', title: 'Kategorie', type: 'string', options: { list: ['Websites', 'Strategie', 'Automatisierung', 'Sichtbarkeit', 'KI', 'Design'] } },
     { name: 'body', title: 'Artikel', type: 'array', of: [{ type: 'block' }] },
   ],
 }

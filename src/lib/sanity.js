@@ -19,6 +19,7 @@ const postProjection = `{
   "image": mainImage.asset->url,
   publishedAt,
   readTime,
+  category,
   body
 }`
 
