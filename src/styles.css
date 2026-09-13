@@ -2244,7 +2244,14 @@ input { caret-color: var(--accent); }
 /* Insight articles read top-down from the image; cards reserve teal for the action only. */
 .blog-article-image { margin-top: 0; }
 .blog-article-head { margin-top: clamp(30px, 3.35vw, 48px); }
-.blog-article-body { margin-left: 0; margin-right: auto; }
+.blog-article-body { max-width: 1240px; margin-inline: auto; }
+.blog-article-body > p,
+.blog-article-body > h2,
+.blog-article-body > h3,
+.blog-article-body > ul,
+.blog-article-body > ol,
+.blog-article-body > blockquote,
+.blog-article-body > aside { max-width: 760px; }
 
 .blog-card span,
 .blog-page-card span,
