@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowRight, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { PortableText } from '@portabletext/react'
-import { formatPublishedAt, getAllPosts, getPostBySlug, postImageUrl, sanityImageUrl } from './lib/sanity'
-import { fallbackPosts, normalisePost } from './lib/posts'
+import { formatPublishedAt, postImageUrl, sanityImageUrl } from './lib/sanity'
+import { contentSource, getAllPosts, getPostBySlug } from './lib/content'
+import { normalisePost } from './lib/posts'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
+const slugFromLocation = () => {
+  const route = window.location.pathname.match(/\/insights\/([^/]+)\/?$/)
+  return route ? decodeURIComponent(route[1]) : window.location.hash.slice(1).replace(/[.]+$/, '')
+}
+const insightUrl = (slug) => contentSource === 'directus' ? asset(`insights/${encodeURIComponent(slug)}/`) : `${asset('blog.html')}#${slug}`
 
 function BlogMeta({ post }) {
   useEffect(() => {
@@ -26,6 +32,9 @@ function BlogMeta({ post }) {
     upsert('meta[property="og:title"]', 'property', title)
     upsert('meta[property="og:description"]', 'property', description)
     upsert('meta[property="og:image"]', 'property', image)
+    let canonical = document.head.querySelector('link[rel="canonical"]')
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical) }
+    canonical.href = post.canonicalUrl || window.location.href
     let structuredData = document.getElementById('insight-structured-data')
     if (!structuredData) { structuredData = document.createElement('script'); structuredData.id = 'insight-structured-data'; structuredData.type = 'application/ld+json'; document.head.appendChild(structuredData) }
     structuredData.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.title, description, datePublished: post.publishedAt, dateModified: post.publishedAt, author: { '@type': 'Person', name: post.author || 'SideTwo' }, image: image ? [image] : undefined, mainEntityOfPage: window.location.href })
@@ -49,9 +58,29 @@ const portableTextComponents = {
 }
 
 function RichText({ body }) {
-  if (!body?.length) return null
+  if (!body) return null
+  if (typeof body === 'string') return <div className="cms-rich-text" dangerouslySetInnerHTML={{ __html: sanitizeCmsHtml(body) }} />
+  if (!body.length) return null
   if (typeof body[0] === 'string') return body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
   return <PortableText value={body} components={portableTextComponents} />
+}
+
+function sanitizeCmsHtml(value) {
+  const template = document.createElement('template')
+  template.innerHTML = value
+  const allowed = new Set(['P', 'STRONG', 'EM', 'CODE', 'PRE', 'A', 'H2', 'H3', 'BLOCKQUOTE', 'UL', 'OL', 'LI', 'FIGURE', 'FIGCAPTION', 'IMG', 'BR'])
+  const assetPrefix = `${(import.meta.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')}/assets/`
+  for (const node of [...template.content.querySelectorAll('*')]) {
+    if (!allowed.has(node.tagName)) { node.replaceWith(...node.childNodes); continue }
+    for (const attribute of [...node.attributes]) {
+      const isHref = node.tagName === 'A' && attribute.name === 'href' && /^(https?:|mailto:|\/|#)/i.test(attribute.value)
+      const isImage = node.tagName === 'IMG' && attribute.name === 'src' && attribute.value.startsWith(assetPrefix)
+      const isAlt = node.tagName === 'IMG' && attribute.name === 'alt'
+      if (!isHref && !isImage && !isAlt) node.removeAttribute(attribute.name)
+    }
+    if (node.tagName === 'A') { node.setAttribute('rel', 'noopener noreferrer'); if (/^https?:/i.test(node.getAttribute('href') || '')) node.setAttribute('target', '_blank') }
+  }
+  return template.innerHTML
 }
 
 function SideTwoLogo({ className = '' }) {
@@ -88,7 +117,7 @@ function BlogFooter() {
 
 const CATEGORY_ORDER = ['Websites', 'Automatisierung', 'KI', 'Marketing', 'Design', 'Strategie', 'Sichtbarkeit']
 
-function ArticleIndex({ posts, onOpen, isLoading = false }) {
+function ArticleIndex({ posts, onOpen, isLoading = false, error = '' }) {
   const [category, setCategory] = useState('Alle')
   const [query, setQuery] = useState('')
   const foundCategories = Array.from(new Set(posts.map((post) => post.category).filter(Boolean)))
@@ -99,8 +128,9 @@ function ArticleIndex({ posts, onOpen, isLoading = false }) {
   return <section className="blog-page-index" aria-labelledby="blog-page-title">
     <div className="blog-page-index-head"><span className="blog-page-kicker">SIDETWO INSIGHTS</span><h1 id="blog-page-title">Gedanken, Strategien &amp; digitale Ideen.</h1><p>Praktische Insights rund um Websites, Marketing, Automatisierung und KI, ohne unnötiges Agentur-Blabla.</p></div>
     {isLoading ? <div className="blog-loading" aria-live="polite" aria-label="Insights werden geladen"><i /><i /></div> : null}
+    {!isLoading && error ? <p className="blog-empty" role="alert">{error}</p> : null}
     {!isLoading && featured ? <article className="blog-featured"><button type="button" onClick={() => onOpen(featured.slug)}><img src={postImageUrl(featured, { width: 1400, height: 900 })} alt={featured.mainImage?.alt || featured.title} /><div className="blog-featured-copy"><span>{featured.category} · {formatPublishedAt(featured.publishedAt)} · {featured.readTime}</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><b>Artikel lesen <ArrowRight size={17} weight="bold" /></b></div></button></article> : null}
-    {isLoading ? null : <>
+    {isLoading || error ? null : <>
     <div className="blog-controls"><div className="blog-categories" aria-label="Blog-Kategorien">{categories.map((item) => <button key={item} className={item === category ? 'is-active' : ''} type="button" onClick={() => setCategory(item)}>{item}</button>)}</div><label className="blog-search"><MagnifyingGlass size={17} weight="bold" /><input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" /></label></div>
     {visiblePosts.length ? <div className="blog-page-list" aria-live="polite">{visiblePosts.map((post) => <article className="blog-page-card" key={post.slug}><button type="button" onClick={() => onOpen(post.slug)}><img src={postImageUrl(post, { width: 900, height: 650 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category || 'Digital'} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h2>{post.title}</h2><p>{post.excerpt}</p><b>Weiterlesen <ArrowRight size={16} weight="bold" /></b></div></button></article>)}</div> : <p className="blog-empty">Zu dieser Auswahl gibt es noch keinen weiteren Artikel.</p>}
     </>}
@@ -116,41 +146,61 @@ function BlogPage() {
   const [posts, setPosts] = useState([])
   const [activePost, setActivePost] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [missingSlug, setMissingSlug] = useState('')
 
   useEffect(() => {
     let mounted = true
     const load = async () => {
-      const slug = window.location.hash.slice(1).replace(/[.]+$/, '')
-      const sanityPosts = await getAllPosts()
-      const resolved = sanityPosts.length ? sanityPosts.map(normalisePost) : fallbackPosts
+      const slug = slugFromLocation()
+      const sourcePosts = await getAllPosts()
+      const resolved = contentSource === 'sanity' ? sourcePosts.map(normalisePost) : sourcePosts
       if (!mounted) return
       setPosts(resolved)
       if (slug) {
-        let sanityPost = null
-        try { sanityPost = await getPostBySlug(slug) } catch { sanityPost = null }
+        let loadedPost = null
+        try { loadedPost = await getPostBySlug(slug) } catch { loadedPost = null }
         if (!mounted) return
-        setActivePost(sanityPost ? normalisePost(sanityPost, resolved.findIndex((post) => post.slug === slug)) : resolved.find((post) => post.slug === slug) || null)
+        const post = loadedPost ? (contentSource === 'sanity' ? normalisePost(loadedPost) : loadedPost) : resolved.find((item) => item.slug === slug) || null
+        setActivePost(post)
+        setMissingSlug(post ? '' : slug)
       }
       if (mounted) setIsLoading(false)
     }
-    load().catch(() => {
+    load().catch((error) => {
       if (!mounted) return
-      const fallbackSlug = window.location.hash.slice(1).replace(/[.]+$/, '')
-      setPosts(fallbackPosts)
-      setActivePost(fallbackPosts.find((post) => post.slug === fallbackSlug) || null)
+      setPosts([])
+      setLoadError(error instanceof Error ? error.message : 'Insights sind gerade nicht verfügbar.')
       setIsLoading(false)
     })
     return () => { mounted = false }
   }, [])
 
   useEffect(() => {
+    if (!posts.length) return undefined
+    const updateRoute = () => {
+      const slug = slugFromLocation()
+      const post = slug ? posts.find((item) => item.slug === slug) || null : null
+      setActivePost(post)
+      setMissingSlug(slug && !post ? slug : '')
+    }
+    window.addEventListener('popstate', updateRoute)
+    window.addEventListener('hashchange', updateRoute)
+    return () => {
+      window.removeEventListener('popstate', updateRoute)
+      window.removeEventListener('hashchange', updateRoute)
+    }
+  }, [posts])
+
+  useEffect(() => {
     if (!activePost) document.title = 'Insights | SideTwo'
   }, [activePost])
 
-  const open = (slug) => { window.location.hash = slug; setActivePost(posts.find((post) => post.slug === slug) || null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const back = () => { window.history.replaceState(null, '', window.location.pathname); setActivePost(null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const open = (slug) => { if (contentSource === 'directus') window.history.pushState(null, '', insightUrl(slug)); else window.location.hash = slug; setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const back = () => { if (contentSource === 'directus') window.history.pushState(null, '', asset('blog.html')); else window.history.replaceState(null, '', window.location.pathname); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
-  return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} />}<BlogFooter /></main>
+  const pageError = loadError || (missingSlug ? 'Der gewünschte Insight-Artikel wurde nicht gefunden.' : '')
+  return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} error={pageError} />}<BlogFooter /></main>
 }
 
 createRoot(document.getElementById('root')).render(<BlogPage />)

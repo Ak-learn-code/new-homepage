@@ -2160,6 +2160,24 @@ input { caret-color: var(--accent); }
 @media (max-width: 560px) { .blog-site-header { padding-bottom: 16px; }.blog-page-index { padding: 42px 18px 78px; }.blog-page-kicker { font-size: 10px; }.blog-page-index h1 { margin-top: 16px; font-size: clamp(41px, 11.8vw, 53px); line-height: .96; }.blog-page-index-head > p { margin-top: 18px; font-size: 15px; }.blog-featured { margin-top: 35px; border-radius: 22px; }.blog-featured img { min-height: 245px; }.blog-featured div { padding: 27px 22px 29px; }.blog-featured h2 { font-size: 31px; }.blog-featured p { font-size: 14px; }.blog-controls { margin-top: 38px; }.blog-categories { gap: 2px 16px; }.blog-categories button { font-size: 11px; }.blog-page-list { gap: 26px; margin-top: 28px; }.blog-page-card { border-radius: 20px; }.blog-page-card div { padding: 21px; }.blog-article { padding: 42px 18px 76px; }.blog-article-head { margin-top: 42px; }.blog-article h1 { font-size: clamp(40px, 11.5vw, 52px); line-height: .98; }.blog-article-head > p { margin-top: 20px; font-size: 18px; line-height: 1.52; }.blog-article-image { aspect-ratio: 1.08 / 1; margin-top: 36px; border-radius: 20px; }.blog-article-body { margin-top: 38px; }.blog-article-body > p, .blog-article-body ul, .blog-article-body ol { font-size: 17px; line-height: 1.72; }.blog-article-body h2 { margin-top: 51px; font-size: 31px; }.blog-article-body h3 { margin-top: 37px; font-size: 25px; }.blog-article-body blockquote { margin: 34px 0; padding-left: 18px; font-size: 22px; }.blog-article-body aside { margin-top: 48px; padding: 26px 23px; border-radius: 20px; }.blog-related { margin-top: 79px; padding-top: 46px; }.blog-related > div { grid-template-columns: 1fr; gap: 28px; }.blog-related > div > :last-child { grid-column: auto; max-width: none; }.blog-related img { border-radius: 19px; } }
 @media (prefers-reduced-motion: reduce) { .blog-featured img, .blog-page-card img, .blog-related img { transition: none; } }
 
+/* Directus HTML is rendered inside this wrapper after client-side sanitization. */
+.cms-rich-text > p,
+.cms-rich-text > ul,
+.cms-rich-text > ol { max-width: 760px; color: rgba(237, 245, 241, .86); font-size: clamp(17px, 1.45vw, 19px); line-height: 1.76; }
+.cms-rich-text > p { margin: 0 0 29px; }
+.cms-rich-text > h2 { max-width: 760px; margin: 65px 0 21px; color: #edf5f1; font-size: clamp(30px, 3.1vw, 43px); line-height: 1.08; letter-spacing: -.045em; }
+.cms-rich-text > h3 { max-width: 760px; margin: 45px 0 17px; color: #edf5f1; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.14; letter-spacing: -.035em; }
+.cms-rich-text > blockquote { max-width: 760px; margin: 44px 0; padding: 2px 0 2px 24px; border-left: 1px solid #f2a146; color: #b9e2d8; font-size: clamp(22px, 2.6vw, 31px); line-height: 1.42; letter-spacing: -.03em; }
+.cms-rich-text > ul,
+.cms-rich-text > ol { margin: 0 0 28px; padding-left: 24px; }
+.cms-rich-text li + li { margin-top: 8px; }
+.cms-rich-text a { color: #f2a146; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.cms-rich-text figure { width: min(950px, calc(100% + 180px)); max-width: none; margin: 48px 50%; transform: translateX(-50%); }
+.cms-rich-text figure img { display: block; width: 100%; border-radius: 22px; }
+.cms-rich-text figcaption { margin-top: 10px; color: rgba(237, 245, 241, .65); font-size: 13px; line-height: 1.5; }
+@media (max-width: 800px) { .cms-rich-text figure { width: 100%; margin-inline: 0; transform: none; } }
+@media (max-width: 560px) { .cms-rich-text > p, .cms-rich-text > ul, .cms-rich-text > ol { font-size: 17px; line-height: 1.72; }.cms-rich-text > h2 { margin-top: 51px; font-size: 31px; }.cms-rich-text > h3 { margin-top: 37px; font-size: 25px; }.cms-rich-text > blockquote { margin: 34px 0; padding-left: 18px; font-size: 22px; }.cms-rich-text figure img { border-radius: 19px; } }
+
 /* Blog refinement: make the first story read as one calm editorial composition. */
 .blog-page-index-head { max-width: 760px; }
 .blog-page-index h1 { max-width: 760px; font-size: clamp(46px, 5.65vw, 74px); }

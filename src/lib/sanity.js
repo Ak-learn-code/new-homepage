@@ -24,7 +24,7 @@ export function sanityImageUrl(source, { width, height } = {}) {
 }
 
 export function postImageUrl(post, dimensions) {
-  return sanityImageUrl(post?.mainImage, dimensions) || post?.image || ''
+  return post?.image || sanityImageUrl(post?.mainImage, dimensions) || ''
 }
 
 export function formatPublishedAt(value) {

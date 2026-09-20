@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { formatPublishedAt, getLatestPosts, postImageUrl } from './lib/sanity'
-import { fallbackPosts, normalisePost } from './lib/posts'
+import { formatPublishedAt, postImageUrl } from './lib/sanity'
+import { contentSource, getLatestPosts } from './lib/content'
+import { normalisePost } from './lib/posts'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -23,6 +24,7 @@ import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
+const insightUrl = (slug) => contentSource === 'directus' ? asset(`insights/${encodeURIComponent(slug)}/`) : `${asset('blog.html')}#${slug}`
 
 const projects = [
   { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
@@ -844,14 +846,17 @@ function FAQ() {
 }
 
 function Blog() {
-  const [posts, setPosts] = useState(fallbackPosts)
+  const [posts, setPosts] = useState([])
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     let current = true
-    getLatestPosts().then((sanityPosts) => {
-      if (!current || !sanityPosts.length) return
-      setPosts(sanityPosts.map(normalisePost))
-    }).catch(() => undefined)
+    getLatestPosts().then((contentPosts) => {
+      if (!current) return
+      setPosts(contentSource === 'sanity' ? contentPosts.map(normalisePost) : contentPosts)
+    }).catch(() => {
+      if (current) setLoadError(true)
+    })
     return () => { current = false }
   }, [])
 
@@ -859,7 +864,9 @@ function Blog() {
     <section className="blog" id="blog" aria-labelledby="blog-title">
       <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('blog.html')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={`${asset('blog.html')}#${post.slug}`} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {!posts.length && !loadError ? <p className="blog-empty">Insights werden geladen.</p> : null}
+        {loadError ? <p className="blog-empty" role="status">Insights sind gerade nicht verfügbar.</p> : null}
       </div>
     </section>
   )
