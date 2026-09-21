@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { renderArticleHtml } from './insight-prerender-utils.mjs'
+import { renderArticleHtml, withViteBasePath } from './insight-prerender-utils.mjs'
 
 const blogHtml = '<html><head><meta name="description" content="Basis" /><title>Insights | SideTwo</title></head><body><script type="module" crossorigin src="/assets/blog.js"></script></body></html>'
 const post = { slug: 'ein-insight', title: 'Ein <Insight>', excerpt: 'Kurz & klar', seo_title: 'SEO Insight', seo_description: 'Beschreibung & Kontext', published_at: '2026-09-21T10:00:00.000Z', featured_image: 'featured-id', author: { name: 'SideTwo' } }
@@ -24,4 +24,17 @@ test('the Directus prerender request has no client-side status query or filter',
   assert.match(requestLine, /fields=\$\{encodeURIComponent\(fields\)\}&limit=100/)
   assert.doesNotMatch(requestLine, /status/)
   assert.doesNotMatch(requestLine, /filter=/)
+})
+
+test('does not apply the Vite base twice to an already base-prefixed script path', () => {
+  assert.equal(withViteBasePath('/new-homepage/assets/blog-ABC.js', '/new-homepage/'), '/new-homepage/assets/blog-ABC.js')
+  const basePrefixedBlogHtml = blogHtml.replace('/assets/blog.js', '/new-homepage/assets/blog-ABC.js')
+  const html = renderArticleHtml({ blogHtml: basePrefixedBlogHtml, scriptPath: '/new-homepage/assets/blog-ABC.js', base: '/new-homepage/', post, directusUrl: 'https://directus.sidetwo.de', siteUrl: 'https://ak-learn-code.github.io/new-homepage' })
+  assert.match(html, /src="\/new-homepage\/assets\/blog-ABC\.js"/)
+  assert.doesNotMatch(html, /\/new-homepage\/new-homepage\//)
+})
+
+test('applies the Vite base once to a root-relative asset path', () => {
+  assert.equal(withViteBasePath('/assets/blog-ABC.js', '/new-homepage/'), '/new-homepage/assets/blog-ABC.js')
+  assert.equal(withViteBasePath('/assets/blog-ABC.js', '/'), '/assets/blog-ABC.js')
 })

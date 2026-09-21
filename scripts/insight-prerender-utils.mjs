@@ -2,6 +2,14 @@ export const escapeHtml = (value = '') => String(value).replace(/&/g, '&amp;').r
 
 const fileId = (value) => typeof value === 'string' ? value : value?.id || ''
 
+export function withViteBasePath(assetPath, base) {
+  if (/^(?:[a-z][a-z\d+.-]*:)?\/\//i.test(assetPath)) return assetPath
+  const normalizedBase = base.endsWith('/') ? base : `${base}/`
+  const baseWithoutTrailingSlash = normalizedBase.slice(0, -1)
+  if (assetPath === baseWithoutTrailingSlash || assetPath.startsWith(normalizedBase)) return assetPath
+  return `${normalizedBase}${assetPath.replace(/^\/+/, '')}`
+}
+
 export function articleMetadata(post, { directusUrl, siteUrl }) {
   const title = post.seo_title || post.title || 'Insights'
   const description = post.seo_description || post.excerpt || 'Praktische Einblicke von SideTwo.'
@@ -22,5 +30,5 @@ export function renderArticleHtml({ blogHtml, scriptPath, base, post, directusUr
   return blogHtml
     .replace(/<meta name="description"[^>]*\/?>/, articleMetadata(post, { directusUrl, siteUrl }))
     .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(title)} | SideTwo</title>`)
-    .replace(scriptPath, `${base}${scriptPath.replace(/^\//, '')}`)
+    .replace(scriptPath, withViteBasePath(scriptPath, base))
 }
