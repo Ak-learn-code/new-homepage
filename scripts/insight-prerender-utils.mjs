@@ -2,6 +2,10 @@ export const escapeHtml = (value = '') => String(value).replace(/&/g, '&amp;').r
 
 const fileId = (value) => typeof value === 'string' ? value : value?.id || ''
 
+function migratedContentHtml(value) {
+  return typeof value === 'string' ? value : ''
+}
+
 export function withViteBasePath(assetPath, base) {
   if (/^(?:[a-z][a-z\d+.-]*:)?\/\//i.test(assetPath)) return assetPath
   const normalizedBase = base.endsWith('/') ? base : `${base}/`
@@ -25,10 +29,20 @@ export function articleMetadata(post, { directusUrl, siteUrl }) {
   return `<meta name="description" content="${escapeHtml(description)}" />\n    <meta name="robots" content="index, follow" />\n    <meta property="og:type" content="article" />\n    <meta property="og:locale" content="de_DE" />\n    <meta property="og:title" content="${escapeHtml(title)}" />\n    <meta property="og:description" content="${escapeHtml(description)}" />\n    <meta property="og:url" content="${escapeHtml(canonical)}" />${image ? `\n    <meta property="og:image" content="${escapeHtml(image)}" />` : ''}\n    <meta name="twitter:card" content="summary_large_image" />\n    <link rel="canonical" href="${escapeHtml(canonical)}" />\n    <script type="application/ld+json">${structuredData}</script>`
 }
 
+export function prerenderedArticle(post) {
+  const title = post.title || 'Insights'
+  const excerpt = post.excerpt || ''
+  // cms_posts.content is emitted as sanitized HTML by the Sanity-to-Directus migration.
+  // Runtime rendering applies an additional browser-side allow-list before displaying it.
+  const content = migratedContentHtml(post.content)
+  return `<main class="blog-page"><article class="blog-article"><header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}</header><div class="blog-article-body"><div class="cms-rich-text">${content}</div></div></article></main>`
+}
+
 export function renderArticleHtml({ blogHtml, scriptPath, base, post, directusUrl, siteUrl }) {
   const title = post.seo_title || post.title || 'Insights'
   return blogHtml
     .replace(/<meta name="description"[^>]*\/?>/, articleMetadata(post, { directusUrl, siteUrl }))
     .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(title)} | SideTwo</title>`)
     .replace(scriptPath, withViteBasePath(scriptPath, base))
+    .replace('<div id="root"></div>', `<div id="root">${prerenderedArticle(post)}</div>`)
 }

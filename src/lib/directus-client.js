@@ -31,7 +31,7 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
       ogImage: imageUrl(ogId || featuredId, 1600, 900),
       publishedAt: item.published_at,
       readTime: item.read_time_minutes ? `${item.read_time_minutes} Min. Lesezeit` : '',
-      bodyHtml: item.content || '',
+      body: typeof item.content === 'string' ? item.content : '',
       seoTitle: item.seo_title || '',
       seoDescription: item.seo_description || '',
       canonicalUrl: item.canonical_url || '',

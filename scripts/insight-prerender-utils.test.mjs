@@ -2,10 +2,10 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { renderArticleHtml, withViteBasePath } from './insight-prerender-utils.mjs'
+import { prerenderedArticle, renderArticleHtml, withViteBasePath } from './insight-prerender-utils.mjs'
 
-const blogHtml = '<html><head><meta name="description" content="Basis" /><title>Insights | SideTwo</title></head><body><script type="module" crossorigin src="/assets/blog.js"></script></body></html>'
-const post = { slug: 'ein-insight', title: 'Ein <Insight>', excerpt: 'Kurz & klar', seo_title: 'SEO Insight', seo_description: 'Beschreibung & Kontext', published_at: '2026-09-21T10:00:00.000Z', featured_image: 'featured-id', author: { name: 'SideTwo' } }
+const blogHtml = '<html><head><meta name="description" content="Basis" /><title>Insights | SideTwo</title></head><body><div id="root"></div><script type="module" crossorigin src="/assets/blog.js"></script></body></html>'
+const post = { slug: 'ein-insight', title: 'Ein <Insight>', excerpt: 'Kurz & klar', content: '<p>Der vollständige <strong>Artikeltext</strong>.</p><h2>Zwischenüberschrift</h2>', seo_title: 'SEO Insight', seo_description: 'Beschreibung & Kontext', published_at: '2026-09-21T10:00:00.000Z', featured_image: 'featured-id', author: { name: 'SideTwo' } }
 
 test('prerenders crawlable Directus article metadata and a GitHub Pages route', () => {
   const html = renderArticleHtml({ blogHtml, scriptPath: '/assets/blog.js', base: '/new-homepage/', post, directusUrl: 'https://directus.sidetwo.de', siteUrl: 'https://ak-learn-code.github.io/new-homepage' })
@@ -15,7 +15,14 @@ test('prerenders crawlable Directus article metadata and a GitHub Pages route', 
   assert.match(html, /https:\/\/directus\.sidetwo\.de\/assets\/featured-id\?format=webp/)
   assert.match(html, /"@type":"BlogPosting"/)
   assert.match(html, /src="\/new-homepage\/assets\/blog\.js"/)
+  assert.match(html, /Der vollständige <strong>Artikeltext<\/strong>\./)
+  assert.match(html, /<h2>Zwischenüberschrift<\/h2>/)
   assert.doesNotMatch(html, /Ein <Insight>/)
+})
+
+test('keeps migrated Directus HTML content in the prerendered article body', () => {
+  assert.match(prerenderedArticle(post), /<div class="cms-rich-text"><p>Der vollständige <strong>Artikeltext<\/strong>\.<\/p><h2>Zwischenüberschrift<\/h2><\/div>/)
+  assert.equal(prerenderedArticle({ title: 'Leer', content: null }), '<main class="blog-page"><article class="blog-article"><header class="blog-article-head"><h1>Leer</h1></header><div class="blog-article-body"><div class="cms-rich-text"></div></div></article></main>')
 })
 
 test('the Directus prerender request has no client-side status query or filter', async () => {
@@ -24,6 +31,7 @@ test('the Directus prerender request has no client-side status query or filter',
   assert.match(requestLine, /fields=\$\{encodeURIComponent\(fields\)\}&limit=100/)
   assert.doesNotMatch(requestLine, /status/)
   assert.doesNotMatch(requestLine, /filter=/)
+  assert.match(source, /content,published_at/)
 })
 
 test('does not apply the Vite base twice to an already base-prefixed script path', () => {

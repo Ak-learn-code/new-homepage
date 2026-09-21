@@ -24,7 +24,7 @@ test('requests only the public Directus fields without a client-side status filt
   assert.equal(post.category, 'Strategie')
   assert.equal(post.author, 'SideTwo')
   assert.match(post.image, /^https:\/\/directus\.example\/assets\/image-id\?/) 
-  assert.equal(post.bodyHtml, '<p>Inhalt</p>')
+  assert.equal(post.body, '<p>Inhalt</p>')
 })
 
 test('uses a slug-only filter for one post without querying status', async () => {
@@ -33,8 +33,9 @@ test('uses a slug-only filter for one post without querying status', async () =>
     requestUrl = new URL(url)
     return new Response(JSON.stringify({ data: [publishedPost] }), { status: 200 })
   } })
-  await client.getPostBySlug('ein-insight')
+  const post = await client.getPostBySlug('ein-insight')
   assert.deepEqual(JSON.parse(requestUrl.searchParams.get('filter')), { slug: { _eq: 'ein-insight' } })
+  assert.equal(post.body, '<p>Inhalt</p>')
 })
 
 test('reports permission and service errors without returning fallback content', async () => {
