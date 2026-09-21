@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { prerenderedArticle, renderArticleHtml, withViteBasePath } from './insight-prerender-utils.mjs'
+import { createSitemapXml, prerenderedArticle, renderArticleHtml, withViteBasePath } from './insight-prerender-utils.mjs'
 
 const blogHtml = '<html><head><meta name="description" content="Basis" /><title>Insights | SideTwo</title></head><body><div id="root"></div><script type="module" crossorigin src="/assets/blog.js"></script></body></html>'
 const post = { slug: 'ein-insight', title: 'Ein <Insight>', excerpt: 'Kurz & klar', content: '<p>Der vollständige <strong>Artikeltext</strong>.</p><h2>Zwischenüberschrift</h2>', seo_title: 'SEO Insight', seo_description: 'Beschreibung & Kontext', published_at: '2026-09-21T10:00:00.000Z', featured_image: 'featured-id', author: { name: 'SideTwo' } }
@@ -45,4 +45,16 @@ test('does not apply the Vite base twice to an already base-prefixed script path
 test('applies the Vite base once to a root-relative asset path', () => {
   assert.equal(withViteBasePath('/assets/blog-ABC.js', '/new-homepage/'), '/new-homepage/assets/blog-ABC.js')
   assert.equal(withViteBasePath('/assets/blog-ABC.js', '/'), '/assets/blog-ABC.js')
+})
+
+test('creates a valid, deduplicated sitemap for the homepage, blog overview, and public insight slugs', () => {
+  const sitemap = createSitemapXml({ siteUrl: 'https://ak-learn-code.github.io/new-homepage', slugs: ['warum-eine-gute-website', 'automatisierung', 'warum-eine-gute-website', '', null] })
+  assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/<\/loc>/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/blog\.html<\/loc>/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/warum-eine-gute-website\/<\/loc>/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/automatisierung\/<\/loc>/)
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 4)
+  assert.doesNotMatch(sitemap, /\/new-homepage\/new-homepage\//)
+  assert.doesNotMatch(sitemap, /(?:^|[^&])&(?!amp;|lt;|gt;|quot;)/)
 })

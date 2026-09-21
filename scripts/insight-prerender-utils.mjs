@@ -14,6 +14,21 @@ export function withViteBasePath(assetPath, base) {
   return `${normalizedBase}${assetPath.replace(/^\/+/, '')}`
 }
 
+function publicUrl(siteUrl, path = '') {
+  return new URL(path.replace(/^\//, ''), `${siteUrl.replace(/\/$/, '')}/`).toString()
+}
+
+export function createSitemapXml({ siteUrl, slugs }) {
+  const urls = [publicUrl(siteUrl), publicUrl(siteUrl, 'blog.html')]
+  const seen = new Set(urls)
+  for (const slug of slugs) {
+    if (typeof slug !== 'string' || !slug.trim()) continue
+    const url = publicUrl(siteUrl, `insights/${encodeURIComponent(slug)}/`)
+    if (!seen.has(url)) { seen.add(url); urls.push(url) }
+  }
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>${escapeHtml(url)}</loc></url>`).join('\n')}\n</urlset>\n`
+}
+
 export function articleMetadata(post, { directusUrl, siteUrl }) {
   const title = post.seo_title || post.title || 'Insights'
   const description = post.seo_description || post.excerpt || 'Praktische Einblicke von SideTwo.'

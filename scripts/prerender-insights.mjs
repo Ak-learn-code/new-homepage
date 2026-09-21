@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
-import { renderArticleHtml } from './insight-prerender-utils.mjs'
+import { createSitemapXml, renderArticleHtml } from './insight-prerender-utils.mjs'
 
 const root = process.cwd()
 const base = '/new-homepage/'
@@ -24,4 +24,6 @@ for (const post of data) {
   await writeFile(output, html)
 }
 
-console.log(`Prerendered ${data.length} insight route(s).`)
+await writeFile(resolve(root, 'dist', 'sitemap.xml'), createSitemapXml({ siteUrl, slugs: data.map((post) => post?.slug) }))
+
+console.log(`Prerendered ${data.length} insight route(s) and updated sitemap.xml.`)
