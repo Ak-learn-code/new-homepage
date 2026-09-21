@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test:content": "node --test src/lib/directus-client.test.js scripts/insight-prerender-utils.test.mjs",
     "prerender:insights": "node scripts/prerender-insights.mjs",
     "build:directus": "VITE_CONTENT_SOURCE=directus vite build && node scripts/prerender-insights.mjs",
     "preview": "vite preview",

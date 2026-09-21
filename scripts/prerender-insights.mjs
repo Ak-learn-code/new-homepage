@@ -1,10 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
+import { renderArticleHtml } from './insight-prerender-utils.mjs'
 
 const root = process.cwd()
 const base = '/new-homepage/'
 const directusUrl = (process.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')
-const response = await fetch(`${directusUrl}/items/cms_posts?fields=slug&filter=${encodeURIComponent(JSON.stringify({ status: { _eq: 'published' } }))}&limit=100`)
+const siteUrl = (process.env.VITE_SITE_URL || 'https://ak-learn-code.github.io/new-homepage').replace(/\/$/, '')
+const fields = 'slug,title,excerpt,published_at,seo_title,seo_description,canonical_url,featured_image,og_image,author.name'
+const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIComponent(fields)}&filter=${encodeURIComponent(JSON.stringify({ status: { _eq: 'published' } }))}&limit=100`)
 
 if (!response.ok) throw new Error(`Published Directus insights could not be read (HTTP ${response.status}). Configure public read access before prerendering.`)
 
@@ -15,9 +18,7 @@ if (!scriptPath) throw new Error('Could not locate the built blog JavaScript ent
 
 for (const post of data) {
   if (!post?.slug) continue
-  const html = blogHtml
-    .replace(/<title>.*?<\/title>/, '<title>Insights | SideTwo</title>')
-    .replace(scriptPath, `${base}${scriptPath.replace(/^\//, '')}`)
+  const html = renderArticleHtml({ blogHtml, scriptPath, base, post, directusUrl, siteUrl })
   const output = resolve(root, 'dist', 'insights', encodeURIComponent(post.slug), 'index.html')
   await mkdir(dirname(output), { recursive: true })
   await writeFile(output, html)
