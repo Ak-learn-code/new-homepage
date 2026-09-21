@@ -16,6 +16,12 @@ test('only requests published Directus posts and maps public fields', async () =
   const filter = JSON.parse(requestUrl.searchParams.get('filter'))
   assert.deepEqual(filter, { _and: [{ status: { _eq: 'published' } }] })
   assert.equal(requestUrl.searchParams.get('sort'), '-published_at')
+  assert.deepEqual(requestUrl.searchParams.get('fields').split(',').sort(), [
+    'author.id', 'author.name', 'author.portrait', 'author.role', 'author.slug',
+    'canonical_url', 'category.id', 'category.name', 'category.slug', 'content',
+    'excerpt', 'featured_image', 'featured_image_alt', 'id', 'og_image',
+    'published_at', 'read_time_minutes', 'seo_description', 'seo_title', 'slug', 'title',
+  ].sort())
   assert.equal(post.category, 'Strategie')
   assert.equal(post.author, 'SideTwo')
   assert.match(post.image, /^https:\/\/directus\.example\/assets\/image-id\?/) 
