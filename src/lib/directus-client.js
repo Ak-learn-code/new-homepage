@@ -37,12 +37,12 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
       canonicalUrl: item.canonical_url || '',
     }
   }
-  const requestPosts = async (filter = {}) => {
+  const requestPosts = async (filter) => {
     const url = new URL(`${baseUrl}/items/cms_posts`)
     url.searchParams.set('fields', postFields)
     url.searchParams.set('sort', '-published_at')
     url.searchParams.set('limit', '100')
-    url.searchParams.set('filter', JSON.stringify({ _and: [{ status: { _eq: 'published' } }, ...(filter._and || [])] }))
+    if (filter) url.searchParams.set('filter', JSON.stringify(filter))
     const response = await fetcher(url)
     if (!response.ok) throw new Error(response.status === 403 ? 'Die veröffentlichten Insights sind noch nicht freigegeben.' : 'Insights konnten gerade nicht geladen werden.')
     const body = await response.json()
@@ -51,7 +51,7 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
 
   return {
     getAllPosts: () => requestPosts(),
-    getPostBySlug: async (slug) => (await requestPosts({ _and: [{ slug: { _eq: slug } }] }))[0] || null,
+    getPostBySlug: async (slug) => (await requestPosts({ slug: { _eq: slug } }))[0] || null,
     getLatestPosts: async () => (await requestPosts()).slice(0, 3),
     imageUrl,
   }

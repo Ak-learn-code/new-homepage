@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { readFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
 import { renderArticleHtml } from './insight-prerender-utils.mjs'
 
 const blogHtml = '<html><head><meta name="description" content="Basis" /><title>Insights | SideTwo</title></head><body><script type="module" crossorigin src="/assets/blog.js"></script></body></html>'
@@ -14,4 +16,12 @@ test('prerenders crawlable Directus article metadata and a GitHub Pages route', 
   assert.match(html, /"@type":"BlogPosting"/)
   assert.match(html, /src="\/new-homepage\/assets\/blog\.js"/)
   assert.doesNotMatch(html, /Ein <Insight>/)
+})
+
+test('the Directus prerender request has no client-side status query or filter', async () => {
+  const source = await readFile(resolve(process.cwd(), 'scripts/prerender-insights.mjs'), 'utf8')
+  const requestLine = source.split('\n').find((line) => line.includes('/items/cms_posts')) || ''
+  assert.match(requestLine, /fields=\$\{encodeURIComponent\(fields\)\}&limit=100/)
+  assert.doesNotMatch(requestLine, /status/)
+  assert.doesNotMatch(requestLine, /filter=/)
 })

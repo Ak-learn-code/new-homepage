@@ -7,7 +7,7 @@ const base = '/new-homepage/'
 const directusUrl = (process.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')
 const siteUrl = (process.env.VITE_SITE_URL || 'https://ak-learn-code.github.io/new-homepage').replace(/\/$/, '')
 const fields = 'slug,title,excerpt,published_at,seo_title,seo_description,canonical_url,featured_image,og_image,author.name'
-const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIComponent(fields)}&filter=${encodeURIComponent(JSON.stringify({ status: { _eq: 'published' } }))}&limit=100`)
+const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIComponent(fields)}&limit=100`)
 
 if (!response.ok) throw new Error(`Published Directus insights could not be read (HTTP ${response.status}). Configure public read access before prerendering.`)
 

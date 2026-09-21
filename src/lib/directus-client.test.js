@@ -6,15 +6,14 @@ const publishedPost = {
   id: 'post-id', slug: 'ein-insight', title: 'Ein Insight', excerpt: 'Kurz erklärt.', featured_image: 'image-id', featured_image_alt: 'Ein Bild', published_at: '2026-09-21T10:00:00.000Z', read_time_minutes: 4, content: '<p>Inhalt</p>', seo_title: 'SEO', seo_description: 'Beschreibung', canonical_url: 'https://sidetwo.de/insights/ein-insight/', og_image: 'og-id', category: { id: 'category-id', name: 'Strategie', slug: 'strategie' }, author: { id: 'author-id', name: 'SideTwo', slug: 'sidetwo', role: 'Studio' },
 }
 
-test('only requests published Directus posts and maps public fields', async () => {
+test('requests only the public Directus fields without a client-side status filter', async () => {
   let requestUrl
   const client = createDirectusContentClient({ directusUrl: 'https://directus.example/', fetcher: async (url) => {
     requestUrl = new URL(url)
     return new Response(JSON.stringify({ data: [publishedPost] }), { status: 200 })
   } })
   const [post] = await client.getAllPosts()
-  const filter = JSON.parse(requestUrl.searchParams.get('filter'))
-  assert.deepEqual(filter, { _and: [{ status: { _eq: 'published' } }] })
+  assert.equal(requestUrl.searchParams.has('filter'), false)
   assert.equal(requestUrl.searchParams.get('sort'), '-published_at')
   assert.deepEqual(requestUrl.searchParams.get('fields').split(',').sort(), [
     'author.id', 'author.name', 'author.portrait', 'author.role', 'author.slug',
@@ -28,14 +27,14 @@ test('only requests published Directus posts and maps public fields', async () =
   assert.equal(post.bodyHtml, '<p>Inhalt</p>')
 })
 
-test('adds the slug filter without dropping the published filter', async () => {
+test('uses a slug-only filter for one post without querying status', async () => {
   let requestUrl
   const client = createDirectusContentClient({ directusUrl: 'https://directus.example', fetcher: async (url) => {
     requestUrl = new URL(url)
     return new Response(JSON.stringify({ data: [publishedPost] }), { status: 200 })
   } })
   await client.getPostBySlug('ein-insight')
-  assert.deepEqual(JSON.parse(requestUrl.searchParams.get('filter')), { _and: [{ status: { _eq: 'published' } }, { slug: { _eq: 'ein-insight' } }] })
+  assert.deepEqual(JSON.parse(requestUrl.searchParams.get('filter')), { slug: { _eq: 'ein-insight' } })
 })
 
 test('reports permission and service errors without returning fallback content', async () => {
