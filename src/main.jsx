@@ -54,14 +54,12 @@ const serviceItems = [
 ]
 
 const clientLogos = [
-  { name: 'Gardinen Mannheim', type: 'gardinen' },
-  { name: 'AVCI Gerüstbau', type: 'avci' },
-  { name: 'Ingenieurbüro Nuri', type: 'nuri' },
-  { name: 'Campingglück', type: 'camping' },
-  { name: 'Sordillo Erdbau', type: 'sordillo' },
-  { name: 'Michael Noll Handpan', type: 'handpan' },
-  { name: 'MP Dienstleistungen', type: 'mp' },
-  { name: 'Stadtmüller Bedachungen', type: 'stadtmueller' },
+  { name: 'da nico', type: 'da-nico', src: asset('assets/client-logos/da-nico.svg') },
+  { name: 'AVCI Gerüstbau', type: 'avci', src: asset('assets/client-logos/avci-geruestbau.png') },
+  { name: 'Krug – Das Restaurant', type: 'krug', src: asset('assets/client-logos/krug-das-restaurant.png') },
+  { name: 'Ingenieurbüro Kaltbrunn', type: 'kaltbrunn', src: asset('assets/client-logos/ingenieurbuero-kaltbrunn.svg') },
+  { name: 'Pfrimmpark Arena', type: 'pfrimm', src: asset('assets/client-logos/pfrimmpark-arena.png') },
+  { name: 'Bukkador Handpan', type: 'bukkador', src: asset('assets/client-logos/bukkador-handpan.png') },
 ]
 
 const processSteps = [
@@ -251,17 +249,6 @@ function ServiceRail() {
 function ClientMarquee() {
   const repeatedLogos = [...clientLogos, ...clientLogos]
 
-  const renderLogo = (type) => {
-    if (type === 'gardinen') return <><b>GARDINEN</b><span>MANNHEIM</span></>
-    if (type === 'avci') return <><b>AVCI</b><span>GERÜSTBAU</span></>
-    if (type === 'nuri') return <><i>KFZ<br />NURI</i><span>INGENIEURBÜRO <b>NURI</b></span></>
-    if (type === 'camping') return <><b>Camping</b><span>glück</span></>
-    if (type === 'sordillo') return <><i /><b>SORDILLO</b><span>ERDBAU · ABBRUCH</span></>
-    if (type === 'handpan') return <><i>◉</i><b>MICHAEL NOLL</b><span>HANDPAN</span></>
-    if (type === 'mp') return <><b>MP</b><span>DIENSTLEISTUNGEN</span></>
-    return <><b>STADTMÜLLER</b><span>BEDACHUNGEN</span></>
-  }
-
   return (
     <div className="client-marquee" role="region" aria-labelledby="client-marquee-title">
       <div className="client-marquee-head">
@@ -271,13 +258,13 @@ function ClientMarquee() {
         <div className="client-marquee-track">
           {repeatedLogos.map((client, index) => (
             <article
-              className="client-logo-tile"
+              className={`client-logo-tile client-logo-${client.type}`}
               key={`${client.type}-${index}`}
               aria-label={index < clientLogos.length ? client.name : undefined}
               aria-hidden={index >= clientLogos.length ? 'true' : undefined}
             >
-              <div className={`client-logo-mark logo-${client.type}`} aria-hidden="true">
-                {renderLogo(client.type)}
+              <div className="client-logo-mark">
+                <img src={client.src} alt="" decoding="async" />
               </div>
             </article>
           ))}
