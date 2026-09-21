@@ -2337,6 +2337,10 @@ input { caret-color: var(--accent); }
 .client-logo-pfrimm .client-logo-mark img { max-height: 40px; }
 .client-logo-bukkador .client-logo-mark img { max-height: 52px; }
 
+@media (min-width: 821px) {
+  .hero > .client-marquee .client-logo-mark { transform: scale(.86); }
+}
+
 @media (max-width: 560px) {
   .hero > .client-marquee .client-logo-mark { transform: scale(.72); }
   .client-logo-mark img { max-height: 64px; }
