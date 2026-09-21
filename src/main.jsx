@@ -55,7 +55,7 @@ const serviceItems = [
 
 const clientLogos = [
   { name: 'da nico', type: 'da-nico', src: asset('assets/client-logos/da-nico.svg') },
-  { name: 'AVCI Gerüstbau', type: 'avci', src: asset('assets/client-logos/avci-geruestbau.png') },
+  { name: 'AVCI Gerüstbau', type: 'avci', src: asset('assets/client-logos/avci-geruestbau-white.png') },
   { name: 'Krug – Das Restaurant', type: 'krug', src: asset('assets/client-logos/krug-das-restaurant.png') },
   { name: 'Ingenieurbüro Kaltbrunn', type: 'kaltbrunn', src: asset('assets/client-logos/ingenieurbuero-kaltbrunn.svg') },
   { name: 'Pfrimmpark Arena', type: 'pfrimm', src: asset('assets/client-logos/pfrimmpark-arena.png') },
