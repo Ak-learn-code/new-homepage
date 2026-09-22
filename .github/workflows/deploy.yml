@@ -4,15 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      content_source:
-        description: "Zu veröffentlichende Insight-Quelle"
-        required: true
-        default: "sanity"
-        type: choice
-        options:
-          - sanity
-          - directus
 
 permissions:
   contents: read
@@ -33,14 +24,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: |
-          if [ "$VITE_CONTENT_SOURCE" = "directus" ]; then
-            npm run build:directus
-          else
-            npm run build
-          fi
-        env:
-          VITE_CONTENT_SOURCE: ${{ inputs.content_source || 'sanity' }}
+      - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

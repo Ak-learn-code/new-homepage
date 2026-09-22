@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowRight, List, MagnifyingGlass, X } from '@phosphor-icons/react'
-import { PortableText } from '@portabletext/react'
-import { formatPublishedAt, postImageUrl, sanityImageUrl } from './lib/sanity'
-import { contentSource, getAllPosts, getPostBySlug } from './lib/content'
-import { normalisePost } from './lib/posts'
+import { formatPublishedAt, getAllDirectusPosts as getAllPosts, getDirectusPostBySlug as getPostBySlug, postImageUrl } from './lib/directus'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
@@ -13,7 +10,7 @@ const slugFromLocation = () => {
   const route = window.location.pathname.match(/\/insights\/([^/]+)\/?$/)
   return route ? decodeURIComponent(route[1]) : window.location.hash.slice(1).replace(/[.]+$/, '')
 }
-const insightUrl = (slug) => contentSource === 'directus' ? asset(`insights/${encodeURIComponent(slug)}/`) : `${asset('blog.html')}#${slug}`
+const insightUrl = (slug) => asset(`insights/${encodeURIComponent(slug)}/`)
 
 function BlogMeta({ post }) {
   useEffect(() => {
@@ -43,26 +40,9 @@ function BlogMeta({ post }) {
   return null
 }
 
-const portableTextComponents = {
-  block: {
-    h2: ({ children }) => <h2>{children}</h2>,
-    h3: ({ children }) => <h3>{children}</h3>,
-    blockquote: ({ children }) => <blockquote>{children}</blockquote>,
-  },
-  types: {
-    image: ({ value }) => <img src={sanityImageUrl(value, { width: 1200, height: 820 })} alt={value.alt || ''} loading="lazy" />,
-  },
-  marks: {
-    link: ({ children, value }) => <a href={value?.href} target={value?.href?.startsWith('http') ? '_blank' : undefined} rel={value?.href?.startsWith('http') ? 'noreferrer' : undefined}>{children}</a>,
-  },
-}
-
 function RichText({ body }) {
-  if (!body) return null
-  if (typeof body === 'string') return <div className="cms-rich-text" dangerouslySetInnerHTML={{ __html: sanitizeCmsHtml(body) }} />
-  if (!body.length) return null
-  if (typeof body[0] === 'string') return body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
-  return <PortableText value={body} components={portableTextComponents} />
+  if (typeof body !== 'string' || !body) return null
+  return <div className="cms-rich-text" dangerouslySetInnerHTML={{ __html: sanitizeCmsHtml(body) }} />
 }
 
 function sanitizeCmsHtml(value) {
@@ -154,14 +134,14 @@ function BlogPage() {
     const load = async () => {
       const slug = slugFromLocation()
       const sourcePosts = await getAllPosts()
-      const resolved = contentSource === 'sanity' ? sourcePosts.map(normalisePost) : sourcePosts
+      const resolved = sourcePosts
       if (!mounted) return
       setPosts(resolved)
       if (slug) {
         let loadedPost = null
         try { loadedPost = await getPostBySlug(slug) } catch { loadedPost = null }
         if (!mounted) return
-        const post = loadedPost ? (contentSource === 'sanity' ? normalisePost(loadedPost) : loadedPost) : resolved.find((item) => item.slug === slug) || null
+        const post = loadedPost || resolved.find((item) => item.slug === slug) || null
         setActivePost(post)
         setMissingSlug(post ? '' : slug)
       }
@@ -196,8 +176,8 @@ function BlogPage() {
     if (!activePost) document.title = 'Insights | SideTwo'
   }, [activePost])
 
-  const open = (slug) => { if (contentSource === 'directus') window.history.pushState(null, '', insightUrl(slug)); else window.location.hash = slug; setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const back = () => { if (contentSource === 'directus') window.history.pushState(null, '', asset('blog.html')); else window.history.replaceState(null, '', window.location.pathname); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const open = (slug) => { window.history.pushState(null, '', insightUrl(slug)); setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const back = () => { window.history.pushState(null, '', asset('blog.html')); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   const pageError = loadError || (missingSlug ? 'Der gewünschte Insight-Artikel wurde nicht gefunden.' : '')
   return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} error={pageError} />}<BlogFooter /></main>

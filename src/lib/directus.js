@@ -8,3 +8,12 @@ export const getAllDirectusPosts = client.getAllPosts
 export const getDirectusPostBySlug = client.getPostBySlug
 export const getLatestDirectusPosts = client.getLatestPosts
 export const directusImageUrl = client.imageUrl
+
+export function postImageUrl(post) {
+  return post?.image || ''
+}
+
+export function formatPublishedAt(value) {
+  if (!value) return 'Vorschau'
+  return new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(value))
+}

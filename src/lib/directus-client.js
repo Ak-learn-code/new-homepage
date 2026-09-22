@@ -13,7 +13,7 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
     if (height) query.set('height', String(height))
     return `${baseUrl}/assets/${encodeURIComponent(id)}?${query}`
   }
-  const normalisePost = (item) => {
+  const mapDirectusPost = (item) => {
     const featuredId = asId(item.featured_image)
     const ogId = asId(item.og_image)
     return {
@@ -46,7 +46,7 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
     const response = await fetcher(url)
     if (!response.ok) throw new Error(response.status === 403 ? 'Die veröffentlichten Insights sind noch nicht freigegeben.' : 'Insights konnten gerade nicht geladen werden.')
     const body = await response.json()
-    return Array.isArray(body.data) ? body.data.map(normalisePost) : []
+    return Array.isArray(body.data) ? body.data.map(mapDirectusPost) : []
   }
 
   return {

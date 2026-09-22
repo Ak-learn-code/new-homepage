@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { formatPublishedAt, postImageUrl } from './lib/sanity'
-import { contentSource, getLatestPosts } from './lib/content'
-import { normalisePost } from './lib/posts'
+import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl } from './lib/directus'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -24,7 +22,7 @@ import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
-const insightUrl = (slug) => contentSource === 'directus' ? asset(`insights/${encodeURIComponent(slug)}/`) : `${asset('blog.html')}#${slug}`
+const insightUrl = (slug) => asset(`insights/${encodeURIComponent(slug)}/`)
 
 const projects = [
   { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
@@ -415,11 +413,15 @@ function StudioImpact() {
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
           <article className="team-modal team-overview-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
-            <header className="team-overview-head"><span>SideTwo</span><h3 id="team-modal-title">Zwei Köpfe. Eine digitale Seite.</h3><p>Strategie, Gestaltung und technische Umsetzung direkt aus einer Hand.</p></header>
+            <header className="team-overview-head">
+              <div className="team-overview-portrait-duo" aria-label="Alexandros Kodalis und Bilal Altuntas">
+                {Object.entries(founderProfiles).map(([key, founder]) => <span className={`team-overview-portrait team-overview-portrait-${key}`} key={key}><img src={asset(founder.portrait)} alt="" /></span>)}
+              </div>
+              <div className="team-overview-heading-copy"><span>Gründer · SideTwo</span><h3 id="team-modal-title">Zwei Köpfe. Eine digitale Seite.</h3><p>Strategie, Gestaltung und technische Umsetzung direkt aus einer Hand.</p></div>
+            </header>
             <div className="team-overview-grid">
               {Object.entries(founderProfiles).map(([key, founder]) => (
                 <article className={`team-profile-card team-profile-card-${key}`} key={key}>
-                  <div className="team-profile-image"><img src={asset(founder.portrait)} alt={founder.name} /></div>
                   <div className="team-profile-content">
                     <p>Gründer · SideTwo</p><h4>{founder.name}</h4><strong>{founder.intro}</strong>
                     <ul>{founder.facts.slice(0, key === 'alex' ? 3 : 2).map((fact) => <li key={fact}>{fact}</li>)}</ul>
@@ -840,7 +842,7 @@ function Blog() {
     let current = true
     getLatestPosts().then((contentPosts) => {
       if (!current) return
-      setPosts(contentSource === 'sanity' ? contentPosts.map(normalisePost) : contentPosts)
+      setPosts(contentPosts)
     }).catch(() => {
       if (current) setLoadError(true)
     })
