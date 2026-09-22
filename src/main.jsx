@@ -775,6 +775,8 @@ function Contact() {
               <div className="project-contact-fields">
                 <label htmlFor="contact-name">Name<input id="contact-name" name="name" required placeholder="Vor- und Nachname" /></label>
                 <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required placeholder="name@firma.de" /></label>
+                <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" placeholder="Unternehmen" /></label>
+                <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" placeholder="Für eine Rückmeldung" /></label>
                 <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" rows="3" placeholder="Worum geht es?" /></label>
                 <label className="privacy-consent"><input type="checkbox" name="privacy" required /><span>Ich habe die <a href={asset('datenschutz')}>Datenschutzerklärung</a> gelesen und akzeptiere sie.</span></label>
               </div>
@@ -887,7 +889,7 @@ function Footer() {
         <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
         <div className="footer-col"><strong>Leistungen</strong><a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a></div>
         <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#faq">Fragen &amp; Antworten</a><a href="#kontakt">Kontakt</a></div>
-        <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('datenschutz')}>Datenschutz</a></div>
+        <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>
       </div>
       <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
     </footer>

@@ -10,6 +10,8 @@ export default defineConfig({
       input: {
         home: resolve(import.meta.dirname, 'index.html'),
         blog: resolve(import.meta.dirname, 'blog.html'),
+        impressum: resolve(import.meta.dirname, 'impressum/index.html'),
+        datenschutz: resolve(import.meta.dirname, 'datenschutz/index.html'),
       },
     },
   },

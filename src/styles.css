@@ -2366,6 +2366,8 @@ input { caret-color: var(--accent); }
 @media (max-width: 800px) { .blog-article-image { aspect-ratio: 16 / 9; } }
 @media (max-width: 560px) { .blog-article-image { aspect-ratio: 16 / 9; } }
 
+.legal-page { min-height: 100dvh; color: #1c3030; background: #f8f8f6; }.legal-header { padding-bottom: 34px; background: #f8f8f6; }.legal-content { width: min(100% - 44px, 900px); margin: 0 auto; padding: clamp(52px, 7vw, 96px) 0 clamp(82px, 10vw, 132px); }.legal-eyebrow { color: #087f76; font-size: 11px; font-weight: 800; letter-spacing: .12em; }.legal-content h1 { max-width: 760px; margin: 18px 0 58px; font-size: clamp(48px, 6.15vw, 80px); font-weight: 500; line-height: .94; letter-spacing: -.06em; }.legal-content section { max-width: 760px; padding-top: 31px; margin-top: 31px; border-top: 1px solid rgba(28,48,48,.16); }.legal-content h2 { margin: 0 0 15px; font-size: clamp(24px, 2.5vw, 34px); font-weight: 550; line-height: 1.05; letter-spacing: -.04em; }.legal-content p { margin: 0; color: #536561; font-size: 15px; line-height: 1.7; }.legal-content strong { color: #1c3030; }.legal-content a { color: #087f76; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; } @media (max-width: 560px) { .legal-header { padding-bottom: 20px; }.legal-content { width: calc(100% - 36px); padding-top: 42px; }.legal-content h1 { margin-bottom: 42px; font-size: clamp(41px, 11.8vw, 53px); }.legal-content section { padding-top: 26px; margin-top: 26px; }.legal-content p { font-size: 14px; line-height: 1.65; } }
+
 /* Insight detail: one shared vertical content axis for metadata, image, heading and rich text. */
 .blog-article > .blog-article-topline,
 .blog-article > .blog-article-image,
