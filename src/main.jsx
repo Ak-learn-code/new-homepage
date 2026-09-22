@@ -425,7 +425,7 @@ function StudioImpact() {
                   <div className="team-profile-content">
                     <p>Gründer · SideTwo</p><h4>{founder.name}</h4><strong>{founder.intro}</strong>
                     <ul>{founder.facts.slice(0, key === 'alex' ? 3 : 2).map((fact) => <li key={fact}>{fact}</li>)}</ul>
-                    {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noreferrer">LinkedIn-Profil <ArrowRight size={15} weight="bold" /></a> : <span>Profil wird ergänzt.</span>}
+                    {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn-Profil <ArrowRight size={15} weight="bold" /></a> : <span>Profil wird ergänzt.</span>}
                   </div>
                 </article>
               ))}
@@ -502,7 +502,7 @@ function ReferencesSequence() {
           <article className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label="Referenz schließen"><X weight="bold" /></button>
             <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} /></div>
-            <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span>{activeProject.location ? <small className="reference-location">Standort: {activeProject.location}</small> : null}{activeProject.url ? <a href={activeProject.url} target="_blank" rel="noreferrer">Website ansehen <ArrowRight size={16} weight="bold" /></a> : null}<a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
+            <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span>{activeProject.location ? <small className="reference-location">Standort: {activeProject.location}</small> : null}{activeProject.url ? <a href={activeProject.url} target="_blank" rel="noopener noreferrer">Website ansehen <ArrowRight size={16} weight="bold" /></a> : null}<a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
           </article>
         </div>
       ) : null}
@@ -773,11 +773,11 @@ function Contact() {
               </fieldset>
             ) : (
               <div className="project-contact-fields">
-                <label htmlFor="contact-name">Name<input id="contact-name" name="name" required placeholder="Vor- und Nachname" /></label>
-                <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required placeholder="name@firma.de" /></label>
-                <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" placeholder="Unternehmen" /></label>
-                <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" placeholder="Für eine Rückmeldung" /></label>
-                <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" rows="3" placeholder="Worum geht es?" /></label>
+                <label htmlFor="contact-name">Name<input id="contact-name" name="name" required autoComplete="name" maxLength="120" placeholder="Vor- und Nachname" /></label>
+                <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required autoComplete="email" maxLength="254" placeholder="name@firma.de" /></label>
+                <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" autoComplete="organization" maxLength="160" placeholder="Unternehmen" /></label>
+                <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" maxLength="40" placeholder="Für eine Rückmeldung" /></label>
+                <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" required rows="3" maxLength="5000" placeholder="Worum geht es?" /></label>
                 <label className="privacy-consent"><input type="checkbox" name="privacy" required /><span>Ich habe die <a href={asset('datenschutz')}>Datenschutzerklärung</a> gelesen und akzeptiere sie.</span></label>
               </div>
             )}
@@ -786,7 +786,7 @@ function Contact() {
               <button className="project-next" type="submit"><span>{step === 1 ? 'Weiter' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
             </div>
           </form>
-          {notice ? <p className="contact-notice" role="status">Die Anfrage ist vorbereitet. Für den Versand fehlt nur noch die Empfängeradresse des Kontaktformulars.</p> : null}
+          {notice ? <p className="contact-notice" role="status">Der Formularversand ist vor dem Produktivstart noch nicht verfügbar. Bitte schreibt uns bis dahin an info@sidetwo.de.</p> : null}
         </div>
       </div>
     </section>
@@ -886,7 +886,7 @@ function Footer() {
   return (
     <footer className="footer" id="ueber-uns">
       <div className="footer-inner">
-        <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
+        <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
         <div className="footer-col"><strong>Leistungen</strong><a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a></div>
         <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#faq">Fragen &amp; Antworten</a><a href="#kontakt">Kontakt</a></div>
         <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>

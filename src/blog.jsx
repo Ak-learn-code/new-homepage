@@ -106,10 +106,10 @@ function BlogFooter() {
   const home = (anchor = '') => `${asset('')}${anchor}`
   return <footer className="footer">
     <div className="footer-inner">
-      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
+      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
       <div className="footer-col"><strong>Leistungen</strong><a href={home('#leistungen')}>Webseiten</a><a href={home('#leistungen')}>Automatisierung</a><a href={home('#leistungen')}>KI-Agenten</a><a href={home('#leistungen')}>Social Media</a></div>
       <div className="footer-col"><strong>Studio</strong><a href={home('#impact')}>Über uns</a><a href={home('#referenzen')}>Projekte</a><a href={home('#fallstudien')}>Fallstudien</a><a href={home('#faq')}>Fragen &amp; Antworten</a><a href={home('#kontakt')}>Kontakt</a></div>
-      <div className="footer-col"><strong>Starten</strong><a href={home('#kontakt')}>Projekt anfragen</a><a href={home('#kontakt')}>Unverbindlich sprechen</a><a href={asset('datenschutz')}>Datenschutz</a></div>
+      <div className="footer-col"><strong>Starten</strong><a href={home('#kontakt')}>Projekt anfragen</a><a href={home('#kontakt')}>Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>
     </div>
     <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
   </footer>
