@@ -2366,7 +2366,7 @@ input { caret-color: var(--accent); }
 
 /* Client trust rail: marks float as one quiet, continuous line rather than individual cards. */
 .hero > .client-marquee {
-  bottom: 30px;
+  bottom: 80px;
 }
 
 .hero > .client-marquee .client-marquee-head {
@@ -2435,7 +2435,7 @@ input { caret-color: var(--accent); }
 }
 
 @media (max-width: 820px) {
-  .hero > .client-marquee { bottom: 22px; }
+  .hero > .client-marquee { bottom: 62px; }
   .hero > .client-marquee .client-marquee-head { padding-bottom: 7px; }
   .hero > .client-marquee .client-marquee-head h2 { font-size: 20px; }
   .hero > .client-marquee .client-marquee-window { padding: 12px 0 3px; }
@@ -2446,7 +2446,7 @@ input { caret-color: var(--accent); }
 }
 
 @media (max-width: 600px) {
-  .hero > .client-marquee { bottom: 24px; }
+  .hero > .client-marquee { bottom: 54px; }
   .hero > .client-marquee .client-marquee-head { margin-inline: 18px; padding-bottom: 5px; }
   .hero > .client-marquee .client-marquee-head h2 { font-size: 18px; text-align: left; }
   .hero > .client-marquee .client-marquee-window { padding: 10px 0 1px; }
