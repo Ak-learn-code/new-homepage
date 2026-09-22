@@ -1,12 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
+import { directusPublicPostFields } from '../src/lib/directus-client.js'
 import { createSitemapXml, renderArticleHtml } from './insight-prerender-utils.mjs'
 
 const root = process.cwd()
 const base = '/new-homepage/'
 const directusUrl = (process.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')
 const siteUrl = (process.env.VITE_SITE_URL || 'https://ak-learn-code.github.io/new-homepage').replace(/\/$/, '')
-const fields = 'slug,title,excerpt,content,published_at,seo_title,seo_description,canonical_url,featured_image,og_image,author.name'
+const fields = directusPublicPostFields.join(',')
 const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIComponent(fields)}&limit=100`)
 
 if (!response.ok) throw new Error(`Published Directus insights could not be read (HTTP ${response.status}). Configure public read access before prerendering.`)

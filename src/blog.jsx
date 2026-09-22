@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowRight, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { formatPublishedAt, getAllDirectusPosts as getAllPosts, getDirectusPostBySlug as getPostBySlug, postImageUrl } from './lib/directus'
+import { mapDirectusPost } from './lib/directus-client'
+import { blogRouteFromLocation, blogViewForRoute } from './lib/blog-route'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
-const slugFromLocation = () => {
-  const route = window.location.pathname.match(/\/insights\/([^/]+)\/?$/)
-  return route ? decodeURIComponent(route[1]) : window.location.hash.slice(1).replace(/[.]+$/, '')
-}
+const routeFromLocation = () => blogRouteFromLocation(window.location)
 const insightUrl = (slug) => asset(`insights/${encodeURIComponent(slug)}/`)
+
+function prerenderedPostFromDocument() {
+  const data = document.getElementById('directus-prerendered-insight')?.textContent
+  if (!data) return null
+  try {
+    return mapDirectusPost(JSON.parse(data), { directusUrl: import.meta.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de' })
+  } catch {
+    return null
+  }
+}
 
 function BlogMeta({ post }) {
   useEffect(() => {
@@ -122,9 +131,18 @@ function ArticleDetail({ post, posts, onBack, onOpen }) {
   return <article className="blog-article"><BlogMeta post={post} /><div className="blog-article-topline blog-article-prelude"><button className="blog-article-back" type="button" onClick={onBack}><ArrowLeft size={16} weight="bold" /> Alle Insights</button><span>{post.category || 'Digital'} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span></div><img className="blog-article-image" src={postImageUrl(post, { width: 1600, height: 900 })} alt={post.mainImage?.alt || post.title} /><header className="blog-article-head"><h1>{post.title}</h1><p>{post.excerpt}</p><small>Von {post.author || 'SideTwo'}</small></header><div className="blog-article-body"><RichText body={post.body} /><aside><strong>Idee im Kopf? Lass uns darüber sprechen.</strong><p>Wir schauen gemeinsam, welcher nächste Schritt für euer Unternehmen Sinn ergibt.</p><a href={`${asset('')}#kontakt`}>Projekt anfragen <ArrowRight size={16} weight="bold" /></a></aside></div>{relatedPosts.length ? <section className="blog-related" aria-labelledby="related-insights-title"><h2 id="related-insights-title">Noch mehr Insights</h2><div>{relatedPosts.map((related) => <button key={related.slug} type="button" onClick={() => onOpen(related.slug)}><img src={postImageUrl(related, { width: 680, height: 470 })} alt={related.mainImage?.alt || related.title} loading="lazy" /><span>{related.category || 'Digital'} · {formatPublishedAt(related.publishedAt)}</span><strong>{related.title}</strong><i>Artikel lesen <ArrowRight size={15} weight="bold" /></i></button>)}</div></section> : null}</article>
 }
 
+function ArticleLoading() {
+  return <section className="blog-article blog-article-loading" aria-live="polite" aria-label="Artikel wird geladen"><div className="blog-loading"><i /><i /></div></section>
+}
+
 function BlogPage() {
-  const [posts, setPosts] = useState([])
-  const [activePost, setActivePost] = useState(null)
+  const [{ initialRoute, initialPost }] = useState(() => {
+    const route = routeFromLocation()
+    return { initialRoute: route, initialPost: route.type === 'article' ? prerenderedPostFromDocument() : null }
+  })
+  const [route, setRoute] = useState(initialRoute)
+  const [posts, setPosts] = useState(initialPost ? [initialPost] : [])
+  const [activePost, setActivePost] = useState(initialPost)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [missingSlug, setMissingSlug] = useState('')
@@ -132,16 +150,16 @@ function BlogPage() {
   useEffect(() => {
     let mounted = true
     const load = async () => {
-      const slug = slugFromLocation()
+      const { slug, type } = routeFromLocation()
       const sourcePosts = await getAllPosts()
       const resolved = sourcePosts
       if (!mounted) return
       setPosts(resolved)
-      if (slug) {
+      if (type === 'article') {
         let loadedPost = null
         try { loadedPost = await getPostBySlug(slug) } catch { loadedPost = null }
         if (!mounted) return
-        const post = loadedPost || resolved.find((item) => item.slug === slug) || null
+        const post = loadedPost || resolved.find((item) => item.slug === slug) || initialPost || null
         setActivePost(post)
         setMissingSlug(post ? '' : slug)
       }
@@ -159,8 +177,10 @@ function BlogPage() {
   useEffect(() => {
     if (!posts.length) return undefined
     const updateRoute = () => {
-      const slug = slugFromLocation()
+      const nextRoute = routeFromLocation()
+      const { slug } = nextRoute
       const post = slug ? posts.find((item) => item.slug === slug) || null : null
+      setRoute(nextRoute)
       setActivePost(post)
       setMissingSlug(slug && !post ? slug : '')
     }
@@ -176,11 +196,14 @@ function BlogPage() {
     if (!activePost) document.title = 'Insights | SideTwo'
   }, [activePost])
 
-  const open = (slug) => { window.history.pushState(null, '', insightUrl(slug)); setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const back = () => { window.history.pushState(null, '', asset('blog.html')); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const open = (slug) => { window.history.pushState(null, '', insightUrl(slug)); setRoute({ type: 'article', slug }); setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const back = () => { window.history.pushState(null, '', asset('blog.html')); setRoute({ type: 'overview', slug: '' }); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   const pageError = loadError || (missingSlug ? 'Der gewünschte Insight-Artikel wurde nicht gefunden.' : '')
-  return <main className="blog-page"><BlogHeader />{activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} error={pageError} />}<BlogFooter /></main>
+  const content = blogViewForRoute(route) === 'article'
+    ? activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : pageError ? <p className="blog-empty" role="alert">{pageError}</p> : <ArticleLoading />
+    : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} error={pageError} />
+  return <main className="blog-page"><BlogHeader />{content}<BlogFooter /></main>
 }
 
 createRoot(document.getElementById('root')).render(<BlogPage />)

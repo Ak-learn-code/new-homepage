@@ -17,6 +17,8 @@ test('prerenders crawlable Directus article metadata and a GitHub Pages route', 
   assert.match(html, /src="\/new-homepage\/assets\/blog\.js"/)
   assert.match(html, /Der vollständige <strong>Artikeltext<\/strong>\./)
   assert.match(html, /<h2>Zwischenüberschrift<\/h2>/)
+  assert.match(html, /id="directus-prerendered-insight" type="application\/json"/)
+  assert.match(html, /"slug":"ein-insight"/)
   assert.doesNotMatch(html, /Ein <Insight>/)
 })
 
@@ -31,7 +33,7 @@ test('the Directus prerender request has no client-side status query or filter',
   assert.match(requestLine, /fields=\$\{encodeURIComponent\(fields\)\}&limit=100/)
   assert.doesNotMatch(requestLine, /status/)
   assert.doesNotMatch(requestLine, /filter=/)
-  assert.match(source, /content,published_at/)
+  assert.match(source, /directusPublicPostFields/)
 })
 
 test('does not apply the Vite base twice to an already base-prefixed script path', () => {

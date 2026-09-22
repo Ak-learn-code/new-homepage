@@ -53,11 +53,15 @@ export function prerenderedArticle(post) {
   return `<main class="blog-page"><article class="blog-article"><header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}</header><div class="blog-article-body"><div class="cms-rich-text">${content}</div></div></article></main>`
 }
 
+function prerenderedPostData(post) {
+  return JSON.stringify(post).replace(/</g, '\\u003c')
+}
+
 export function renderArticleHtml({ blogHtml, scriptPath, base, post, directusUrl, siteUrl }) {
   const title = post.seo_title || post.title || 'Insights'
   return blogHtml
     .replace(/<meta name="description"[^>]*\/?>/, articleMetadata(post, { directusUrl, siteUrl }))
     .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(title)} | SideTwo</title>`)
     .replace(scriptPath, withViteBasePath(scriptPath, base))
-    .replace('<div id="root"></div>', `<div id="root">${prerenderedArticle(post)}</div>`)
+    .replace('<div id="root"></div>', `<div id="root">${prerenderedArticle(post)}</div><script id="directus-prerendered-insight" type="application/json">${prerenderedPostData(post)}</script>`)
 }
