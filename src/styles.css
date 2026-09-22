@@ -2359,3 +2359,9 @@ input { caret-color: var(--accent); }
   .client-logo-pfrimm .client-logo-mark img { max-height: 34px; }
   .client-logo-bukkador .client-logo-mark img { max-height: 46px; }
 }
+
+/* Directus editorial imagery: a contained, crop-safe 16:9 frame across every viewport. */
+.blog-article-image { width: 100%; max-width: 1040px; aspect-ratio: 16 / 9; height: auto; display: block; margin-inline: auto; object-fit: cover; object-position: center; overflow: hidden; }
+.blog-page-card img { aspect-ratio: 16 / 9; object-fit: cover; object-position: center; }
+@media (max-width: 800px) { .blog-article-image { aspect-ratio: 16 / 9; } }
+@media (max-width: 560px) { .blog-article-image { aspect-ratio: 16 / 9; } }

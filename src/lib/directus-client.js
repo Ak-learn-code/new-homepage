@@ -11,6 +11,7 @@ export function mapDirectusPost(item, { directusUrl }) {
     const query = new URLSearchParams({ format: 'webp', quality: '82' })
     if (width) query.set('width', String(width))
     if (height) query.set('height', String(height))
+    if (width && height) query.set('fit', 'cover')
     return `${baseUrl}/assets/${encodeURIComponent(id)}?${query}`
   }
   const featuredId = asId(item.featured_image)
@@ -26,6 +27,7 @@ export function mapDirectusPost(item, { directusUrl }) {
     authorRole: item.author?.role || '',
     authorPortrait: imageUrl(asId(item.author?.portrait), 160, 160),
     mainImage: featuredId ? { alt: item.featured_image_alt || item.title } : null,
+    imageId: featuredId,
     image: imageUrl(featuredId),
     ogImage: imageUrl(ogId || featuredId, 1600, 900),
     publishedAt: item.published_at,
@@ -46,6 +48,7 @@ export function createDirectusContentClient({ directusUrl, fetcher = fetch }) {
     const query = new URLSearchParams({ format: 'webp', quality: '82' })
     if (width) query.set('width', String(width))
     if (height) query.set('height', String(height))
+    if (width && height) query.set('fit', 'cover')
     return `${baseUrl}/assets/${encodeURIComponent(id)}?${query}`
   }
   const requestPosts = async (filter) => {

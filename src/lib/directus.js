@@ -9,8 +9,13 @@ export const getDirectusPostBySlug = client.getPostBySlug
 export const getLatestDirectusPosts = client.getLatestPosts
 export const directusImageUrl = client.imageUrl
 
-export function postImageUrl(post) {
-  return post?.image || ''
+export function postImageUrl(post, { width, height } = {}) {
+  return post?.imageId ? directusImageUrl(post.imageId, width, height) : post?.image || ''
+}
+
+export function postImageSrcSet(post, widths, ratio = 16 / 9) {
+  if (!post?.imageId) return undefined
+  return widths.map((width) => `${directusImageUrl(post.imageId, width, Math.round(width / ratio))} ${width}w`).join(', ')
 }
 
 export function formatPublishedAt(value) {
