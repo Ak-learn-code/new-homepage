@@ -21,6 +21,17 @@ function prerenderedPostFromDocument() {
   }
 }
 
+function prerenderedPostsFromDocument() {
+  const data = document.getElementById('directus-prerendered-posts')?.textContent
+  if (!data) return []
+  try {
+    const rawPosts = JSON.parse(data)
+    return Array.isArray(rawPosts) ? rawPosts.map((post) => mapDirectusPost(post, { directusUrl: import.meta.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de' })) : []
+  } catch {
+    return []
+  }
+}
+
 function BlogMeta({ post }) {
   useEffect(() => {
     if (!post) return undefined
@@ -136,14 +147,16 @@ function ArticleLoading() {
 }
 
 function BlogPage() {
-  const [{ initialRoute, initialPost }] = useState(() => {
+  const [{ initialRoute, initialPost, initialPosts }] = useState(() => {
     const route = routeFromLocation()
-    return { initialRoute: route, initialPost: route.type === 'article' ? prerenderedPostFromDocument() : null }
+    const post = route.type === 'article' ? prerenderedPostFromDocument() : null
+    const posts = route.type === 'overview' ? prerenderedPostsFromDocument() : []
+    return { initialRoute: route, initialPost: post, initialPosts: post ? [post] : posts }
   })
   const [route, setRoute] = useState(initialRoute)
-  const [posts, setPosts] = useState(initialPost ? [initialPost] : [])
+  const [posts, setPosts] = useState(initialPosts)
   const [activePost, setActivePost] = useState(initialPost)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(initialPosts.length === 0)
   const [loadError, setLoadError] = useState('')
   const [missingSlug, setMissingSlug] = useState('')
 

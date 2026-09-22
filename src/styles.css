@@ -2184,6 +2184,11 @@ input { caret-color: var(--accent); }
 @media (max-width: 800px) { .cms-rich-text figure { width: 100%; margin-inline: 0; transform: none; } }
 @media (max-width: 560px) { .cms-rich-text > p, .cms-rich-text > ul, .cms-rich-text > ol { font-size: 17px; line-height: 1.72; }.cms-rich-text > h2 { margin-top: 51px; font-size: 31px; }.cms-rich-text > h3 { margin-top: 37px; font-size: 25px; }.cms-rich-text > blockquote { margin: 34px 0; padding-left: 18px; font-size: 22px; }.cms-rich-text figure img { border-radius: 19px; } }
 
+/* Static Directus overview uses real links before React takes over; keep their geometry identical to the interactive cards. */
+.blog-featured > a { min-height: 458px; display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(430px, .96fr); color: #edf5f1; text-align: left; text-decoration: none; }
+.blog-page-card > a { width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: stretch; color: inherit; text-align: left; text-decoration: none; }
+@media (max-width: 800px) { .blog-featured > a { min-height: 0; grid-template-columns: 1fr; } }
+
 /* Blog refinement: make the first story read as one calm editorial composition. */
 .blog-page-index-head { max-width: 760px; }
 .blog-page-index h1 { max-width: 760px; font-size: clamp(46px, 5.65vw, 74px); }
