@@ -2365,3 +2365,18 @@ input { caret-color: var(--accent); }
 .blog-page-card img { aspect-ratio: 16 / 9; object-fit: cover; object-position: center; }
 @media (max-width: 800px) { .blog-article-image { aspect-ratio: 16 / 9; } }
 @media (max-width: 560px) { .blog-article-image { aspect-ratio: 16 / 9; } }
+
+/* Insight detail: one shared vertical content axis for metadata, image, heading and rich text. */
+.blog-article > .blog-article-topline,
+.blog-article > .blog-article-image,
+.blog-article > .blog-article-head,
+.blog-article > .blog-article-body { width: 100%; max-width: 1040px; margin-inline: auto; }
+.blog-article-head h1,
+.blog-article-body,
+.cms-rich-text > p,
+.cms-rich-text > ul,
+.cms-rich-text > ol,
+.cms-rich-text > h2,
+.cms-rich-text > h3,
+.cms-rich-text > blockquote,
+.blog-article-body aside { max-width: none; }

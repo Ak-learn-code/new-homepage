@@ -57,6 +57,12 @@ test('keeps critical CSS ahead of the module script in prerendered articles', ()
   assert.ok(html.indexOf('<link rel="stylesheet"') < html.indexOf('<script type="module"'))
 })
 
+test('keeps image, heading, and rich text on one insight content axis', async () => {
+  const css = await readFile(resolve(process.cwd(), 'src/styles.css'), 'utf8')
+  assert.match(css, /\.blog-article > \.blog-article-topline,[\s\S]*max-width: 1040px/)
+  assert.match(css, /\.blog-article-head h1,[\s\S]*\.blog-article-body,[\s\S]*max-width: none/)
+})
+
 test('the Directus prerender request has no client-side status query or filter', async () => {
   const source = await readFile(resolve(process.cwd(), 'scripts/prerender-insights.mjs'), 'utf8')
   const requestLine = source.split('\n').find((line) => line.includes('/items/cms_posts')) || ''
