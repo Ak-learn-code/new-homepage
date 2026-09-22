@@ -45,3 +45,10 @@ test('the executable public source contains no client-side storage, tracking bea
   assert.doesNotMatch(source, /(?:localStorage|sessionStorage|indexedDB|document\.cookie|navigator\.sendBeacon)/)
   assert.doesNotMatch(source, /(?:TURNSTILE_SECRET|siteverify|challenges\.cloudflare\.com)/i)
 })
+
+test('local environment files are ignored while the safe example remains trackable', async () => {
+  const gitignore = await read('.gitignore')
+  assert.match(gitignore, /^\.env$/m)
+  assert.match(gitignore, /^\.env\.\*$/m)
+  assert.match(gitignore, /^!\.env\.example$/m)
+})
