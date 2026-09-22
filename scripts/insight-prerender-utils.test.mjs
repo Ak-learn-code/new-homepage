@@ -63,6 +63,15 @@ test('keeps image, heading, and rich text on one insight content axis', async ()
   assert.match(css, /\.blog-article-head h1,[\s\S]*\.blog-article-body,[\s\S]*max-width: none/)
 })
 
+test('keeps inline CMS images uncropped and aligned to the article body', async () => {
+  const postWithInlineImage = { ...post, content: '<figure><img src="https://directus.sidetwo.de/assets/inline-image" alt="Zwischenbild" /></figure>' }
+  const html = prerenderedArticle(postWithInlineImage, { base: '/new-homepage/', directusUrl: 'https://directus.sidetwo.de' })
+  const css = await readFile(resolve(process.cwd(), 'src/styles.css'), 'utf8')
+  assert.match(html, /<figure><img src="https:\/\/directus\.sidetwo\.de\/assets\/inline-image" alt="Zwischenbild" \/><\/figure>/)
+  assert.match(css, /\.cms-rich-text figure,[\s\S]*width: 100%; max-width: 100%; margin: 48px 0; transform: none/)
+  assert.match(css, /\.cms-rich-text figure img,[\s\S]*height: auto; display: block;[\s\S]*object-fit: contain/)
+})
+
 test('the Directus prerender request has no client-side status query or filter', async () => {
   const source = await readFile(resolve(process.cwd(), 'scripts/prerender-insights.mjs'), 'utf8')
   const requestLine = source.split('\n').find((line) => line.includes('/items/cms_posts')) || ''

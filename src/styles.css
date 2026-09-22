@@ -2380,3 +2380,10 @@ input { caret-color: var(--accent); }
 .cms-rich-text > h3,
 .cms-rich-text > blockquote,
 .blog-article-body aside { max-width: none; }
+
+/* Editorial images from cms_posts.content are content, not heroes: retain their original ratio and body alignment. */
+.cms-rich-text figure,
+.cms-rich-text > img { width: 100%; max-width: 100%; margin: 48px 0; transform: none; }
+.cms-rich-text figure img,
+.cms-rich-text > img { width: 100%; max-width: 100%; height: auto; display: block; border-radius: 22px; object-fit: contain; object-position: center; }
+@media (max-width: 560px) { .cms-rich-text figure, .cms-rich-text > img { margin-block: 34px; }.cms-rich-text figure img, .cms-rich-text > img { border-radius: 19px; } }
