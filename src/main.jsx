@@ -778,15 +778,16 @@ function Execution() {
   )
 }
 
-function TurnstileWidget({ siteKey, onToken, onError }) {
+function TurnstileWidget({ siteKey, onToken, onError, resetSignal }) {
   const targetRef = useRef(null)
+  const widgetIdRef = useRef(null)
 
   useEffect(() => {
     let mounted = true
     const scriptId = 'sidetwo-turnstile-script'
     const render = () => {
       if (!mounted || !targetRef.current || !window.turnstile) return
-      window.turnstile.render(targetRef.current, { sitekey: siteKey, action: 'contact', callback: onToken, 'error-callback': onError, 'expired-callback': () => onToken('') })
+      widgetIdRef.current = window.turnstile.render(targetRef.current, { sitekey: siteKey, action: 'contact', callback: onToken, 'error-callback': onError, 'expired-callback': () => onToken('') })
     }
     const existing = document.getElementById(scriptId)
     if (existing) { existing.addEventListener('load', render); render(); return () => { mounted = false; existing.removeEventListener('load', render) } }
@@ -801,6 +802,10 @@ function TurnstileWidget({ siteKey, onToken, onError }) {
     return () => { mounted = false; script.removeEventListener('load', render); script.removeEventListener('error', onError) }
   }, [siteKey, onToken, onError])
 
+  useEffect(() => {
+    if (resetSignal && widgetIdRef.current !== null && window.turnstile) window.turnstile.reset(widgetIdRef.current)
+  }, [resetSignal])
+
   return <div className="turnstile-widget" ref={targetRef} aria-label="Sicherheitsprüfung" />
 }
 
@@ -809,6 +814,7 @@ function Contact() {
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState('')
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0)
   const [step, setStep] = useState(1)
   const [projectType, setProjectType] = useState('Webseite')
   const formRef = useRef(null)
@@ -835,6 +841,7 @@ function Contact() {
       if (!response.ok || result.success !== true) throw new Error(result.message || 'Die Anfrage konnte nicht gesendet werden.')
       form.reset()
       setTurnstileToken('')
+      setTurnstileResetSignal((current) => current + 1)
       setNotice(result.message || 'Vielen Dank. Wir melden uns zeitnah bei euch.')
     } catch (error) {
       setNotice(error instanceof Error && error.message ? error.message : 'Die Anfrage konnte nicht gesendet werden. Bitte versucht es später erneut.')
@@ -869,7 +876,7 @@ function Contact() {
                 <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" aria-invalid={Boolean(errors.company)} autoComplete="organization" maxLength="160" placeholder="Unternehmen" /></label>{errors.company ? <p className="contact-field-error">{errors.company}</p> : null}
                 <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" aria-invalid={Boolean(errors.phone)} autoComplete="tel" inputMode="tel" maxLength="40" placeholder="Für eine Rückmeldung" /></label>{errors.phone ? <p className="contact-field-error">{errors.phone}</p> : null}
                 <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" required aria-required="true" aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'contact-message-error' : undefined} rows="3" maxLength="5000" placeholder="Worum geht es?" /></label>{errors.message ? <p id="contact-message-error" className="contact-field-error">{errors.message}</p> : null}
-                {productionWorkflowEnabled ? <><TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} onError={() => { setTurnstileToken(''); setErrors((current) => ({ ...current, turnstileToken: 'Die Sicherheitsprüfung konnte nicht geladen werden.' })) }} />{errors.turnstileToken ? <p className="contact-field-error">{errors.turnstileToken}</p> : null}</> : null}
+                {productionWorkflowEnabled ? <><TurnstileWidget siteKey={turnstileSiteKey} resetSignal={turnstileResetSignal} onToken={setTurnstileToken} onError={() => { setTurnstileToken(''); setErrors((current) => ({ ...current, turnstileToken: 'Die Sicherheitsprüfung konnte nicht geladen werden.' })) }} />{errors.turnstileToken ? <p className="contact-field-error">{errors.turnstileToken}</p> : null}</> : null}
                 <label className="privacy-consent"><input type="checkbox" name="privacy" required /><span>Ich habe die <a href={asset('datenschutz')}>Datenschutzerklärung</a> gelesen und akzeptiere sie.</span></label>
               </div>
             )}

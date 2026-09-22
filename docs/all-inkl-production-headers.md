@@ -2,7 +2,7 @@
 
 Diese Datei ist eine **Vorlage** für die produktive Apache-/`.htaccess`-Konfiguration auf `sidetwo.de`. Sie wird nicht vom GitHub-Pages-Workflow ausgeliefert und darf erst nach einem Staging-Test auf dem künftigen Host aktiviert werden.
 
-Die erste CSP-Variante beschreibt den aktuellen Code: lokale Assets und Fonts sowie öffentliche Bild-/Content-Anfragen an `https://directus.sidetwo.de`. Cloudflare Turnstile ist aktuell nicht eingebunden und deshalb bewusst nicht freigegeben.
+Die CSP beschreibt den Produktionscode: lokale Assets und Fonts, öffentliche Directus-Bilder/-Inhalte, den serverseitigen Contact-Endpunkt bei `dashboard.sidetwo.de` und Cloudflare Turnstile. Turnstile darf erst aktiviert werden, wenn der zugehörige Server-Secret im SideTwo-OS-Service gesetzt und Siteverify erfolgreich getestet ist.
 
 ```apacheconf
 <IfModule mod_headers.c>
@@ -10,7 +10,7 @@ Die erste CSP-Variante beschreibt den aktuellen Code: lokale Assets und Fonts so
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
   Header always set X-Frame-Options "DENY"
-  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data: https://directus.sidetwo.de; connect-src 'self' https://directus.sidetwo.de; media-src 'self'; manifest-src 'self'"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self'; font-src 'self' data:; img-src 'self' data: https://directus.sidetwo.de; connect-src 'self' https://directus.sidetwo.de https://dashboard.sidetwo.de https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; media-src 'self'; manifest-src 'self'"
 
   # Erst aktivieren, wenn sidetwo.de dauerhaft per HTTPS erreichbar ist.
   # includeSubDomains und preload bewusst nicht voreinstellen.
@@ -18,7 +18,7 @@ Die erste CSP-Variante beschreibt den aktuellen Code: lokale Assets und Fonts so
 </IfModule>
 ```
 
-Vor dem Einschalten von Turnstile muss die CSP gezielt erweitert werden. Die produktiv eingesetzte Widget-Variante benötigt mindestens `https://challenges.cloudflare.com` in `script-src` und `frame-src`; `connect-src` darf nur ergänzt werden, wenn der Browser tatsächlich direkt zu Cloudflare verbinden muss. Der Formular-Endpunkt muss den Turnstile-Token ausschließlich serverseitig gegen Siteverify prüfen und ungültige oder abgelaufene Tokens ablehnen.
+Der Formular-Endpunkt muss den Turnstile-Token ausschließlich serverseitig gegen Siteverify prüfen und ungültige oder abgelaufene Tokens ablehnen. Falls Turnstile beim finalen Launch noch nicht aktiv ist, die drei Cloudflare-Quellen bewusst wieder aus der CSP entfernen und die öffentlichen `VITE_*`-Formularwerte leer lassen.
 
 ## Abnahme vor Aktivierung
 

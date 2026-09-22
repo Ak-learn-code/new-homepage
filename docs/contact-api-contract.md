@@ -4,7 +4,7 @@ GitHub Pages kann keinen geheimen Schlüssel schützen. Deshalb bleibt das Formu
 
 ## Öffentlicher Request
 
-`POST /api/contact` (bevorzugt same-origin auf dem künftigen ALL-INKL-/Backend-Host) mit `Content-Type: application/json`:
+`POST https://dashboard.sidetwo.de/api/public/contact` mit `Content-Type: application/json`:
 
 ```json
 {
@@ -25,8 +25,8 @@ Nur diese sechs Felder dürfen übernommen werden. Der Server muss dieselben Reg
 2. Request gegen den gemeinsamen Contract validieren.
 3. Rate-Limit pro IP und angemessene Missbrauchserkennung anwenden.
 4. `turnstileToken` serverseitig mit `TURNSTILE_SECRET_KEY` über Siteverify prüfen. Bei fehlender, ungültiger, abgelaufener oder nicht erreichbarer Prüfung: **ablehnen**.
-5. Erwarteten `hostname` (`sidetwo.de`) und die Aktion `contact` prüfen.
-6. Erst danach die Anfrage per sicherer Mail-Integration und/oder an das Dashboard weitergeben. Keine Secrets, Roh-Header oder Stacktraces an den Browser ausgeben.
+5. Erwartete Hostnamen (`sidetwo.de`, `www.sidetwo.de`) und die Aktion `contact` prüfen.
+6. Erst danach die Anfrage serverseitig per SMTP an `info@sidetwo.de` zustellen und als Website-Lead im bestehenden CRM erfassen. Keine Secrets, Roh-Header oder Stacktraces an den Browser ausgeben.
 
 ## Antworten
 
@@ -36,6 +36,8 @@ Fehler: `400`, `403`, `413`, `429` oder `500` mit `{ "success": false, "code": "
 
 ## Konfiguration
 
-- `VITE_CONTACT_API_URL`: öffentliche Endpoint-URL; leer lassen, bis der Endpoint existiert.
+- `VITE_CONTACT_API_URL`: `https://dashboard.sidetwo.de/api/public/contact` im Produktionsbuild; leer lassen, solange der Nuxt-Endpunkt noch nicht produktiv konfiguriert ist.
 - `VITE_TURNSTILE_SITE_KEY`: öffentlicher Sitekey; nur zusammen mit dem Endpoint setzen.
 - `TURNSTILE_SECRET_KEY`: ausschließlich im Server-/Hosting-Secret-Store, niemals als `VITE_*`-Variable.
+
+Die Endpoint-CORS-Regel akzeptiert ausschließlich `https://sidetwo.de` und `https://www.sidetwo.de`. Für lokale Integrationstests muss ein lokaler Origin explizit in `CONTACT_ALLOWED_ORIGINS` ergänzt und nachher wieder entfernt werden.
