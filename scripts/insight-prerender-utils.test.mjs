@@ -23,8 +23,18 @@ test('prerenders crawlable Directus article metadata and a GitHub Pages route', 
 })
 
 test('keeps migrated Directus HTML content in the prerendered article body', () => {
-  assert.match(prerenderedArticle(post), /<div class="cms-rich-text"><p>Der vollständige <strong>Artikeltext<\/strong>\.<\/p><h2>Zwischenüberschrift<\/h2><\/div>/)
-  assert.equal(prerenderedArticle({ title: 'Leer', content: null }), '<main class="blog-page"><article class="blog-article"><header class="blog-article-head"><h1>Leer</h1></header><div class="blog-article-body"><div class="cms-rich-text"></div></div></article></main>')
+  const html = prerenderedArticle(post, { base: '/new-homepage/', directusUrl: 'https://directus.sidetwo.de' })
+  assert.match(html, /<div class="cms-rich-text"><p>Der vollständige <strong>Artikeltext<\/strong>\.<\/p><h2>Zwischenüberschrift<\/h2><\/div>/)
+  assert.match(html, /class="blog-article-image"[^>]*width="1600" height="900" fetchpriority="high"/)
+  assert.match(html, /class="nav-shell blog-site-header"/)
+  assert.match(html, /<footer class="footer">/)
+  assert.match(prerenderedArticle({ title: 'Leer', content: null }, { base: '/', directusUrl: 'https://directus.sidetwo.de' }), /<h1>Leer<\/h1>/)
+})
+
+test('keeps critical CSS ahead of the module script in prerendered articles', () => {
+  const htmlWithCss = blogHtml.replace('</head>', '<link rel="stylesheet" href="/assets/blog.css"></head>')
+  const html = renderArticleHtml({ blogHtml: htmlWithCss, scriptPath: '/assets/blog.js', base: '/new-homepage/', post, directusUrl: 'https://directus.sidetwo.de', siteUrl: 'https://ak-learn-code.github.io/new-homepage' })
+  assert.ok(html.indexOf('<link rel="stylesheet"') < html.indexOf('<script type="module"'))
 })
 
 test('the Directus prerender request has no client-side status query or filter', async () => {
