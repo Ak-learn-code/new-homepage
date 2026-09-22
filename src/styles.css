@@ -2448,7 +2448,7 @@ input { caret-color: var(--accent); }
 @media (max-width: 600px) {
   .hero > .client-marquee { bottom: 54px; }
   .hero > .client-marquee .client-marquee-head { margin-inline: 18px; padding-bottom: 5px; }
-  .hero > .client-marquee .client-marquee-head h2 { font-size: 18px; text-align: left; }
+  .hero > .client-marquee .client-marquee-head h2 { font-size: 18px; text-align: left; transform: translateY(-5px); }
   .hero > .client-marquee .client-marquee-window { padding: 10px 0 1px; }
   .hero > .client-marquee .client-marquee-track { gap: 34px; padding-right: 34px; animation-duration: 42s; }
   .hero > .client-marquee .client-logo-tile { width: 112px; height: 38px; }
