@@ -12,12 +12,13 @@ Die erste CSP-Variante beschreibt den aktuellen Code: lokale Assets und Fonts so
   Header always set X-Frame-Options "DENY"
   Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data: https://directus.sidetwo.de; connect-src 'self' https://directus.sidetwo.de; media-src 'self'; manifest-src 'self'"
 
-  # Erst aktivieren, wenn sidetwo.de und alle verwendeten Subdomains dauerhaft per HTTPS erreichbar sind.
-  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Erst aktivieren, wenn sidetwo.de dauerhaft per HTTPS erreichbar ist.
+  # includeSubDomains und preload bewusst nicht voreinstellen.
+  Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>
 ```
 
-Vor dem Einschalten von Turnstile muss die CSP gezielt erweitert werden. Die produktiv eingesetzte Widget-Variante bestimmt die erforderlichen Quellen; typischerweise sind mindestens `https://challenges.cloudflare.com` in `script-src` und `frame-src` nötig. Der Formular-Endpunkt muss den Turnstile-Token ausschließlich serverseitig gegen Siteverify prüfen und ungültige oder abgelaufene Tokens ablehnen.
+Vor dem Einschalten von Turnstile muss die CSP gezielt erweitert werden. Die produktiv eingesetzte Widget-Variante benötigt mindestens `https://challenges.cloudflare.com` in `script-src` und `frame-src`; `connect-src` darf nur ergänzt werden, wenn der Browser tatsächlich direkt zu Cloudflare verbinden muss. Der Formular-Endpunkt muss den Turnstile-Token ausschließlich serverseitig gegen Siteverify prüfen und ungültige oder abgelaufene Tokens ablehnen.
 
 ## Abnahme vor Aktivierung
 

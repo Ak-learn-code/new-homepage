@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl } from './lib/directus'
+import { validateContactPayload } from './lib/contact-contract'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -151,6 +152,32 @@ function SideTwoLogo({ className = '' }) {
       style={{ WebkitMaskImage: logoUrl, maskImage: logoUrl }}
     />
   )
+}
+
+function useModalFocus(isOpen, onClose, triggerRef) {
+  const dialogRef = useRef(null)
+  const closeRef = useRef(onClose)
+  closeRef.current = onClose
+  useEffect(() => {
+    if (!isOpen) return undefined
+    const dialog = dialogRef.current
+    const focusable = () => [...dialog?.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])') || []]
+    const first = focusable()[0]
+    first?.focus()
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') { event.preventDefault(); closeRef.current(); return }
+      if (event.key !== 'Tab') return
+      const controls = focusable()
+      if (!controls.length) { event.preventDefault(); dialog?.focus(); return }
+      const firstControl = controls[0]
+      const lastControl = controls.at(-1)
+      if (event.shiftKey && document.activeElement === firstControl) { event.preventDefault(); lastControl.focus() }
+      if (!event.shiftKey && document.activeElement === lastControl) { event.preventDefault(); firstControl.focus() }
+    }
+    dialog?.addEventListener('keydown', onKeyDown)
+    return () => { dialog?.removeEventListener('keydown', onKeyDown); triggerRef.current?.focus() }
+  }, [isOpen, triggerRef])
+  return dialogRef
 }
 
 function Navigation() {
@@ -326,6 +353,8 @@ function StudioImpact() {
   const sectionRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
   const [profileOpen, setProfileOpen] = useState(false)
+  const profileTriggerRef = useRef(null)
+  const profileDialogRef = useModalFocus(profileOpen, () => setProfileOpen(false), profileTriggerRef)
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -385,7 +414,7 @@ function StudioImpact() {
           <p>für Unternehmen aus der Region realisiert.</p>
         </article>
         <div className="impact-stack">
-          <button className="impact-card impact-team" type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
+          <button className="impact-card impact-team" ref={profileTriggerRef} type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
             <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
               <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
               <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
@@ -411,7 +440,7 @@ function StudioImpact() {
       </div>
       {profileOpen ? (
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
-          <article className="team-modal team-overview-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className="team-modal team-overview-modal" ref={profileDialogRef} tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="team-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setProfileOpen(false)} aria-label="Profil schließen"><X weight="bold" /></button>
             <header className="team-overview-head">
               <div className="team-overview-portrait-duo" aria-label="Alexandros Kodalis und Bilal Altuntas">
@@ -443,6 +472,8 @@ function ReferencesSequence() {
   const [page, setPage] = useState(0)
   const swipeStart = useRef(null)
   const didSwipe = useRef(false)
+  const referenceTriggerRef = useRef(null)
+  const referenceDialogRef = useModalFocus(Boolean(activeProject), () => setActiveProject(null), referenceTriggerRef)
 
   useEffect(() => {
     const close = (event) => {
@@ -488,7 +519,7 @@ function ReferencesSequence() {
       </header>
       <div className="references-wall" onPointerDown={(event) => { swipeStart.current = event.clientX }} onPointerUp={endSwipe} onPointerCancel={() => { swipeStart.current = null }}>
         {visibleProjects.map((project) => (
-          <button className="reference-tile" type="button" key={project.name} onClick={() => { if (didSwipe.current) { didSwipe.current = false; return } setActiveProject(project) }} aria-label={`Details zu ${project.name} öffnen`}>
+          <button className="reference-tile" type="button" key={project.name} onClick={(event) => { if (didSwipe.current) { didSwipe.current = false; return } referenceTriggerRef.current = event.currentTarget; setActiveProject(project) }} aria-label={`Details zu ${project.name} öffnen`}>
             <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" />
             <span className="reference-tile-cover">
               <span><b>{project.name}</b><small>{project.meta}</small></span>
@@ -499,7 +530,7 @@ function ReferencesSequence() {
       </div>
       {activeProject ? (
         <div className="reference-modal-backdrop" role="presentation" onMouseDown={() => setActiveProject(null)}>
-          <article className="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className="reference-modal" ref={referenceDialogRef} tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label="Referenz schließen"><X weight="bold" /></button>
             <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} /></div>
             <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span>{activeProject.location ? <small className="reference-location">Standort: {activeProject.location}</small> : null}{activeProject.url ? <a href={activeProject.url} target="_blank" rel="noopener noreferrer">Website ansehen <ArrowRight size={16} weight="bold" /></a> : null}<a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
@@ -747,10 +778,70 @@ function Execution() {
   )
 }
 
+function TurnstileWidget({ siteKey, onToken, onError }) {
+  const targetRef = useRef(null)
+
+  useEffect(() => {
+    let mounted = true
+    const scriptId = 'sidetwo-turnstile-script'
+    const render = () => {
+      if (!mounted || !targetRef.current || !window.turnstile) return
+      window.turnstile.render(targetRef.current, { sitekey: siteKey, action: 'contact', callback: onToken, 'error-callback': onError, 'expired-callback': () => onToken('') })
+    }
+    const existing = document.getElementById(scriptId)
+    if (existing) { existing.addEventListener('load', render); render(); return () => { mounted = false; existing.removeEventListener('load', render) } }
+    const script = document.createElement('script')
+    script.id = scriptId
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+    script.async = true
+    script.defer = true
+    script.addEventListener('load', render)
+    script.addEventListener('error', onError)
+    document.head.appendChild(script)
+    return () => { mounted = false; script.removeEventListener('load', render); script.removeEventListener('error', onError) }
+  }, [siteKey, onToken, onError])
+
+  return <div className="turnstile-widget" ref={targetRef} aria-label="Sicherheitsprüfung" />
+}
+
 function Contact() {
-  const [notice, setNotice] = useState(false)
+  const [notice, setNotice] = useState('')
+  const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [step, setStep] = useState(1)
   const [projectType, setProjectType] = useState('Webseite')
+  const formRef = useRef(null)
+  const contactApiUrl = import.meta.env.VITE_CONTACT_API_URL || ''
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
+  const productionWorkflowEnabled = Boolean(contactApiUrl && turnstileSiteKey)
+
+  const submit = async (event) => {
+    event.preventDefault()
+    if (step === 1) { setStep(2); setNotice(''); return }
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    if (!formData.get('privacy')) { setErrors({ form: 'Bitte bestätige die Datenschutzerklärung.' }); setNotice('Bitte bestätige die Datenschutzerklärung.'); return }
+    const { privacy: _privacy, ...fields } = Object.fromEntries(formData.entries())
+    const validation = validateContactPayload({ ...fields, turnstileToken }, { requireTurnstile: productionWorkflowEnabled })
+    if (!validation.ok) { setErrors(validation.errors); setNotice(validation.errors.form || 'Bitte prüfe die markierten Felder.'); return }
+    setErrors({})
+    if (!productionWorkflowEnabled) { setNotice('Der Formularversand ist vor dem Produktivstart noch nicht verfügbar. Bitte schreibt uns bis dahin an info@sidetwo.de.'); return }
+    setIsSubmitting(true)
+    setNotice('')
+    try {
+      const response = await fetch(contactApiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'omit', body: JSON.stringify({ ...validation.value, turnstileToken }) })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || result.success !== true) throw new Error(result.message || 'Die Anfrage konnte nicht gesendet werden.')
+      form.reset()
+      setTurnstileToken('')
+      setNotice(result.message || 'Vielen Dank. Wir melden uns zeitnah bei euch.')
+    } catch (error) {
+      setNotice(error instanceof Error && error.message ? error.message : 'Die Anfrage konnte nicht gesendet werden. Bitte versucht es später erneut.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <section className="project-start" id="kontakt" aria-labelledby="project-start-title">
@@ -762,7 +853,7 @@ function Contact() {
           <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /></div>
         </div>
         <div className="project-start-form-wrap">
-          <form className="project-start-form" onSubmit={(event) => { event.preventDefault(); if (step === 1) setStep(2); else setNotice(true) }}>
+          <form className="project-start-form" ref={formRef} onSubmit={submit} noValidate>
             <div className="project-start-progress"><div><span>Schritt {step} von 2</span><strong>{step === 1 ? 'Leistung auswählen' : 'Kontakt teilen'}</strong></div></div>
             {step === 1 ? (
               <fieldset className="project-service-choices">
@@ -773,20 +864,21 @@ function Contact() {
               </fieldset>
             ) : (
               <div className="project-contact-fields">
-                <label htmlFor="contact-name">Name<input id="contact-name" name="name" required autoComplete="name" maxLength="120" placeholder="Vor- und Nachname" /></label>
-                <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required autoComplete="email" maxLength="254" placeholder="name@firma.de" /></label>
-                <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" autoComplete="organization" maxLength="160" placeholder="Unternehmen" /></label>
-                <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" maxLength="40" placeholder="Für eine Rückmeldung" /></label>
-                <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" required rows="3" maxLength="5000" placeholder="Worum geht es?" /></label>
+                <label htmlFor="contact-name">Name<input id="contact-name" name="name" required aria-required="true" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'contact-name-error' : undefined} autoComplete="name" maxLength="120" placeholder="Vor- und Nachname" /></label>{errors.name ? <p id="contact-name-error" className="contact-field-error">{errors.name}</p> : null}
+                <label htmlFor="contact-email">E-Mail-Adresse<input id="contact-email" name="email" type="email" required aria-required="true" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'contact-email-error' : undefined} autoComplete="email" maxLength="254" placeholder="name@firma.de" /></label>{errors.email ? <p id="contact-email-error" className="contact-field-error">{errors.email}</p> : null}
+                <label htmlFor="contact-company">Firma <small>(optional)</small><input id="contact-company" name="company" aria-invalid={Boolean(errors.company)} autoComplete="organization" maxLength="160" placeholder="Unternehmen" /></label>{errors.company ? <p className="contact-field-error">{errors.company}</p> : null}
+                <label htmlFor="contact-phone">Telefonnummer <small>(optional)</small><input id="contact-phone" name="phone" type="tel" aria-invalid={Boolean(errors.phone)} autoComplete="tel" inputMode="tel" maxLength="40" placeholder="Für eine Rückmeldung" /></label>{errors.phone ? <p className="contact-field-error">{errors.phone}</p> : null}
+                <label htmlFor="contact-message">Kurz zum Projekt<textarea id="contact-message" name="message" required aria-required="true" aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'contact-message-error' : undefined} rows="3" maxLength="5000" placeholder="Worum geht es?" /></label>{errors.message ? <p id="contact-message-error" className="contact-field-error">{errors.message}</p> : null}
+                {productionWorkflowEnabled ? <><TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} onError={() => { setTurnstileToken(''); setErrors((current) => ({ ...current, turnstileToken: 'Die Sicherheitsprüfung konnte nicht geladen werden.' })) }} />{errors.turnstileToken ? <p className="contact-field-error">{errors.turnstileToken}</p> : null}</> : null}
                 <label className="privacy-consent"><input type="checkbox" name="privacy" required /><span>Ich habe die <a href={asset('datenschutz')}>Datenschutzerklärung</a> gelesen und akzeptiere sie.</span></label>
               </div>
             )}
             <div className="project-start-actions">
               {step === 2 ? <button className="project-back" type="button" onClick={() => setStep(1)}>Zurück</button> : <span />}
-              <button className="project-next" type="submit"><span>{step === 1 ? 'Weiter' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
+              <button className="project-next" type="submit" disabled={isSubmitting}><span>{isSubmitting ? 'Wird gesendet …' : step === 1 ? 'Weiter' : productionWorkflowEnabled ? 'Anfrage senden' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
             </div>
           </form>
-          {notice ? <p className="contact-notice" role="status">Der Formularversand ist vor dem Produktivstart noch nicht verfügbar. Bitte schreibt uns bis dahin an info@sidetwo.de.</p> : null}
+          {notice ? <p className="contact-notice" role={Object.keys(errors).length ? 'alert' : 'status'}>{notice}</p> : null}
         </div>
       </div>
     </section>
@@ -916,7 +1008,7 @@ function App() {
     }
   }, [])
 
-  return <main><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main>
+  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

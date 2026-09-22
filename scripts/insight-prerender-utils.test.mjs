@@ -72,6 +72,18 @@ test('keeps inline CMS images cropped to 16:9 and aligned to the article body', 
   assert.match(css, /\.cms-rich-text figure img,[\s\S]*aspect-ratio: 16 \/ 9; height: auto; display: block;[\s\S]*object-fit: cover/)
 })
 
+test('sanitizes CMS HTML before it is written into prerendered articles', () => {
+  const unsafePost = {
+    ...post,
+    content: '<script>alert(1)</script><img src="x" onerror="alert(1)" /><a href="javascript:alert(1)">Test</a><div onclick="alert(1)">Inhalt</div><iframe srcdoc="x"></iframe>',
+  }
+  const html = prerenderedArticle(unsafePost, { base: '/new-homepage/', directusUrl: 'https://directus.sidetwo.de' })
+
+  assert.doesNotMatch(html, /<script|onerror=|onclick=|javascript:|srcdoc=|<iframe/i)
+  assert.match(html, /Test/)
+  assert.match(html, /Inhalt/)
+})
+
 test('the Directus prerender request has no client-side status query or filter', async () => {
   const source = await readFile(resolve(process.cwd(), 'scripts/prerender-insights.mjs'), 'utf8')
   const requestLine = source.split('\n').find((line) => line.includes('/items/cms_posts')) || ''

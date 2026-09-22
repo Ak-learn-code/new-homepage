@@ -13,6 +13,6 @@ test('the public website and release workflow are Directus-only with no Sanity f
   assert.doesNotMatch(blog, /sanity|PortableText|contentSource|normalisePost/i)
   assert.doesNotMatch(homepage, /sanity|contentSource|normalisePost/i)
   assert.doesNotMatch(workflow, /sanity|content_source|VITE_CONTENT_SOURCE/i)
-  assert.match(packageJson, /"build": "vite build && node scripts\/prerender-insights\.mjs"/)
+  assert.match(packageJson, /"build": "vite build && node scripts\/prerender-legal-pages\.mjs && node scripts\/prerender-insights\.mjs"/)
   assert.match(workflow, /- run: npm run build/)
 })

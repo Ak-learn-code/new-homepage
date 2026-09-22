@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
+import { getSiteConfig } from './scripts/site-config.mjs'
 
-export default defineConfig({
-  plugins: [react()],
-  base: '/new-homepage/',
+export default defineConfig(() => {
+  const { base, siteUrl } = getSiteConfig()
+  return {
+  plugins: [react(), { name: 'sidetwo-site-metadata', transformIndexHtml: (html) => html.replaceAll('__SIDETWO_SITE_URL__', siteUrl) }],
+  base,
   build: {
     rollupOptions: {
       input: {
@@ -15,4 +18,5 @@ export default defineConfig({
       },
     },
   },
+  }
 })

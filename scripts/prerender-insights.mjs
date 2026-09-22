@@ -2,11 +2,11 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { directusPublicPostFields } from '../src/lib/directus-client.js'
 import { createSitemapXml, renderArticleHtml, renderBlogIndexHtml } from './insight-prerender-utils.mjs'
+import { getSiteConfig } from './site-config.mjs'
 
 const root = process.cwd()
-const base = '/new-homepage/'
+const { base, siteUrl } = getSiteConfig()
 const directusUrl = (process.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')
-const siteUrl = (process.env.VITE_SITE_URL || 'https://ak-learn-code.github.io/new-homepage').replace(/\/$/, '')
 const fields = directusPublicPostFields.join(',')
 const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIComponent(fields)}&sort=-published_at&limit=100`)
 
@@ -31,5 +31,6 @@ for (const post of data) {
 }
 
 await writeFile(resolve(root, 'dist', 'sitemap.xml'), createSitemapXml({ siteUrl, slugs: data.map((post) => post?.slug) }))
+await writeFile(resolve(root, 'dist', 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`)
 
 console.log(`Prerendered ${data.length} insight route(s) and updated sitemap.xml.`)

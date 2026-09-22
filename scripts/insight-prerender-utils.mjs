@@ -1,10 +1,8 @@
+import { sanitizeCmsHtml } from '../src/lib/sanitize-cms-html.js'
+
 export const escapeHtml = (value = '') => String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 const fileId = (value) => typeof value === 'string' ? value : value?.id || ''
-
-function migratedContentHtml(value) {
-  return typeof value === 'string' ? value : ''
-}
 
 function directusAssetUrl(value, directusUrl, width, height) {
   const id = fileId(value)
@@ -100,9 +98,7 @@ export function prerenderedArticle(post, { base, directusUrl }) {
   const excerpt = post.excerpt || ''
   const image = directusAssetUrl(post.featured_image, directusUrl, 1200, 675)
   const meta = [post.category?.name || 'Digital', formatPublishedAt(post.published_at), post.read_time_minutes ? `${post.read_time_minutes} Min. Lesezeit` : ''].filter(Boolean).join(' · ')
-  // cms_posts.content is emitted as sanitized HTML by the Sanity-to-Directus migration.
-  // Runtime rendering applies an additional browser-side allow-list before displaying it.
-  const content = migratedContentHtml(post.content)
+  const content = sanitizeCmsHtml(post.content, { directusUrl })
   const imageMarkup = image ? `<img class="blog-article-image" src="${escapeHtml(image)}" srcset="${escapeHtml(directusSrcSet(post.featured_image, directusUrl, [640, 960, 1200, 1600]))}" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 800px) calc(100vw - 60px), 1040px" alt="${escapeHtml(post.featured_image_alt || title)}" width="1600" height="900" fetchpriority="high" />` : ''
   return `<main class="blog-page">${siteHeader(base)}<article class="blog-article"><div class="blog-article-topline blog-article-prelude"><a class="blog-article-back" href="${base}blog.html">← Alle Insights</a><span>${escapeHtml(meta)}</span></div>${imageMarkup}<header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}<small>Von ${escapeHtml(post.author?.name || 'SideTwo')}</small></header><div class="blog-article-body"><div class="cms-rich-text">${content}</div><aside><strong>Idee im Kopf? Lass uns darüber sprechen.</strong><p>Wir schauen gemeinsam, welcher nächste Schritt für euer Unternehmen Sinn ergibt.</p><a href="${base}#kontakt">Projekt anfragen</a></aside></div></article>${siteFooter(base)}</main>`
 }

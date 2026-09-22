@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/prerender-insights.mjs",
-    "test:content": "node --test src/lib/directus-client.test.js src/lib/blog-route.test.js scripts/insight-prerender-utils.test.mjs scripts/directus-only-architecture.test.mjs scripts/prelaunch-public-site.test.mjs",
+    "build": "vite build && node scripts/prerender-legal-pages.mjs && node scripts/prerender-insights.mjs",
+    "test:content": "node --test src/lib/directus-client.test.js src/lib/sanitize-cms-html.test.js src/lib/contact-contract.test.js src/lib/blog-route.test.js scripts/insight-prerender-utils.test.mjs scripts/directus-only-architecture.test.mjs scripts/prelaunch-public-site.test.mjs",
     "prerender:insights": "node scripts/prerender-insights.mjs",
     "preview": "vite preview"
   },
@@ -16,6 +16,7 @@
     "@vitejs/plugin-react": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "sanitize-html": "^2.17.7",
     "vite": "latest"
   }
 }

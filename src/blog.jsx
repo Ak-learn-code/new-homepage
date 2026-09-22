@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowRight, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { formatPublishedAt, getAllDirectusPosts as getAllPosts, getDirectusPostBySlug as getPostBySlug, postImageUrl, postImageSrcSet } from './lib/directus'
 import { mapDirectusPost } from './lib/directus-client'
+import { sanitizeCmsHtml } from './lib/sanitize-cms-html'
 import { blogRouteFromLocation, blogViewForRoute } from './lib/blog-route'
 import '@fontsource-variable/manrope'
 import './styles.css'
@@ -62,25 +63,7 @@ function BlogMeta({ post }) {
 
 function RichText({ body }) {
   if (typeof body !== 'string' || !body) return null
-  return <div className="cms-rich-text" dangerouslySetInnerHTML={{ __html: sanitizeCmsHtml(body) }} />
-}
-
-function sanitizeCmsHtml(value) {
-  const template = document.createElement('template')
-  template.innerHTML = value
-  const allowed = new Set(['P', 'STRONG', 'EM', 'CODE', 'PRE', 'A', 'H2', 'H3', 'BLOCKQUOTE', 'UL', 'OL', 'LI', 'FIGURE', 'FIGCAPTION', 'IMG', 'BR'])
-  const assetPrefix = `${(import.meta.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de').replace(/\/$/, '')}/assets/`
-  for (const node of [...template.content.querySelectorAll('*')]) {
-    if (!allowed.has(node.tagName)) { node.replaceWith(...node.childNodes); continue }
-    for (const attribute of [...node.attributes]) {
-      const isHref = node.tagName === 'A' && attribute.name === 'href' && /^(https?:|mailto:|\/|#)/i.test(attribute.value)
-      const isImage = node.tagName === 'IMG' && attribute.name === 'src' && attribute.value.startsWith(assetPrefix)
-      const isAlt = node.tagName === 'IMG' && attribute.name === 'alt'
-      if (!isHref && !isImage && !isAlt) node.removeAttribute(attribute.name)
-    }
-    if (node.tagName === 'A') { node.setAttribute('rel', 'noopener noreferrer'); if (/^https?:/i.test(node.getAttribute('href') || '')) node.setAttribute('target', '_blank') }
-  }
-  return template.innerHTML
+  return <div className="cms-rich-text" dangerouslySetInnerHTML={{ __html: sanitizeCmsHtml(body, { directusUrl: import.meta.env.VITE_DIRECTUS_URL || 'https://directus.sidetwo.de' }) }} />
 }
 
 function SideTwoLogo({ className = '' }) {
@@ -216,7 +199,7 @@ function BlogPage() {
   const content = blogViewForRoute(route) === 'article'
     ? activePost ? <ArticleDetail post={activePost} posts={posts} onBack={back} onOpen={open} /> : pageError ? <p className="blog-empty" role="alert">{pageError}</p> : <ArticleLoading />
     : <ArticleIndex posts={posts} onOpen={open} isLoading={isLoading} error={pageError} />
-  return <main className="blog-page"><BlogHeader />{content}<BlogFooter /></main>
+  return <main id="main-content" className="blog-page"><a className="skip-link" href="#blog-content">Zum Hauptinhalt springen</a><BlogHeader /><div id="blog-content">{content}</div><BlogFooter /></main>
 }
 
 createRoot(document.getElementById('root')).render(<BlogPage />)
