@@ -1,0 +1,85 @@
+name: SideTwo Production Artifact
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-production-artifact:
+    name: Production-Build erzeugen
+    runs-on: ubuntu-latest
+    env:
+      VITE_SITE_URL: https://sidetwo.de
+      VITE_BASE_PATH: /
+      VITE_CONTACT_API_URL: ${{ vars.VITE_CONTACT_API_URL }}
+      VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
+    steps:
+      # v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prüfe erforderliche öffentliche Build-Variablen
+        run: |
+          test -n "$VITE_CONTACT_API_URL"
+          test -n "$VITE_TURNSTILE_SITE_KEY"
+      - name: Erzeuge Production-Build
+        run: npm run build:production
+      - name: Prüfe Production-Artefakt
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { existsSync } from 'node:fs'
+          import { readFile, readdir } from 'node:fs/promises'
+          import { resolve } from 'node:path'
+
+          const dist = resolve('dist')
+          const requiredFiles = [
+            'index.html',
+            'blog.html',
+            'impressum/index.html',
+            'datenschutz/index.html',
+            'sitemap.xml',
+            'robots.txt',
+          ]
+
+          for (const file of requiredFiles) {
+            assert.ok(existsSync(resolve(dist, file)), `Missing required production file: ${file}`)
+          }
+
+          const files = []
+          const collectFiles = async (directory) => {
+            for (const entry of await readdir(directory, { withFileTypes: true })) {
+              const path = resolve(directory, entry.name)
+              if (entry.isDirectory()) await collectFiles(path)
+              else files.push(path)
+            }
+          }
+          await collectFiles(dist)
+          const artifact = (await Promise.all(files.map((file) => readFile(file, 'utf8').catch(() => '')))).join('\n')
+          const htmlFiles = files.filter((file) => file.endsWith('.html'))
+
+          assert.ok(files.some((file) => file.startsWith(resolve(dist, 'insights')) && file.endsWith('index.html')), 'Production artifact contains no prerendered insight pages')
+          assert.ok(!artifact.includes('/new-homepage/'), 'Production artifact contains a GitHub Pages base path')
+          for (const file of htmlFiles) {
+            const html = await readFile(file, 'utf8')
+            assert.match(html, /<link rel="canonical" href="https:\/\/sidetwo\.de(?:\/|\")/, `Missing production canonical URL in ${file}`)
+          }
+          assert.ok(artifact.includes(process.env.VITE_CONTACT_API_URL), 'Contact API URL was not bundled')
+          assert.ok(artifact.includes(process.env.VITE_TURNSTILE_SITE_KEY), 'Turnstile site key was not bundled')
+          assert.match(artifact, /turnstile/i, 'Turnstile integration is missing from the production artifact')
+          assert.doesNotMatch(artifact, /TURNSTILE_SECRET|DIRECTUS_(?:TOKEN|STATIC_TOKEN|PASSWORD)|SMTP_(?:PASSWORD|USER)|DATABASE_(?:URL|PASSWORD)/i, 'Production artifact contains an obvious secret marker')
+          console.log(`Production artifact checks passed (${files.length} files).`)
+          NODE
+      # v4.6.2
+      - name: Lade deploybares ALL-INKL-Artefakt hoch
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sidetwo-production
+          path: dist
+          if-no-files-found: error
