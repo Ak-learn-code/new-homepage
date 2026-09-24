@@ -18,9 +18,10 @@ const scriptPath = blogHtml.match(/<script type="module" crossorigin src="([^"]+
 if (!scriptPath) throw new Error('Could not locate the built blog JavaScript entry.')
 
 const insightsIndex = renderBlogIndexHtml({ blogHtml, posts: data, base, directusUrl })
+const insightsCanonical = new URL(`${base}insights/`, `${siteUrl}/`).toString()
 await mkdir(resolve(root, 'dist', 'insights'), { recursive: true })
 await writeFile(resolve(root, 'dist', 'insights', 'index.html'), insightsIndex)
-await writeFile(resolve(root, 'dist', 'blog.html'), `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${base}insights/"><link rel="canonical" href="${base}insights/"><title>Insights | SideTwo</title></head><body><p><a href="${base}insights/">Zu den Insights</a></p></body></html>`)
+await writeFile(resolve(root, 'dist', 'blog.html'), `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${base}insights/"><link rel="canonical" href="${insightsCanonical}"><title>Insights | SideTwo</title></head><body><p><a href="${base}insights/">Zu den Insights</a></p></body></html>`)
 
 for (const post of data) {
   if (!post?.slug) continue

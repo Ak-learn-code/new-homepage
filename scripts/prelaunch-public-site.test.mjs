@@ -106,3 +106,11 @@ test('the production build is configured through explicit site and base variable
   assert.match(prerender, /getSiteConfig/)
   assert.match(prerender, /dist', 'robots\.txt/)
 })
+
+test('the legacy blog redirect keeps its base-aware target but emits an absolute canonical URL', async () => {
+  const prerender = await read('scripts/prerender-insights.mjs')
+
+  assert.match(prerender, /new URL\(`\$\{base\}insights\/`, `\$\{siteUrl\}\/`\)\.toString\(\)/)
+  assert.match(prerender, /http-equiv="refresh" content="0; url=\$\{base\}insights\/"/)
+  assert.match(prerender, /rel="canonical" href="\$\{insightsCanonical\}"/)
+})
