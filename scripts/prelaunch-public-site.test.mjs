@@ -52,6 +52,8 @@ test('the hero links to the verified Google business profile without rating clai
   assert.match(homepage, /className="google-rating" href=\{googleProfileUrl\} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen"/)
   assert.match(homepage, /Google/)
   assert.match(homepage, /Google-Bewertungen/)
+  assert.match(homepage, /assets\/people\/alex-kodalis\.png/)
+  assert.match(homepage, /assets\/people\/bilal-altuntas\.png/)
   assert.doesNotMatch(homepage, /Sterneanzahl|Bewertungspunktzahl|Review-Anzahl/)
 })
 

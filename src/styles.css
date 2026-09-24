@@ -1507,18 +1507,20 @@ input { caret-color: var(--accent); }
 .google-rating:focus-visible { outline: 2px solid #f2a146; outline-offset: 3px; }
 .google-rating-context { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .google-rating-context svg { color: #f2bc4b; filter: drop-shadow(0 2px 5px rgba(242, 161, 70, .18)); }
-.google-rating-context strong { color: #f5f7f2; font-size: 16px; font-weight: 500; letter-spacing: -.02em; line-height: 1; white-space: nowrap; }
-.google-rating-pill { min-height: 48px; display: inline-flex; align-items: center; padding: 4px 20px; border-radius: 999px; color: #f6f8f4; background: rgba(255, 255, 255, .1); font-size: 15px; font-weight: 400; letter-spacing: -.01em; line-height: 1; white-space: nowrap; }
+.google-rating-context strong { color: #f5f7f2; font-size: 15px; font-weight: 500; letter-spacing: -.15px; line-height: 21px; white-space: nowrap; }
+.google-rating-pill { min-height: 48px; display: inline-flex; align-items: center; padding: 4px; border-radius: 99px; color: #f6f8f4; background: rgba(255, 255, 255, .1); font-size: 14px; font-weight: 400; letter-spacing: -.28px; line-height: 19.6px; white-space: nowrap; }
+.google-rating-avatars { width: 70px; height: 40px; position: relative; flex: 0 0 70px; }
+.google-rating-avatars img { width: 40px; height: 40px; position: absolute; top: 0; left: 0; display: block; border: 0; border-radius: 200px; object-fit: cover; }
+.google-rating-avatars img + img { left: 30px; }
 
 @media (max-width: 720px) {
-  .google-rating { gap: 16px; margin-bottom: 16px; }
-  .google-rating-pill { padding-inline: 16px; font-size: 14px; }
+  .google-rating { gap: 20px; margin-bottom: 16px; }
+  .google-rating-context strong { font-size: 16px; font-weight: 400; letter-spacing: normal; line-height: 19.2px; }
+  .google-rating-pill { font-family: var(--font-sans); font-size: 16px; letter-spacing: normal; line-height: 19.2px; }
 }
 
 @media (max-width: 390px) {
-  .google-rating { gap: 12px; min-height: 44px; }
-  .google-rating-context strong { font-size: 15px; }
-  .google-rating-pill { min-height: 44px; padding-inline: 13px; font-size: 12px; }
+  .google-rating { width: min(350px, 100%); justify-content: space-between; gap: 0; }
 }
 .hero-copy-actions .button:first-child { color: #2b2114; background: #f2a146; box-shadow: 0 14px 30px rgba(115, 70, 19, .25); }
 .hero-copy-actions .button-secondary { color: #f3f1eb; background: rgba(239, 242, 237, .12); border: 1px solid rgba(239, 242, 237, .5); box-shadow: none; backdrop-filter: blur(8px); }
