@@ -12,11 +12,11 @@ import {
   CaretRight,
   ChartLineUp,
   FlowArrow,
-  GoogleLogo,
   List,
   Plus,
   Robot,
   ShareNetwork,
+  Star,
   X,
 } from '@phosphor-icons/react'
 import { FooterSocialLinks, socialLinks } from './components/footer-social-links'
@@ -83,7 +83,7 @@ const founderProfiles = {
   bilal: {
     name: 'Bilal Altuntas',
     portrait: 'assets/people/bilal-altuntas.png',
-    intro: 'Bilal bringt einen praktischen, lösungsorientierten Hintergrund aus der Automobilbranche mit. Ausbildung und Weiterbildung verbinden technisches Verständnis, strukturiertes Arbeiten und einen Blick für Prozesse, die im Alltag funktionieren. Bei SideTwo liegt sein Fokus auf verständlichen digitalen Lösungen ohne unnötige Komplexität.',
+    intro: 'Bilal bringt technisches Verständnis und einen praxisnahen Blick aus der Automobilbranche mit. Bei SideTwo fokussiert er sich auf einfache, funktionierende Lösungen.',
     facts: ['Kfz-Hintergrund: Ausbildung im Kfz-Bereich', 'Weiterbildung: IHK-Qualifikation', 'SideTwo: praxisnahe digitale Lösungen für Unternehmen'],
     profileHref: instagramProfile?.href,
     profileLabel: instagramProfile?.label,
@@ -245,11 +245,9 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
-            <GoogleLogo size={20} weight="bold" aria-hidden="true" />
-            <div>
-              <strong>SideTwo auf Google</strong>
-              <small>Profil ansehen</small>
-            </div>
+            <span className="google-rating-star" aria-hidden="true"><Star size={18} weight="fill" /></span>
+            <span className="google-rating-separator" aria-hidden="true" />
+            <span className="google-rating-copy"><strong>Google-Bewertungen</strong><small>Profil ansehen <ArrowRight size={12} weight="bold" aria-hidden="true" /></small></span>
           </a>
           <h1>
             <span>Wir bauen</span>

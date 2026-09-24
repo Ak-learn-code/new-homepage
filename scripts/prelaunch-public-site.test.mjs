@@ -50,13 +50,15 @@ test('the hero links to the verified Google business profile without rating clai
 
   assert.match(homepage, /https:\/\/www\.google\.com\/maps\/place\/\/+@49\.6515694/)
   assert.match(homepage, /className="google-rating" href=\{googleProfileUrl\} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen"/)
+  assert.match(homepage, /Google-Bewertungen/)
+  assert.match(homepage, /Profil ansehen/)
   assert.doesNotMatch(homepage, /Sterneanzahl|Bewertungspunktzahl|Review-Anzahl/)
 })
 
 test('Bilal has a complete founder profile and uses the shared Instagram URL', async () => {
   const homepage = await read('src/main.jsx')
 
-  assert.match(homepage, /Bilal bringt einen praktischen, lösungsorientierten Hintergrund aus der Automobilbranche mit\./)
+  assert.match(homepage, /Bilal bringt technisches Verständnis und einen praxisnahen Blick aus der Automobilbranche mit\. Bei SideTwo fokussiert er sich auf einfache, funktionierende Lösungen\./)
   assert.match(homepage, /Kfz-Hintergrund: Ausbildung im Kfz-Bereich/)
   assert.match(homepage, /Weiterbildung: IHK-Qualifikation/)
   assert.match(homepage, /SideTwo: praxisnahe digitale Lösungen für Unternehmen/)
