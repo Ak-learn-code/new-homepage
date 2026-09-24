@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowRight, List, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { FooterSocialLinks } from './components/footer-social-links'
 import { formatPublishedAt, getAllDirectusPosts as getAllPosts, getDirectusPostBySlug as getPostBySlug, postImageUrl, postImageSrcSet } from './lib/directus'
 import { mapDirectusPost } from './lib/directus-client'
 import { sanitizeCmsHtml } from './lib/sanitize-cms-html'
@@ -89,7 +90,7 @@ function BlogFooter() {
   const home = (anchor = '') => `${asset('')}${anchor}`
   return <footer className="footer">
     <div className="footer-inner">
-      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a className="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/" target="_blank" rel="noopener noreferrer">LinkedIn <ArrowRight size={15} weight="bold" /></a></div>
+      <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><FooterSocialLinks /></div>
       <div className="footer-col"><strong>Leistungen</strong><a href={home('#leistungen')}>Webseiten</a><a href={home('#leistungen')}>Automatisierung</a><a href={home('#leistungen')}>KI-Agenten</a><a href={home('#leistungen')}>Social Media</a></div>
       <div className="footer-col"><strong>Studio</strong><a href={home('#impact')}>Über uns</a><a href={home('#referenzen')}>Projekte</a><a href={home('#fallstudien')}>Fallstudien</a><a href={home('#faq')}>Fragen &amp; Antworten</a><a href={home('#kontakt')}>Kontakt</a></div>
       <div className="footer-col"><strong>Starten</strong><a href={home('#kontakt')}>Projekt anfragen</a><a href={home('#kontakt')}>Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>
@@ -163,8 +164,10 @@ function BlogPage() {
     }
     load().catch((error) => {
       if (!mounted) return
-      setPosts([])
-      setLoadError(error instanceof Error ? error.message : 'Insights sind gerade nicht verfügbar.')
+      if (!initialPosts.length) {
+        setPosts([])
+        setLoadError(error instanceof Error ? error.message : 'Insights sind gerade nicht verfügbar.')
+      }
       setIsLoading(false)
     })
     return () => { mounted = false }
@@ -193,7 +196,7 @@ function BlogPage() {
   }, [activePost])
 
   const open = (slug) => { window.history.pushState(null, '', insightUrl(slug)); setRoute({ type: 'article', slug }); setActivePost(posts.find((post) => post.slug === slug) || null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const back = () => { window.history.pushState(null, '', asset('blog.html')); setRoute({ type: 'overview', slug: '' }); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const back = () => { window.history.pushState(null, '', asset('insights/')); setRoute({ type: 'overview', slug: '' }); setActivePost(null); setMissingSlug(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   const pageError = loadError || (missingSlug ? 'Der gewünschte Insight-Artikel wurde nicht gefunden.' : '')
   const content = blogViewForRoute(route) === 'article'

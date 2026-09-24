@@ -29,12 +29,26 @@ test('all public React footers link to imprint and privacy pages', async () => {
 })
 
 test('new-window links use opener protection', async () => {
-  const sources = await Promise.all([read('src/main.jsx'), read('src/blog.jsx'), read('src/legal.jsx')])
+  const sources = await Promise.all([read('src/main.jsx'), read('src/blog.jsx'), read('src/legal.jsx'), read('src/components/footer-social-links.jsx')])
   for (const source of sources) {
     for (const tag of source.match(/<a[^>]+target="_blank"[^>]*>/g) || []) {
       assert.match(tag, /rel="noopener noreferrer"/)
     }
   }
+})
+
+test('the shared footer links to SideTwo Instagram with accessible external-link attributes', async () => {
+  const footerSocialLinks = await read('src/components/footer-social-links.jsx')
+
+  assert.match(footerSocialLinks, /https:\/\/www\.instagram\.com\/sidetwo\.de\//)
+  assert.match(footerSocialLinks, /label: 'SideTwo auf Instagram'/)
+  assert.match(footerSocialLinks, /target="_blank" rel="noopener noreferrer"/)
+})
+
+test('prerendered insights remain visible when the client-side refresh is unavailable', async () => {
+  const blog = await read('src/blog.jsx')
+
+  assert.match(blog, /if \(!initialPosts\.length\) \{[\s\S]*setPosts\(\[\]\)[\s\S]*setLoadError/)
 })
 
 test('the executable public source contains no client-side storage or secrets and gates Turnstile behind configuration', async () => {

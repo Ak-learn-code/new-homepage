@@ -31,7 +31,11 @@ function siteHeader(base) {
 function siteFooter(base) {
   const home = (anchor = '') => `${base}${anchor}`
   const logo = `<span class="sidetwo-logo footer-brand-logo" aria-hidden="true" style="-webkit-mask-image:url('${home('assets/sidetwo-logo-currentcolor.svg')}');mask-image:url('${home('assets/sidetwo-logo-currentcolor.svg')}')"></span>`
-  return `<footer class="footer"><div class="footer-inner"><div class="footer-brand">${logo}<p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><a class="footer-linkedin" href="https://www.linkedin.com/in/alexandros-kodalis-42a908334/">LinkedIn</a></div><div class="footer-col"><strong>Leistungen</strong><a href="${home('#leistungen')}">Webseiten</a><a href="${home('#leistungen')}">Automatisierung</a><a href="${home('#leistungen')}">KI-Agenten</a><a href="${home('#leistungen')}">Social Media</a></div><div class="footer-col"><strong>Studio</strong><a href="${home('#impact')}">Über uns</a><a href="${home('#referenzen')}">Projekte</a><a href="${home('#fallstudien')}">Fallstudien</a><a href="${home('#faq')}">Fragen &amp; Antworten</a><a href="${home('#kontakt')}">Kontakt</a></div><div class="footer-col"><strong>Starten</strong><a href="${home('#kontakt')}">Projekt anfragen</a><a href="${home('#kontakt')}">Unverbindlich sprechen</a><a href="${home('impressum')}">Impressum</a><a href="${home('datenschutz')}">Datenschutz</a></div></div><div class="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div></footer>`
+  const social = (href, label, icon) => `<a href="${href}" target="_blank" rel="noopener noreferrer" aria-label="${label}" title="${label}">${icon}<span class="sr-only">${label}</span></a>`
+  const linkedInIcon = '<svg aria-hidden="true" viewBox="0 0 256 256" width="19" height="19" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><rect x="36" y="36" width="184" height="184" rx="24"></rect><line x1="88" y1="112" x2="88" y2="176"></line><line x1="88" y1="80" x2="88" y2="80"></line><path d="M128 176v-36a28 28 0 0 1 56 0v36"></path><line x1="128" y1="112" x2="128" y2="176"></line></svg>'
+  const instagramIcon = '<svg aria-hidden="true" viewBox="0 0 256 256" width="19" height="19" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><rect x="36" y="36" width="184" height="184" rx="48"></rect><circle cx="128" cy="128" r="40"></circle><circle cx="180" cy="76" r="12" fill="currentColor" stroke="none"></circle></svg>'
+  const socials = `<div class="footer-socials" aria-label="SideTwo Social Media">${social('https://www.linkedin.com/in/alexandros-kodalis-42a908334/', 'SideTwo auf LinkedIn', linkedInIcon)}${social('https://www.instagram.com/sidetwo.de/', 'SideTwo auf Instagram', instagramIcon)}</div>`
+  return `<footer class="footer"><div class="footer-inner"><div class="footer-brand">${logo}<p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p>${socials}</div><div class="footer-col"><strong>Leistungen</strong><a href="${home('#leistungen')}">Webseiten</a><a href="${home('#leistungen')}">Automatisierung</a><a href="${home('#leistungen')}">KI-Agenten</a><a href="${home('#leistungen')}">Social Media</a></div><div class="footer-col"><strong>Studio</strong><a href="${home('#impact')}">Über uns</a><a href="${home('#referenzen')}">Projekte</a><a href="${home('#fallstudien')}">Fallstudien</a><a href="${home('#faq')}">Fragen &amp; Antworten</a><a href="${home('#kontakt')}">Kontakt</a></div><div class="footer-col"><strong>Starten</strong><a href="${home('#kontakt')}">Projekt anfragen</a><a href="${home('#kontakt')}">Unverbindlich sprechen</a><a href="${home('impressum')}">Impressum</a><a href="${home('datenschutz')}">Datenschutz</a></div></div><div class="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div></footer>`
 }
 
 const categoryOrder = ['Websites', 'Automatisierung', 'KI', 'Marketing', 'Design', 'Strategie', 'Sichtbarkeit']
@@ -40,9 +44,9 @@ function postMeta(post) {
   return [post.category?.name || 'Digital', formatPublishedAt(post.published_at), post.read_time_minutes ? `${post.read_time_minutes} Min. Lesezeit` : ''].filter(Boolean).join(' · ')
 }
 
-function postCard(post, { directusUrl }) {
+function postCard(post, { base, directusUrl }) {
   const image = directusAssetUrl(post.featured_image, directusUrl, 900, 506)
-  return `<article class="blog-page-card"><a href="insights/${encodeURIComponent(post.slug)}/"><img src="${escapeHtml(image)}" alt="${escapeHtml(post.featured_image_alt || post.title)}" width="900" height="650" loading="lazy" /><div><span>${escapeHtml(postMeta(post))}</span><h2>${escapeHtml(post.title)}</h2><p>${escapeHtml(post.excerpt || '')}</p><b>Weiterlesen</b></div></a></article>`
+  return `<article class="blog-page-card"><a href="${base}insights/${encodeURIComponent(post.slug)}/"><img src="${escapeHtml(image)}" alt="${escapeHtml(post.featured_image_alt || post.title)}" width="900" height="650" loading="lazy" /><div><span>${escapeHtml(postMeta(post))}</span><h2>${escapeHtml(post.title)}</h2><p>${escapeHtml(post.excerpt || '')}</p><b>Weiterlesen</b></div></a></article>`
 }
 
 export function prerenderedBlogIndex(posts, { base, directusUrl }) {
@@ -50,8 +54,8 @@ export function prerenderedBlogIndex(posts, { base, directusUrl }) {
   const categories = [...new Set(posts.map((post) => post.category?.name).filter(Boolean))]
   const orderedCategories = ['Alle', ...categoryOrder.filter((category) => categories.includes(category)), ...categories.filter((category) => !categoryOrder.includes(category)).sort((a, b) => a.localeCompare(b, 'de'))]
   const featuredImage = featured ? directusAssetUrl(featured.featured_image, directusUrl, 1200, 675) : ''
-  const featuredMarkup = featured ? `<article class="blog-featured"><a href="insights/${encodeURIComponent(featured.slug)}/"><img src="${escapeHtml(featuredImage)}" alt="${escapeHtml(featured.featured_image_alt || featured.title)}" width="1400" height="900" fetchpriority="high" /><div class="blog-featured-copy"><span>${escapeHtml(postMeta(featured))}</span><h2>${escapeHtml(featured.title)}</h2><p>${escapeHtml(featured.excerpt || '')}</p><b>Artikel lesen</b></div></a></article>` : ''
-  const cards = posts.slice(1).map((post) => postCard(post, { directusUrl })).join('')
+  const featuredMarkup = featured ? `<article class="blog-featured"><a href="${base}insights/${encodeURIComponent(featured.slug)}/"><img src="${escapeHtml(featuredImage)}" alt="${escapeHtml(featured.featured_image_alt || featured.title)}" width="1400" height="900" fetchpriority="high" /><div class="blog-featured-copy"><span>${escapeHtml(postMeta(featured))}</span><h2>${escapeHtml(featured.title)}</h2><p>${escapeHtml(featured.excerpt || '')}</p><b>Artikel lesen</b></div></a></article>` : ''
+  const cards = posts.slice(1).map((post) => postCard(post, { base, directusUrl })).join('')
   return `<main class="blog-page">${siteHeader(base)}<section class="blog-page-index" aria-labelledby="blog-page-title"><div class="blog-page-index-head"><span class="blog-page-kicker">SIDETWO INSIGHTS</span><h1 id="blog-page-title">Gedanken, Strategien &amp; digitale Ideen.</h1><p>Praktische Insights rund um Websites, Marketing, Automatisierung und KI, ohne unnötiges Agentur-Blabla.</p></div>${featuredMarkup}<div class="blog-controls"><div class="blog-categories" aria-label="Blog-Kategorien">${orderedCategories.map((category) => `<button class="${category === 'Alle' ? 'is-active' : ''}" type="button">${escapeHtml(category)}</button>`).join('')}</div><label class="blog-search"><input type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" /></label></div>${cards ? `<div class="blog-page-list">${cards}</div>` : ''}</section>${siteFooter(base)}</main>`
 }
 
@@ -68,7 +72,7 @@ function publicUrl(siteUrl, path = '') {
 }
 
 export function createSitemapXml({ siteUrl, slugs }) {
-  const urls = [publicUrl(siteUrl), publicUrl(siteUrl, 'blog.html')]
+  const urls = [publicUrl(siteUrl), publicUrl(siteUrl, 'insights/')]
   const seen = new Set(urls)
   for (const slug of slugs) {
     if (typeof slug !== 'string' || !slug.trim()) continue
@@ -100,7 +104,7 @@ export function prerenderedArticle(post, { base, directusUrl }) {
   const meta = [post.category?.name || 'Digital', formatPublishedAt(post.published_at), post.read_time_minutes ? `${post.read_time_minutes} Min. Lesezeit` : ''].filter(Boolean).join(' · ')
   const content = sanitizeCmsHtml(post.content, { directusUrl })
   const imageMarkup = image ? `<img class="blog-article-image" src="${escapeHtml(image)}" srcset="${escapeHtml(directusSrcSet(post.featured_image, directusUrl, [640, 960, 1200, 1600]))}" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 800px) calc(100vw - 60px), 1040px" alt="${escapeHtml(post.featured_image_alt || title)}" width="1600" height="900" fetchpriority="high" />` : ''
-  return `<main class="blog-page">${siteHeader(base)}<article class="blog-article"><div class="blog-article-topline blog-article-prelude"><a class="blog-article-back" href="${base}blog.html">← Alle Insights</a><span>${escapeHtml(meta)}</span></div>${imageMarkup}<header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}<small>Von ${escapeHtml(post.author?.name || 'SideTwo')}</small></header><div class="blog-article-body"><div class="cms-rich-text">${content}</div><aside><strong>Idee im Kopf? Lass uns darüber sprechen.</strong><p>Wir schauen gemeinsam, welcher nächste Schritt für euer Unternehmen Sinn ergibt.</p><a href="${base}#kontakt">Projekt anfragen</a></aside></div></article>${siteFooter(base)}</main>`
+  return `<main class="blog-page">${siteHeader(base)}<article class="blog-article"><div class="blog-article-topline blog-article-prelude"><a class="blog-article-back" href="${base}insights/">← Alle Insights</a><span>${escapeHtml(meta)}</span></div>${imageMarkup}<header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}<small>Von ${escapeHtml(post.author?.name || 'SideTwo')}</small></header><div class="blog-article-body"><div class="cms-rich-text">${content}</div><aside><strong>Idee im Kopf? Lass uns darüber sprechen.</strong><p>Wir schauen gemeinsam, welcher nächste Schritt für euer Unternehmen Sinn ergibt.</p><a href="${base}#kontakt">Projekt anfragen</a></aside></div></article>${siteFooter(base)}</main>`
 }
 
 function prerenderedPostData(post) {

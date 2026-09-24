@@ -17,10 +17,10 @@ const blogHtml = await readFile(resolve(root, 'dist/blog.html'), 'utf8')
 const scriptPath = blogHtml.match(/<script type="module" crossorigin src="([^"]+)"/)?.[1]
 if (!scriptPath) throw new Error('Could not locate the built blog JavaScript entry.')
 
-await writeFile(
-  resolve(root, 'dist', 'blog.html'),
-  renderBlogIndexHtml({ blogHtml, posts: data, base, directusUrl }),
-)
+const insightsIndex = renderBlogIndexHtml({ blogHtml, posts: data, base, directusUrl })
+await mkdir(resolve(root, 'dist', 'insights'), { recursive: true })
+await writeFile(resolve(root, 'dist', 'insights', 'index.html'), insightsIndex)
+await writeFile(resolve(root, 'dist', 'blog.html'), `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${base}insights/"><link rel="canonical" href="${base}insights/"><title>Insights | SideTwo</title></head><body><p><a href="${base}insights/">Zu den Insights</a></p></body></html>`)
 
 for (const post of data) {
   if (!post?.slug) continue

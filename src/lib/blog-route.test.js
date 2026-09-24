@@ -4,6 +4,7 @@ import { blogRouteFromLocation, blogViewForRoute } from './blog-route.js'
 
 test('initializes the blog overview only on the overview route', () => {
   assert.deepEqual(blogRouteFromLocation({ pathname: '/new-homepage/blog.html' }), { type: 'overview', slug: '' })
+  assert.deepEqual(blogRouteFromLocation({ pathname: '/new-homepage/insights/' }), { type: 'overview', slug: '' })
 })
 
 test('recognizes an insight article synchronously with the GitHub Pages base path', () => {

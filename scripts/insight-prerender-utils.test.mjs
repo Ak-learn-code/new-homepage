@@ -110,7 +110,7 @@ test('creates a valid, deduplicated sitemap for the homepage, blog overview, and
   const sitemap = createSitemapXml({ siteUrl: 'https://ak-learn-code.github.io/new-homepage', slugs: ['warum-eine-gute-website', 'automatisierung', 'warum-eine-gute-website', '', null] })
   assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/<\/loc>/)
-  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/blog\.html<\/loc>/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/<\/loc>/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/warum-eine-gute-website\/<\/loc>/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/automatisierung\/<\/loc>/)
   assert.equal((sitemap.match(/<loc>/g) || []).length, 4)
