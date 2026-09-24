@@ -245,11 +245,12 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
-            <span className="google-rating-context"><Star size={20} weight="fill" aria-hidden="true" /><strong>Google</strong></span>
+            <span className="google-rating-context"><Star size={20} weight="fill" aria-hidden="true" /><strong>5.0</strong></span>
             <span className="google-rating-pill">
-              <span className="google-rating-avatars" aria-hidden="true">
-                <img src={asset('assets/people/alex-kodalis.png')} alt="" />
-                <img src={asset('assets/people/bilal-altuntas.png')} alt="" />
+              <span className="google-rating-avatars" aria-hidden="true" style={{ '--google-rating-avatar-image': `url(${asset('assets/people/google-review-avatars.png')})` }}>
+                <span />
+                <span />
+                <span />
               </span>
               <span>Google-Bewertungen</span>
             </span>
