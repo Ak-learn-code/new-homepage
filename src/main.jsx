@@ -245,9 +245,8 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
-            <span className="google-rating-star" aria-hidden="true"><Star size={18} weight="fill" /></span>
-            <span className="google-rating-separator" aria-hidden="true" />
-            <span className="google-rating-copy"><strong>Google-Bewertungen</strong><small>Profil ansehen <ArrowRight size={12} weight="bold" aria-hidden="true" /></small></span>
+            <span className="google-rating-context"><Star size={40} weight="fill" aria-hidden="true" /><strong>Google</strong></span>
+            <span className="google-rating-pill"><span>Bewertungen ansehen</span><ArrowRight size={23} weight="bold" aria-hidden="true" /></span>
           </a>
           <h1>
             <span>Wir bauen</span>
