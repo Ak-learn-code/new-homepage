@@ -45,6 +45,34 @@ test('the shared footer links to SideTwo Instagram with accessible external-link
   assert.match(footerSocialLinks, /target="_blank" rel="noopener noreferrer"/)
 })
 
+test('the hero links to the verified Google business profile without rating claims', async () => {
+  const homepage = await read('src/main.jsx')
+
+  assert.match(homepage, /https:\/\/www\.google\.com\/maps\/place\/\/+@49\.6515694/)
+  assert.match(homepage, /className="google-rating" href=\{googleProfileUrl\} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen"/)
+  assert.doesNotMatch(homepage, /Sterneanzahl|Bewertungspunktzahl|Review-Anzahl/)
+})
+
+test('Bilal has a complete founder profile and uses the shared Instagram URL', async () => {
+  const homepage = await read('src/main.jsx')
+
+  assert.match(homepage, /Bilal bringt einen praktischen, lösungsorientierten Hintergrund aus der Automobilbranche mit\./)
+  assert.match(homepage, /Kfz-Hintergrund: Ausbildung im Kfz-Bereich/)
+  assert.match(homepage, /Weiterbildung: IHK-Qualifikation/)
+  assert.match(homepage, /SideTwo: praxisnahe digitale Lösungen für Unternehmen/)
+  assert.match(homepage, /profileHref: instagramProfile\?\.href/)
+  assert.doesNotMatch(homepage, /Profil und Lebenslauf folgen|Quick Facts werden ergänzt|Fokus und Spezialisierung folgen|Profil wird ergänzt/)
+})
+
+test('all public entry pages reference the SideTwo S² favicon', async () => {
+  const pages = await Promise.all([read('index.html'), read('blog.html'), read('impressum/index.html'), read('datenschutz/index.html')])
+
+  for (const page of pages) {
+    assert.match(page, /favicon\.svg/)
+    assert.match(page, /favicon\.ico/)
+  }
+})
+
 test('prerendered insights remain visible when the client-side refresh is unavailable', async () => {
   const blog = await read('src/blog.jsx')
 

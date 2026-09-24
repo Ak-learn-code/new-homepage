@@ -19,12 +19,14 @@ import {
   ShareNetwork,
   X,
 } from '@phosphor-icons/react'
-import { FooterSocialLinks } from './components/footer-social-links'
+import { FooterSocialLinks, socialLinks } from './components/footer-social-links'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
 const insightUrl = (slug) => asset(`insights/${encodeURIComponent(slug)}/`)
+const googleProfileUrl = 'https://www.google.com/maps/place//@49.6515694,8.5341134,11z/data=!3m1!4b1!4m3!3m2!1s0x4797d583f252c585:0x99f69071120f77d7!12e1?entry=ttu&g_ep=EgoyMDI2MDkyMi4wIKXMDSoASAFQAw%3D%3D'
+const instagramProfile = socialLinks.find(({ label }) => label === 'SideTwo auf Instagram')
 
 const projects = [
   { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
@@ -81,9 +83,10 @@ const founderProfiles = {
   bilal: {
     name: 'Bilal Altuntas',
     portrait: 'assets/people/bilal-altuntas.png',
-    intro: 'Profil und Lebenslauf folgen.',
-    facts: ['Quick Facts werden ergänzt.', 'Fokus und Spezialisierung folgen.', 'Berufliche Stationen werden ergänzt.'],
-    experience: [['Profil', 'Wird aktuell ergänzt.']],
+    intro: 'Bilal bringt einen praktischen, lösungsorientierten Hintergrund aus der Automobilbranche mit. Ausbildung und Weiterbildung verbinden technisches Verständnis, strukturiertes Arbeiten und einen Blick für Prozesse, die im Alltag funktionieren. Bei SideTwo liegt sein Fokus auf verständlichen digitalen Lösungen ohne unnötige Komplexität.',
+    facts: ['Kfz-Hintergrund: Ausbildung im Kfz-Bereich', 'Weiterbildung: IHK-Qualifikation', 'SideTwo: praxisnahe digitale Lösungen für Unternehmen'],
+    profileHref: instagramProfile?.href,
+    profileLabel: instagramProfile?.label,
   },
 }
 
@@ -241,13 +244,13 @@ function Hero() {
       </div>
       <div className="hero-content">
         <div className="hero-heading">
-          <div className="google-rating" aria-label="Google-Bewertungen, Profil wird verknüpft">
+          <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
             <GoogleLogo size={20} weight="bold" aria-hidden="true" />
             <div>
-              <strong>Google-Bewertungen</strong>
-              <small>Profil wird verknüpft</small>
+              <strong>SideTwo auf Google</strong>
+              <small>Profil ansehen</small>
             </div>
-          </div>
+          </a>
           <h1>
             <span>Wir bauen</span>
             <span>digitale Auftritte,</span>
@@ -454,8 +457,8 @@ function StudioImpact() {
                 <article className={`team-profile-card team-profile-card-${key}`} key={key}>
                   <div className="team-profile-content">
                     <p>Gründer · SideTwo</p><h4>{founder.name}</h4><strong>{founder.intro}</strong>
-                    <ul>{founder.facts.slice(0, key === 'alex' ? 3 : 2).map((fact) => <li key={fact}>{fact}</li>)}</ul>
-                    {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn-Profil <ArrowRight size={15} weight="bold" /></a> : <span>Profil wird ergänzt.</span>}
+                    <ul>{founder.facts.slice(0, 3).map((fact) => <li key={fact}>{fact}</li>)}</ul>
+                    {founder.linkedin ? <a href={founder.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn-Profil <ArrowRight size={15} weight="bold" /></a> : founder.profileHref ? <a href={founder.profileHref} target="_blank" rel="noopener noreferrer">{founder.profileLabel} <ArrowRight size={15} weight="bold" /></a> : null}
                   </div>
                 </article>
               ))}

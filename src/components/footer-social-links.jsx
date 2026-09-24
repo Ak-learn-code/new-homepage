@@ -1,6 +1,6 @@
 import { InstagramLogo, LinkedinLogo } from '@phosphor-icons/react'
 
-const socialLinks = [
+export const socialLinks = [
   { label: 'SideTwo auf LinkedIn', href: 'https://www.linkedin.com/in/alexandros-kodalis-42a908334/', Icon: LinkedinLogo },
   { label: 'SideTwo auf Instagram', href: 'https://www.instagram.com/sidetwo.de/', Icon: InstagramLogo },
 ]
