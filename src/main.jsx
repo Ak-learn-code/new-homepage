@@ -1004,6 +1004,26 @@ function Footer() {
 
 function App() {
   useEffect(() => {
+    const encodedId = window.location.hash.slice(1)
+    if (!encodedId) return undefined
+
+    let frame = window.requestAnimationFrame(() => {
+      frame = window.requestAnimationFrame(() => {
+        let id = encodedId
+        try { id = decodeURIComponent(encodedId) } catch { /* Keep the browser-provided fragment unchanged. */ }
+        const target = document.getElementById(id)
+        if (!target) return
+        const previousScrollBehavior = document.documentElement.style.scrollBehavior
+        document.documentElement.style.scrollBehavior = 'auto'
+        target.scrollIntoView({ block: 'start' })
+        document.documentElement.style.scrollBehavior = previousScrollBehavior
+      })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
+
+  useEffect(() => {
     const elements = document.querySelectorAll('.reveal-on-scroll')
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {

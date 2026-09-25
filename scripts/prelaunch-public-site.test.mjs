@@ -142,3 +142,11 @@ test('the amber scroll orbit belongs to the contact section, not services', asyn
   assert.match(homepage, /className="contact-scroll-orbit"/)
   assert.match(styles, /\.contact-scroll-orbit path[\s\S]*?stroke-dashoffset: var\(--contact-line-dash/)
 })
+
+test('homepage deep links scroll to a rendered section after React mounts', async () => {
+  const homepage = await read('src/main.jsx')
+
+  assert.match(homepage, /const encodedId = window\.location\.hash\.slice\(1\)/)
+  assert.match(homepage, /document\.documentElement\.style\.scrollBehavior = 'auto'/)
+  assert.match(homepage, /target\.scrollIntoView\(\{ block: 'start' \}\)/)
+})
