@@ -43,8 +43,6 @@ const referenceProjects = [
   { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.', url: 'https://ing-kaltbrunn.de/', location: 'Heppenheim' },
   { ...projects[4], description: 'Website, UX/UI und Entwicklung für eine vielseitige Sportanlage.', url: 'https://pfrimmpark-arena.de/', location: 'Worms' },
   { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.', url: 'https://bukkador-handpan.de/', location: 'Worms' },
-  { name: 'Sordillo Erdbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/sordillo.jpg'), description: 'Website und UX/UI für ein regionales Erdbauunternehmen.' },
-  { name: 'MP Dienstleistungen', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/mp-dienstleistungen.jpg'), description: 'Website und UX/UI für vielseitige Dienstleistungen aus der Region.' },
 ]
 
 const serviceItems = [
