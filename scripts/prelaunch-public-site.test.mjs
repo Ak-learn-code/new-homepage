@@ -124,3 +124,13 @@ test('homepage insight cards open through the resilient insights overview route'
   assert.match(homepage, /const insightOverviewUrl = \(slug\) => `\$\{asset\('insights\/'\)\}#\$\{encodeURIComponent\(slug\)\}`/)
   assert.match(homepage, /href=\{insightOverviewUrl\(post\.slug\)\}/)
 })
+
+test('all public logo links return to the homepage without a top fragment', async () => {
+  const [homepage, blog, legal, prerenderedBlog, prerenderedLegal] = await Promise.all([
+    read('src/main.jsx'), read('src/blog.jsx'), read('src/legal.jsx'), read('scripts/insight-prerender-utils.mjs'), read('scripts/prerender-legal-pages.mjs'),
+  ])
+
+  for (const source of [homepage, blog, legal, prerenderedBlog, prerenderedLegal]) {
+    assert.doesNotMatch(source, /nav-logo[\s\S]*?#top/)
+  }
+})

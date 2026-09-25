@@ -77,7 +77,7 @@ function BlogHeader() {
   const home = (anchor = '') => `${asset('')}${anchor}`
   return <header className="nav-shell blog-site-header">
     <nav className="nav-pill" aria-label="Hauptnavigation">
-      <a className="nav-logo" href={home('#top')} aria-label="SideTwo Startseite"><SideTwoLogo /></a>
+      <a className="nav-logo" href={home()} aria-label="SideTwo Startseite"><SideTwoLogo /></a>
       <div className="nav-links"><a href={home('#ueber-uns')}>Über uns</a><a href={home('#leistungen')}>Leistungen</a><a href={home('#referenzen')}>Projekte</a><a href={home('#fallstudien')}>Fallstudien</a></div>
       <a className="nav-contact" href={home('#kontakt')}>Kontakt</a>
       <button className="menu-button" type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-controls="blog-mobile-navigation" aria-label={open ? 'Menü schließen' : 'Menü öffnen'}>{open ? <X weight="bold" /> : <List weight="bold" />}</button>

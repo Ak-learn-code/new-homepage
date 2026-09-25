@@ -25,7 +25,7 @@ function formatPublishedAt(value) {
 function siteHeader(base) {
   const home = (anchor = '') => `${base}${anchor}`
   const logo = `<span class="sidetwo-logo" aria-hidden="true" style="-webkit-mask-image:url('${home('assets/sidetwo-logo-currentcolor.svg')}');mask-image:url('${home('assets/sidetwo-logo-currentcolor.svg')}')"></span>`
-  return `<header class="nav-shell blog-site-header"><nav class="nav-pill" aria-label="Hauptnavigation"><a class="nav-logo" href="${home('#top')}" aria-label="SideTwo Startseite">${logo}</a><div class="nav-links"><a href="${home('#ueber-uns')}">Über uns</a><a href="${home('#leistungen')}">Leistungen</a><a href="${home('#referenzen')}">Projekte</a><a href="${home('#fallstudien')}">Fallstudien</a></div><a class="nav-contact" href="${home('#kontakt')}">Kontakt</a><button class="menu-button" type="button" aria-label="Menü öffnen"></button></nav></header>`
+  return `<header class="nav-shell blog-site-header"><nav class="nav-pill" aria-label="Hauptnavigation"><a class="nav-logo" href="${home()}" aria-label="SideTwo Startseite">${logo}</a><div class="nav-links"><a href="${home('#ueber-uns')}">Über uns</a><a href="${home('#leistungen')}">Leistungen</a><a href="${home('#referenzen')}">Projekte</a><a href="${home('#fallstudien')}">Fallstudien</a></div><a class="nav-contact" href="${home('#kontakt')}">Kontakt</a><button class="menu-button" type="button" aria-label="Menü öffnen"></button></nav></header>`
 }
 
 function siteFooter(base) {

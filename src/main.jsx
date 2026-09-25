@@ -196,7 +196,7 @@ function Navigation() {
   return (
     <header className="nav-shell">
       <nav className="nav-pill" aria-label="Hauptnavigation">
-        <a className="nav-logo" href="#top" aria-label="SideTwo Startseite">
+        <a className="nav-logo" href={asset('')} aria-label="SideTwo Startseite">
           <SideTwoLogo />
         </a>
         <div className="nav-links">
