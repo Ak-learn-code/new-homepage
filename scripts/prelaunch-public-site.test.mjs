@@ -51,7 +51,7 @@ test('the hero links to the verified Google business profile without rating clai
   assert.match(homepage, /https:\/\/www\.google\.com\/maps\/place\/\/+@49\.6515694/)
   assert.match(homepage, /className="google-rating" href=\{googleProfileUrl\} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen"/)
   assert.match(homepage, /5\.0/)
-  assert.match(homepage, /Google-Bewertungen/)
+  assert.match(homepage, /Zufriedene Kunden/)
   assert.match(homepage, /assets\/people\/google-review-avatars\.png/)
   assert.doesNotMatch(homepage, /Sterneanzahl|Bewertungspunktzahl|Review-Anzahl/)
 })

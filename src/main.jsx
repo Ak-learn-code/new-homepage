@@ -252,7 +252,7 @@ function Hero() {
                 <span />
                 <span />
               </span>
-              <span>Google-Bewertungen</span>
+              <span>Zufriedene Kunden</span>
             </span>
           </a>
           <h1>
