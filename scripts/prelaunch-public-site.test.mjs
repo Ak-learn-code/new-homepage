@@ -134,3 +134,11 @@ test('all public logo links return to the homepage without a top fragment', asyn
     assert.doesNotMatch(source, /nav-logo[\s\S]*?#top/)
   }
 })
+
+test('the amber scroll orbit belongs to the contact section, not services', async () => {
+  const [homepage, styles] = await Promise.all([read('src/main.jsx'), read('src/styles.css')])
+
+  assert.doesNotMatch(homepage, /service-scroll-orbit|serviceLineRef|service-line-dash/)
+  assert.match(homepage, /className="contact-scroll-orbit"/)
+  assert.match(styles, /\.contact-scroll-orbit path[\s\S]*?stroke-dashoffset: var\(--contact-line-dash/)
+})
