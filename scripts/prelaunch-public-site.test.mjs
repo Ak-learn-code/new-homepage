@@ -117,3 +117,10 @@ test('the legacy blog redirect keeps its base-aware target but emits an absolute
   assert.match(prerender, /http-equiv="refresh" content="0; url=\$\{base\}insights\/"/)
   assert.match(prerender, /rel="canonical" href="\$\{insightsCanonical\}"/)
 })
+
+test('homepage insight cards open through the resilient insights overview route', async () => {
+  const homepage = await read('src/main.jsx')
+
+  assert.match(homepage, /const insightOverviewUrl = \(slug\) => `\$\{asset\('insights\/'\)\}#\$\{encodeURIComponent\(slug\)\}`/)
+  assert.match(homepage, /href=\{insightOverviewUrl\(post\.slug\)\}/)
+})

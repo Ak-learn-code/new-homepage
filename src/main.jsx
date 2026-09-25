@@ -24,7 +24,7 @@ import '@fontsource-variable/manrope'
 import './styles.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
-const insightUrl = (slug) => asset(`insights/${encodeURIComponent(slug)}/`)
+const insightOverviewUrl = (slug) => `${asset('insights/')}#${encodeURIComponent(slug)}`
 const googleProfileUrl = 'https://www.google.com/maps/place//@49.6515694,8.5341134,11z/data=!3m1!4b1!4m3!3m2!1s0x4797d583f252c585:0x99f69071120f77d7!12e1?entry=ttu&g_ep=EgoyMDI2MDkyMi4wIKXMDSoASAFQAw%3D%3D'
 const instagramProfile = socialLinks.find(({ label }) => label === 'SideTwo auf Instagram')
 
@@ -960,7 +960,7 @@ function Blog() {
     <section className="blog" id="blog" aria-labelledby="blog-title">
       <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('insights/')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
         {!posts.length && !loadError ? <p className="blog-empty">Insights werden geladen.</p> : null}
         {loadError ? <p className="blog-empty" role="status">Insights sind gerade nicht verfügbar.</p> : null}
       </div>

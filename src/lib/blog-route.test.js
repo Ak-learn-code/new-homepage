@@ -21,6 +21,13 @@ test('recognizes an article route without requiring a prior overview state', () 
   )
 })
 
+test('recognizes an article selected from the insights overview hash', () => {
+  assert.deepEqual(
+    blogRouteFromLocation({ pathname: '/insights/', hash: '#test-slug' }),
+    { type: 'article', slug: 'test-slug' },
+  )
+})
+
 test('keeps an article route in the article view while its post is loading', () => {
   const route = blogRouteFromLocation({ pathname: '/new-homepage/insights/test-slug/' })
   assert.equal(blogViewForRoute(route), 'article')
