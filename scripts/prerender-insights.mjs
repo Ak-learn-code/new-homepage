@@ -1,5 +1,5 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, relative, resolve, sep } from 'node:path'
 import { directusPublicPostFields } from '../src/lib/directus-client.js'
 import { createSitemapXml, renderArticleHtml, renderBlogIndexHtml } from './insight-prerender-utils.mjs'
 import { getSiteConfig } from './site-config.mjs'
@@ -13,6 +13,29 @@ const response = await fetch(`${directusUrl}/items/cms_posts?fields=${encodeURIC
 if (!response.ok) throw new Error(`Published Directus insights could not be read (HTTP ${response.status}). Configure public read access before prerendering.`)
 
 const { data = [] } = await response.json()
+
+async function indexableStaticPaths(directory) {
+  const files = []
+  const visit = async (path) => {
+    for (const entry of await readdir(path, { withFileTypes: true })) {
+      const entryPath = resolve(path, entry.name)
+      if (entry.isDirectory()) await visit(entryPath)
+      else if (entry.isFile() && entry.name === 'index.html') files.push(entryPath)
+    }
+  }
+  await visit(directory)
+
+  const paths = []
+  for (const file of files) {
+    const html = await readFile(file, 'utf8')
+    const noindex = [...html.matchAll(/<meta\b[^>]*>/gi)].some(([tag]) => /\bname=["']robots["']/i.test(tag) && /\bcontent=["'][^"']*\bnoindex\b/i.test(tag))
+    const route = relative(directory, dirname(file)).split(sep).filter(Boolean).join('/')
+    if (!noindex && route !== 'insights') paths.push(route ? `${route}/` : '')
+  }
+  return paths
+}
+
+const staticPaths = await indexableStaticPaths(resolve(root, 'dist'))
 const blogHtml = await readFile(resolve(root, 'dist/blog.html'), 'utf8')
 const scriptPath = blogHtml.match(/<script type="module" crossorigin src="([^"]+)"/)?.[1]
 if (!scriptPath) throw new Error('Could not locate the built blog JavaScript entry.')
@@ -31,7 +54,7 @@ for (const post of data) {
   await writeFile(output, html)
 }
 
-await writeFile(resolve(root, 'dist', 'sitemap.xml'), createSitemapXml({ siteUrl, slugs: data.map((post) => post?.slug) }))
+await writeFile(resolve(root, 'dist', 'sitemap.xml'), createSitemapXml({ siteUrl, staticPaths, posts: data }))
 await writeFile(resolve(root, 'dist', 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`)
 
 console.log(`Prerendered ${data.length} insight route(s) and updated sitemap.xml.`)

@@ -70,6 +70,21 @@ jobs:
             const html = await readFile(file, 'utf8')
             assert.match(html, /<link rel="canonical" href="https:\/\/sidetwo\.de(?:\/|\")/, `Missing production canonical URL in ${file}`)
           }
+          const sitemap = await readFile(resolve(dist, 'sitemap.xml'), 'utf8')
+          const robots = await readFile(resolve(dist, 'robots.txt'), 'utf8')
+          const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url)
+          assert.ok(sitemapUrls.length > 0, 'Production sitemap contains no URLs')
+          assert.ok(sitemapUrls.every((url) => url.startsWith('https://sidetwo.de/')), 'Production sitemap contains a non-production URL')
+          assert.equal(new Set(sitemapUrls).size, sitemapUrls.length, 'Production sitemap contains duplicate URLs')
+          for (const url of ['https://sidetwo.de/', 'https://sidetwo.de/insights/', 'https://sidetwo.de/impressum/', 'https://sidetwo.de/datenschutz/']) {
+            assert.ok(sitemapUrls.includes(url), `Production sitemap is missing ${url}`)
+          }
+          assert.ok(!sitemapUrls.some((url) => /blog\.html(?:$|[?#])/.test(url)), 'Legacy blog redirect must not be indexed')
+          const insightPages = htmlFiles
+            .filter((file) => file.startsWith(resolve(dist, 'insights')) && file !== resolve(dist, 'insights', 'index.html'))
+            .map((file) => `https://sidetwo.de/${file.slice(resolve(dist).length + 1).replace(/index\.html$/, '')}`)
+          for (const url of insightPages) assert.ok(sitemapUrls.includes(url), `Production sitemap is missing prerendered insight ${url}`)
+          assert.match(robots, /Sitemap: https:\/\/sidetwo\.de\/sitemap\.xml/, 'robots.txt does not point to the production sitemap')
           assert.ok(artifact.includes(process.env.VITE_CONTACT_API_URL), 'Contact API URL was not bundled')
           assert.ok(artifact.includes(process.env.VITE_TURNSTILE_SITE_KEY), 'Turnstile site key was not bundled')
           assert.match(artifact, /turnstile/i, 'Turnstile integration is missing from the production artifact')

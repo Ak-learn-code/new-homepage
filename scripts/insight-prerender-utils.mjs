@@ -71,15 +71,34 @@ function publicUrl(siteUrl, path = '') {
   return new URL(path.replace(/^\//, ''), `${siteUrl.replace(/\/$/, '')}/`).toString()
 }
 
-export function createSitemapXml({ siteUrl, slugs }) {
-  const urls = [publicUrl(siteUrl), publicUrl(siteUrl, 'insights/')]
-  const seen = new Set(urls)
-  for (const slug of slugs) {
-    if (typeof slug !== 'string' || !slug.trim()) continue
-    const url = publicUrl(siteUrl, `insights/${encodeURIComponent(slug)}/`)
-    if (!seen.has(url)) { seen.add(url); urls.push(url) }
+function sitemapLastmod(value) {
+  if (!value || Number.isNaN(new Date(value).getTime())) return ''
+  return new Date(value).toISOString().slice(0, 10)
+}
+
+export function createSitemapXml({ siteUrl, staticPaths = [], posts = [], slugs = [] }) {
+  const entries = []
+  const seen = new Set()
+  const add = (path, lastmod = '') => {
+    const url = publicUrl(siteUrl, path)
+    if (seen.has(url)) return
+    seen.add(url)
+    entries.push({ url, lastmod })
   }
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>${escapeHtml(url)}</loc></url>`).join('\n')}\n</urlset>\n`
+
+  add('')
+  add('insights/')
+  for (const path of staticPaths) add(path)
+
+  const sitemapPosts = posts.length ? posts : slugs.map((slug) => ({ slug }))
+  for (const post of sitemapPosts) {
+    const slug = typeof post === 'string' ? post : post?.slug
+    if (typeof slug !== 'string' || !slug.trim()) continue
+    const lastmod = typeof post === 'string' ? '' : sitemapLastmod(post.date_updated || post.published_at)
+    add(`insights/${encodeURIComponent(slug)}/`, lastmod)
+  }
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.map(({ url, lastmod }) => `  <url><loc>${escapeHtml(url)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`).join('\n')}\n</urlset>\n`
 }
 
 export function articleMetadata(post, { directusUrl, siteUrl }) {

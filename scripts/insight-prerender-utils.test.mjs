@@ -107,14 +107,28 @@ test('applies the Vite base once to a root-relative asset path', () => {
   assert.equal(withViteBasePath('/assets/blog-ABC.js', '/'), '/assets/blog-ABC.js')
 })
 
-test('creates a valid, deduplicated sitemap for the homepage, blog overview, and public insight slugs', () => {
-  const sitemap = createSitemapXml({ siteUrl: 'https://ak-learn-code.github.io/new-homepage', slugs: ['warum-eine-gute-website', 'automatisierung', 'warum-eine-gute-website', '', null] })
+test('creates a valid, deduplicated sitemap for indexable static routes and public Directus insights', () => {
+  const sitemap = createSitemapXml({
+    siteUrl: 'https://ak-learn-code.github.io/new-homepage',
+    staticPaths: ['impressum/', 'datenschutz/', 'impressum/'],
+    posts: [
+      { slug: 'warum-eine-gute-website', published_at: '2026-09-21T10:00:00.000Z' },
+      { slug: 'automatisierung', date_updated: '2026-09-22T10:00:00.000Z' },
+      { slug: 'warum-eine-gute-website', published_at: '2026-09-21T10:00:00.000Z' },
+      { slug: '' },
+      null,
+    ],
+  })
   assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/<\/loc>/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/<\/loc>/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/warum-eine-gute-website\/<\/loc>/)
   assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/insights\/automatisierung\/<\/loc>/)
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 4)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/impressum\/<\/loc>/)
+  assert.match(sitemap, /<loc>https:\/\/ak-learn-code\.github\.io\/new-homepage\/datenschutz\/<\/loc>/)
+  assert.match(sitemap, /<lastmod>2026-09-21<\/lastmod>/)
+  assert.match(sitemap, /<lastmod>2026-09-22<\/lastmod>/)
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 6)
   assert.doesNotMatch(sitemap, /\/new-homepage\/new-homepage\//)
   assert.doesNotMatch(sitemap, /(?:^|[^&])&(?!amp;|lt;|gt;|quot;)/)
 })
