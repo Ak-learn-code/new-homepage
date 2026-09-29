@@ -240,6 +240,7 @@ function Hero() {
         <span className="hero-micro hero-micro-side">[WEBSITES / AUTOMATION / AI]</span>
         <span className="hero-micro hero-micro-bottom">[MANNHEIM / 2026]</span>
       </div>
+      <span className="ai-generated-label hero-ai-label" aria-hidden="true">KI-generiert</span>
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
@@ -638,7 +639,7 @@ function ServiceShowcase() {
         <div className="service-carousel-stage" aria-live="polite">
           {serviceSlides.map((slide, index) => (
             <article className={`service-carousel-card ${cardClassName(index)}`} key={slide.name} aria-hidden={index !== activeIndex}>
-              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" /></div>
+              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
               <div className="service-carousel-caption"><span>{slide.name}</span><h3>{slide.description}</h3><ArrowRight size={22} weight="light" /></div>
             </article>
           ))}
@@ -864,7 +865,7 @@ function Contact() {
           <ScrollFillHeading id="project-start-title" className="contact-scroll-title" text="Lasst uns herausfinden, was wir für euch umsetzen können." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .28)" />
           <p>Ihr habt eine Idee, ein konkretes Projekt oder wisst noch nicht genau, welche Lösung passt? Beantwortet ein paar kurze Fragen – wir melden uns mit einer ehrlichen ersten Einschätzung.</p>
           <div className="project-start-trust" aria-label="Hinweise zur Anfrage"><span>Unverbindlich</span><span>Persönliche Rückmeldung</span><span>In der Regel innerhalb von 24 Stunden</span></div>
-          <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /></div>
+          <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
         </div>
         <div className="project-start-form-wrap">
           <form className="project-start-form" ref={formRef} onSubmit={submit} noValidate>
