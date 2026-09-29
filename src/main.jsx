@@ -236,11 +236,9 @@ function Hero() {
           <source media="(max-width: 600px)" srcSet={asset('assets/editorial/hero-founders-portrait.webp')} />
           <img src={asset('assets/editorial/hero-founders-landscape.webp')} alt="" />
         </picture>
-        <span className="hero-micro hero-micro-top">[SIDE TWO / DIGITAL STUDIO]</span>
-        <span className="hero-micro hero-micro-side">[WEBSITES / AUTOMATION / AI]</span>
+        <span className="hero-micro hero-micro-side">[KI-GENERIERT]</span>
         <span className="hero-micro hero-micro-bottom">[MANNHEIM / 2026]</span>
       </div>
-      <span className="ai-generated-label hero-ai-label" aria-hidden="true">KI-generiert</span>
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
