@@ -2508,4 +2508,5 @@ input { caret-color: var(--accent); }
 /* Keep the AI disclosure label visually consistent even where card metadata styles target spans. */
 .blog-card .blog-card-ai-label,
 .blog-featured .ai-generated-label,
-.blog-page-card .ai-generated-label { color: rgba(255, 255, 255, .76); }
+.blog-page-card .ai-generated-label { padding: 4.25px 6.8px; border: 0; color: rgba(255, 255, 255, .76); background: rgba(8, 10, 9, .5); box-shadow: none; backdrop-filter: blur(4px); font-size: 6.8px; font-weight: 700; line-height: 1; letter-spacing: .068em; opacity: .72; text-transform: uppercase; }
+@media (max-width: 560px) { .blog-card .blog-card-ai-label, .blog-featured .ai-generated-label, .blog-page-card .ai-generated-label { padding: 3.4px 5.95px; font-size: 5.95px; } }
