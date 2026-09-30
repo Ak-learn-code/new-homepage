@@ -734,9 +734,9 @@ function Execution() {
         <div className="steps-mini"><span><b>Verstehen</b></span><span><b>Bauen</b></span><span><b>Live gehen</b></span></div>
       </div>
       <div className="showcase-stack reveal-on-scroll" aria-label="Verschiedene Projektansichten">
-        <div className="browser-layer"><img src={projects[1].image} alt="Avci Gerüstbau in einer Desktopansicht" loading="lazy" decoding="async" /></div>
-        <div className="poster-layer"><img src={projects[2].image} alt="Stadtmüller als Projektplakat" loading="lazy" decoding="async" /><b>Ideen werden Systeme.</b></div>
-        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="da nico auf einem Smartphone" loading="lazy" decoding="async" /></div>
+        <div className="browser-layer"><img src={projects[1].image} alt="Avci Gerüstbau in einer Desktopansicht" loading="lazy" /></div>
+        <div className="poster-layer"><img src={projects[2].image} alt="Stadtmüller als Projektplakat" loading="lazy" /><b>Ideen werden Systeme.</b></div>
+        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="da nico auf einem Smartphone" loading="lazy" /></div>
       </div>
     </section>
   )
@@ -1041,7 +1041,7 @@ function App() {
     }
   }, [])
 
-  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Execution /><Contact /><FAQ /><Blog /><Footer /></main></>
+  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

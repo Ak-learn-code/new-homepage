@@ -68,15 +68,6 @@ test('keeps image delivery optimized without changing the hero priority', async 
   assert.match(blog, /loading="lazy" decoding="async" width="900" height="634"/)
 })
 
-test('the reference execution section remains between case studies and contact', async () => {
-  const homepage = await read('src/main.jsx')
-
-  assert.match(homepage, /<CaseStudiesPlaceholder\s*\/\><Execution\s*\/\><Contact\s*\/>/)
-  assert.match(homepage, /className="execution dark-panel" id="ablauf"/)
-  assert.match(homepage, /Von der Idee<br\s*\/>bis <em>live\.<\/em>/)
-  assert.match(homepage, /<b>Verstehen<\/b>[\s\S]*?<b>Bauen<\/b>[\s\S]*?<b>Live gehen<\/b>/)
-})
-
 test('Bilal has a complete founder profile and uses the shared Instagram URL', async () => {
   const homepage = await read('src/main.jsx')
 
