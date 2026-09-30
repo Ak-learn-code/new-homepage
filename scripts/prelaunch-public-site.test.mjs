@@ -56,16 +56,33 @@ test('the hero links to the verified Google business profile without rating clai
   assert.doesNotMatch(homepage, /Sterneanzahl|Bewertungspunktzahl|Review-Anzahl/)
 })
 
-test('keeps image delivery optimized without changing the hero priority', async () => {
+test('keeps local image delivery optimized without changing Directus card URLs or proportions', async () => {
   const homepage = await read('src/main.jsx')
   const blog = await read('src/blog.jsx')
 
   assert.match(homepage, /hero-founders-landscape\.webp[^>]*width="1672" height="941" fetchPriority="high" decoding="async"/)
   assert.match(homepage, /process-motifs\.webp/)
   assert.match(homepage, /google-review-avatars\.webp/)
-  assert.match(homepage, /postImageSrcSet\(post, \[480, 720, 960\], 900 \/ 634\)/)
-  assert.match(blog, /postImageSrcSet\(featured, \[640, 960, 1200, 1600\], 1400 \/ 900\)/)
-  assert.match(blog, /loading="lazy" decoding="async" width="900" height="634"/)
+  assert.match(homepage, /postImageUrl\(post, \{ width: 900, height: 634 \}\)[^>]*loading="lazy" decoding="async"/)
+  assert.doesNotMatch(homepage, /postImageSrcSet\(post, \[480, 720, 960\]/)
+  assert.match(blog, /postImageUrl\(post, \{ width: 900, height: 650 \}\)[^>]*loading="lazy" decoding="async"/)
+  assert.doesNotMatch(blog, /postImageSrcSet\(featured, \[640, 960, 1200, 1600\]/)
+})
+
+test('the workflow reel uses base-aware local assets and follows the services section', async () => {
+  const [homepage, reel, styles] = await Promise.all([
+    read('src/main.jsx'), read('src/components/workflow-reel.jsx'), read('src/styles.css'),
+  ])
+
+  assert.match(homepage, /<ServiceShowcase\s*\/\><WorkflowFilm\s*\/\><CaseStudiesPlaceholder\s*\/>/)
+  assert.match(homepage, /className="workflow-film" id="im-alltag"/)
+  assert.match(reel, /const asset = \(path\) => `\$\{import\.meta\.env\.BASE_URL\}\$\{path\}`/)
+  assert.match(reel, /assets\/workflow-reel\/\$\{s\.file\}\.webp/)
+  assert.doesNotMatch(reel, /\/new-homepage\//)
+  assert.match(reel, /IntersectionObserver/)
+  assert.match(reel, /prefers-reduced-motion: reduce/)
+  assert.match(styles, /\.workflow-reel-frame \{[^}]*aspect-ratio: 16 \/ 9/)
+  assert.match(styles, /\[data-layout="port"\] \.rk-canvas \{ width: 720px; height: 900px/)
 })
 
 test('Bilal has a complete founder profile and uses the shared Instagram URL', async () => {

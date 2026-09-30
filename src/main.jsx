@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl, postImageSrcSet } from './lib/directus'
+import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl } from './lib/directus'
 import { validateContactPayload } from './lib/contact-contract'
 import {
   ArrowBendDownRight,
@@ -20,6 +20,7 @@ import {
   X,
 } from '@phosphor-icons/react'
 import { FooterSocialLinks, socialLinks } from './components/footer-social-links'
+import WorkflowReel from './components/workflow-reel'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
@@ -647,6 +648,18 @@ function ServiceShowcase() {
   )
 }
 
+function WorkflowFilm() {
+  return (
+    <section className="workflow-film" id="im-alltag" aria-labelledby="workflow-film-title">
+      <div className="workflow-film-head">
+        <ScrollFillHeading id="workflow-film-title" className="workflow-scroll-title" text="Was sich für euch ändert." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
+        <p>Wir bauen euren Auftritt, machen euch für neue Kunden sichtbar und nehmen euch mit KI-Werkzeugen Routine ab.</p>
+      </div>
+      <WorkflowReel />
+    </section>
+  )
+}
+
 function CaseStudiesPlaceholder() {
   return (
     <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
@@ -960,7 +973,7 @@ function Blog() {
     <section className="blog" id="blog" aria-labelledby="blog-title">
       <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('insights/')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} srcSet={postImageSrcSet(post, [480, 720, 960], 900 / 634)} sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 900px) calc(50vw - 36px), 440px" alt={post.mainImage?.alt || post.title} loading="lazy" decoding="async" width="900" height="634" /><span className="blog-card-ai-label" aria-hidden="true">KI-generiert</span><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" decoding="async" /><span className="blog-card-ai-label" aria-hidden="true">KI-generiert</span><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
         {!posts.length && !loadError ? <p className="blog-empty">Insights werden geladen.</p> : null}
         {loadError ? <p className="blog-empty" role="status">Insights sind gerade nicht verfügbar.</p> : null}
       </div>
@@ -1041,7 +1054,7 @@ function App() {
     }
   }, [])
 
-  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
+  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><WorkflowFilm /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
 }
 
 createRoot(document.getElementById('root')).render(<App />)
