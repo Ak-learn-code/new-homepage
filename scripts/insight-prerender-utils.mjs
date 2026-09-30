@@ -14,8 +14,8 @@ function directusAssetUrl(value, directusUrl, width, height) {
   return `${directusUrl}/assets/${encodeURIComponent(id)}?${query}`
 }
 
-function directusSrcSet(value, directusUrl, widths) {
-  return widths.map((width) => `${directusAssetUrl(value, directusUrl, width, Math.round(width * 9 / 16))} ${width}w`).join(', ')
+function directusSrcSet(value, directusUrl, widths, ratio = 16 / 9) {
+  return widths.map((width) => `${directusAssetUrl(value, directusUrl, width, Math.round(width / ratio))} ${width}w`).join(', ')
 }
 
 function formatPublishedAt(value) {
@@ -45,16 +45,18 @@ function postMeta(post) {
 }
 
 function postCard(post, { base, directusUrl }) {
-  const image = directusAssetUrl(post.featured_image, directusUrl, 900, 506)
-  return `<article class="blog-page-card"><a href="${base}insights/${encodeURIComponent(post.slug)}/"><img src="${escapeHtml(image)}" alt="${escapeHtml(post.featured_image_alt || post.title)}" width="900" height="650" loading="lazy" /><span class="ai-generated-label" aria-hidden="true">KI-generiert</span><div><span>${escapeHtml(postMeta(post))}</span><h2>${escapeHtml(post.title)}</h2><p>${escapeHtml(post.excerpt || '')}</p><b>Weiterlesen</b></div></a></article>`
+  const image = directusAssetUrl(post.featured_image, directusUrl, 900, 634)
+  const srcset = directusSrcSet(post.featured_image, directusUrl, [480, 720, 960], 900 / 634)
+  return `<article class="blog-page-card"><a href="${base}insights/${encodeURIComponent(post.slug)}/"><img src="${escapeHtml(image)}" srcset="${escapeHtml(srcset)}" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 800px) calc(50vw - 39px), 440px" alt="${escapeHtml(post.featured_image_alt || post.title)}" width="900" height="634" loading="lazy" decoding="async" /><span class="ai-generated-label" aria-hidden="true">KI-generiert</span><div><span>${escapeHtml(postMeta(post))}</span><h2>${escapeHtml(post.title)}</h2><p>${escapeHtml(post.excerpt || '')}</p><b>Weiterlesen</b></div></a></article>`
 }
 
 export function prerenderedBlogIndex(posts, { base, directusUrl }) {
   const featured = posts[0]
   const categories = [...new Set(posts.map((post) => post.category?.name).filter(Boolean))]
   const orderedCategories = ['Alle', ...categoryOrder.filter((category) => categories.includes(category)), ...categories.filter((category) => !categoryOrder.includes(category)).sort((a, b) => a.localeCompare(b, 'de'))]
-  const featuredImage = featured ? directusAssetUrl(featured.featured_image, directusUrl, 1200, 675) : ''
-  const featuredMarkup = featured ? `<article class="blog-featured"><a href="${base}insights/${encodeURIComponent(featured.slug)}/"><img src="${escapeHtml(featuredImage)}" alt="${escapeHtml(featured.featured_image_alt || featured.title)}" width="1400" height="900" fetchpriority="high" /><span class="ai-generated-label" aria-hidden="true">KI-generiert</span><div class="blog-featured-copy"><span>${escapeHtml(postMeta(featured))}</span><h2>${escapeHtml(featured.title)}</h2><p>${escapeHtml(featured.excerpt || '')}</p><b>Artikel lesen</b></div></a></article>` : ''
+  const featuredImage = featured ? directusAssetUrl(featured.featured_image, directusUrl, 1400, 900) : ''
+  const featuredSrcset = featured ? directusSrcSet(featured.featured_image, directusUrl, [640, 960, 1200, 1600], 1400 / 900) : ''
+  const featuredMarkup = featured ? `<article class="blog-featured"><a href="${base}insights/${encodeURIComponent(featured.slug)}/"><img src="${escapeHtml(featuredImage)}" srcset="${escapeHtml(featuredSrcset)}" sizes="(max-width: 800px) calc(100vw - 36px), 850px" alt="${escapeHtml(featured.featured_image_alt || featured.title)}" width="1400" height="900" fetchpriority="high" decoding="async" /><span class="ai-generated-label" aria-hidden="true">KI-generiert</span><div class="blog-featured-copy"><span>${escapeHtml(postMeta(featured))}</span><h2>${escapeHtml(featured.title)}</h2><p>${escapeHtml(featured.excerpt || '')}</p><b>Artikel lesen</b></div></a></article>` : ''
   const cards = posts.slice(1).map((post) => postCard(post, { base, directusUrl })).join('')
   return `<main class="blog-page">${siteHeader(base)}<section class="blog-page-index" aria-labelledby="blog-page-title"><div class="blog-page-index-head"><span class="blog-page-kicker">SIDETWO INSIGHTS</span><h1 id="blog-page-title">Gedanken, Strategien &amp; digitale Ideen.</h1><p>Praktische Insights rund um Websites, Marketing, Automatisierung und KI, ohne unnötiges Agentur-Blabla.</p></div>${featuredMarkup}<div class="blog-controls"><div class="blog-categories" aria-label="Blog-Kategorien">${orderedCategories.map((category) => `<button class="${category === 'Alle' ? 'is-active' : ''}" type="button">${escapeHtml(category)}</button>`).join('')}</div><label class="blog-search"><input type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" /></label></div>${cards ? `<div class="blog-page-list">${cards}</div>` : ''}</section>${siteFooter(base)}</main>`
 }
@@ -122,7 +124,7 @@ export function prerenderedArticle(post, { base, directusUrl }) {
   const image = directusAssetUrl(post.featured_image, directusUrl, 1200, 675)
   const meta = [post.category?.name || 'Digital', formatPublishedAt(post.published_at), post.read_time_minutes ? `${post.read_time_minutes} Min. Lesezeit` : ''].filter(Boolean).join(' · ')
   const content = sanitizeCmsHtml(post.content, { directusUrl })
-  const imageMarkup = image ? `<img class="blog-article-image" src="${escapeHtml(image)}" srcset="${escapeHtml(directusSrcSet(post.featured_image, directusUrl, [640, 960, 1200, 1600]))}" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 800px) calc(100vw - 60px), 1040px" alt="${escapeHtml(post.featured_image_alt || title)}" width="1600" height="900" fetchpriority="high" />` : ''
+  const imageMarkup = image ? `<img class="blog-article-image" src="${escapeHtml(image)}" srcset="${escapeHtml(directusSrcSet(post.featured_image, directusUrl, [640, 960, 1200, 1600]))}" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 800px) calc(100vw - 60px), 1040px" alt="${escapeHtml(post.featured_image_alt || title)}" width="1600" height="900" fetchpriority="high" decoding="async" />` : ''
   return `<main class="blog-page">${siteHeader(base)}<article class="blog-article"><div class="blog-article-topline blog-article-prelude"><a class="blog-article-back" href="${base}insights/">← Alle Insights</a><span>${escapeHtml(meta)}</span></div>${imageMarkup}<header class="blog-article-head"><h1>${escapeHtml(title)}</h1>${excerpt ? `\n<p>${escapeHtml(excerpt)}</p>` : ''}<small>Von ${escapeHtml(post.author?.name || 'SideTwo')}</small></header><div class="blog-article-body"><div class="cms-rich-text">${content}</div><aside><strong>Idee im Kopf? Lass uns darüber sprechen.</strong><p>Wir schauen gemeinsam, welcher nächste Schritt für euer Unternehmen Sinn ergibt.</p><a href="${base}#kontakt">Projekt anfragen</a></aside></div></article>${siteFooter(base)}</main>`
 }
 

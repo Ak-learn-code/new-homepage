@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl } from './lib/directus'
+import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl, postImageSrcSet } from './lib/directus'
 import { validateContactPayload } from './lib/contact-contract'
 import {
   ArrowBendDownRight,
@@ -29,11 +29,11 @@ const googleProfileUrl = 'https://www.google.com/maps/place//@49.6515694,8.53411
 const instagramProfile = socialLinks.find(({ label }) => label === 'SideTwo auf Instagram')
 
 const projects = [
-  { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.jpg'), short: 'Bestellen, ganz einfach.' },
-  { name: 'Avci Gerüstbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/avci-geruestbau.jpg'), short: 'Starker Auftritt fürs Handwerk.' },
-  { name: 'Krug – Das Restaurant', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/krug-das-restaurant.jpg'), short: 'Regional genießen.' },
-  { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.jpg'), short: 'Technik verständlich gemacht.' },
-  { name: 'Pfrimmpark Arena', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/pfrimmpark-arena.jpg'), short: 'Sport gemeinsam erleben.' },
+  { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.webp'), short: 'Bestellen, ganz einfach.' },
+  { name: 'Avci Gerüstbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/avci-geruestbau.webp'), short: 'Starker Auftritt fürs Handwerk.' },
+  { name: 'Krug – Das Restaurant', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/krug-das-restaurant.webp'), short: 'Regional genießen.' },
+  { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.webp'), short: 'Technik verständlich gemacht.' },
+  { name: 'Pfrimmpark Arena', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/pfrimmpark-arena.webp'), short: 'Sport gemeinsam erleben.' },
 ]
 
 const referenceProjects = [
@@ -42,7 +42,7 @@ const referenceProjects = [
   { ...projects[2], description: 'Website, UX/UI und Entwicklung für ein Restaurant mit regionaler Küche.', url: 'https://krug-das-restaurant.de/', location: 'Rosengarten, Lampertheim' },
   { ...projects[3], description: 'Website, UX/UI und Entwicklung für verständliche technische Leistungen.', url: 'https://ing-kaltbrunn.de/', location: 'Heppenheim' },
   { ...projects[4], description: 'Website, UX/UI und Entwicklung für eine vielseitige Sportanlage.', url: 'https://pfrimmpark-arena.de/', location: 'Worms' },
-  { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.jpg'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.', url: 'https://bukkador-handpan.de/', location: 'Worms' },
+  { name: 'Michael Noll Handpan', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/handpan-noll.webp'), description: 'Website und UX/UI für Handpan-Bau, Klang und persönliche Workshops.', url: 'https://bukkador-handpan.de/', location: 'Worms' },
 ]
 
 const serviceItems = [
@@ -72,7 +72,7 @@ const processSteps = [
 const founderProfiles = {
   alex: {
     name: 'Alexandros Kodalis',
-    portrait: 'assets/people/alex-kodalis.png',
+    portrait: 'assets/people/alex-kodalis.webp',
     intro: 'Marketing, Design und digitale Systeme.',
     facts: ['Ausbildung zum Kaufmann für Marketingkommunikation', 'Fokus auf Web Development & Frontend Engineering', 'Spezialisierung auf KI-Workflows und Automatisierung', 'Leidenschaft für UI/UX und digitales Design', 'Performance-, SEO- und Conversion-orientierte Entwicklung'],
     experience: [['2024–2026', 'Kaufmann für Marketingkommunikation (Ausbildung)'], ['Marketing', 'Webentwicklung & E-Commerce'], ['Frontend', 'Responsive Websites & UI-Systeme'], ['Automation', 'n8n, APIs & KI-Workflows'], ['Design', 'Corporate Design & digitale Markenauftritte']],
@@ -80,7 +80,7 @@ const founderProfiles = {
   },
   bilal: {
     name: 'Bilal Altuntas',
-    portrait: 'assets/people/bilal-altuntas.png',
+    portrait: 'assets/people/bilal-altuntas.webp',
     intro: 'Bilal bringt technisches Verständnis und einen praxisnahen Blick aus der Automobilbranche mit. Bei SideTwo fokussiert er sich auf einfache, funktionierende Lösungen.',
     facts: ['Kfz-Hintergrund: Ausbildung im Kfz-Bereich', 'Weiterbildung: IHK-Qualifikation', 'SideTwo: praxisnahe digitale Lösungen für Unternehmen'],
     profileHref: instagramProfile?.href,
@@ -234,7 +234,7 @@ function Hero() {
       <div className="hero-atmosphere" aria-hidden="true">
         <picture>
           <source media="(max-width: 600px)" srcSet={asset('assets/editorial/hero-founders-portrait.webp')} />
-          <img src={asset('assets/editorial/hero-founders-landscape.webp')} alt="" />
+          <img src={asset('assets/editorial/hero-founders-landscape.webp')} alt="" width="1672" height="941" fetchPriority="high" decoding="async" />
         </picture>
         <span className="hero-micro hero-micro-side">[KI-GENERIERT]</span>
         <span className="hero-micro hero-micro-bottom">[MANNHEIM / 2026]</span>
@@ -244,7 +244,7 @@ function Hero() {
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
             <span className="google-rating-context"><Star size={20} weight="fill" aria-hidden="true" /><strong>5.0</strong></span>
             <span className="google-rating-pill">
-              <span className="google-rating-avatars" aria-hidden="true" style={{ '--google-rating-avatar-image': `url(${asset('assets/people/google-review-avatars.png')})` }}>
+              <span className="google-rating-avatars" aria-hidden="true" style={{ '--google-rating-avatar-image': `url(${asset('assets/people/google-review-avatars.webp')})` }}>
                 <span />
                 <span />
                 <span />
@@ -421,8 +421,8 @@ function StudioImpact() {
         <div className="impact-stack">
           <button className="impact-card impact-team" ref={profileTriggerRef} type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
             <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
-              <img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" />
-              <img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" />
+              <img src={asset('assets/people/alex-kodalis.webp')} alt="Alexandros Kodalis" loading="lazy" decoding="async" width="1254" height="1254" />
+              <img src={asset('assets/people/bilal-altuntas.webp')} alt="Bilal Altuntas" loading="lazy" decoding="async" width="1254" height="1254" />
             </div>
             <strong>Zwei Köpfe.</strong>
             <p>Strategie und Umsetzung, zusammen gedacht.</p>
@@ -525,7 +525,7 @@ function ReferencesSequence() {
       <div className="references-wall" onPointerDown={(event) => { swipeStart.current = event.clientX }} onPointerUp={endSwipe} onPointerCancel={() => { swipeStart.current = null }}>
         {visibleProjects.map((project) => (
           <button className="reference-tile" type="button" key={project.name} onClick={(event) => { if (didSwipe.current) { didSwipe.current = false; return } referenceTriggerRef.current = event.currentTarget; setActiveProject(project) }} aria-label={`Details zu ${project.name} öffnen`}>
-            <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" />
+            <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" decoding="async" />
             <span className="reference-tile-cover">
               <span><b>{project.name}</b><small>{project.meta}</small></span>
               <i><Plus weight="bold" /></i>
@@ -537,7 +537,7 @@ function ReferencesSequence() {
         <div className="reference-modal-backdrop" role="presentation" onMouseDown={() => setActiveProject(null)}>
           <article className="reference-modal" ref={referenceDialogRef} tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="reference-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label="Referenz schließen"><X weight="bold" /></button>
-            <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} /></div>
+            <div className="reference-modal-image"><img src={activeProject.image} alt={`Website-Referenz: ${activeProject.name}`} decoding="async" /></div>
             <div className="reference-modal-copy"><p>{activeProject.meta}</p><h3 id="reference-modal-title">{activeProject.name}</h3><span>{activeProject.description}</span>{activeProject.location ? <small className="reference-location">Standort: {activeProject.location}</small> : null}{activeProject.url ? <a href={activeProject.url} target="_blank" rel="noopener noreferrer">Website ansehen <ArrowRight size={16} weight="bold" /></a> : null}<a href="#kontakt" onClick={() => setActiveProject(null)}>Ähnliche Website anfragen <ArrowRight size={16} weight="bold" /></a></div>
           </article>
         </div>
@@ -552,35 +552,35 @@ function ServiceShowcase() {
       name: 'Webseiten',
       Icon: Browser,
       description: 'Ein Auftritt, der eure Leistung verständlich macht – und die passenden Anfragen auslöst.',
-      image: asset('assets/services/websites-showcase.jpg'),
+      image: asset('assets/services/websites-showcase.webp'),
       type: 'website',
     },
     {
       name: 'Automatisierung',
       Icon: FlowArrow,
       description: 'Wiederkehrende Abläufe laufen verlässlich im Hintergrund. Euer Team gewinnt Zeit zurück.',
-      image: asset('assets/services/automation-showcase.jpg'),
+      image: asset('assets/services/automation-showcase.webp'),
       type: 'automation',
     },
     {
       name: 'KI-Agenten',
       Icon: Robot,
       description: 'Digitale Mitarbeitende, die Anfragen sortieren, zuhören und zuverlässig antworten.',
-      image: asset('assets/services/agents-showcase.jpg'),
+      image: asset('assets/services/agents-showcase.webp'),
       type: 'agent',
     },
     {
       name: 'Interne Tools',
       Icon: BracketsCurly,
       description: 'Eigene kleine Systeme, die Informationen bündeln und eure tägliche Arbeit klar machen.',
-      image: asset('assets/services/tools-showcase.jpg'),
+      image: asset('assets/services/tools-showcase.webp'),
       type: 'tools',
     },
     {
       name: 'Social Media',
       Icon: ShareNetwork,
       description: 'Content und Betreuung, die euren Auftritt konsistent sichtbar und relevant hält.',
-      image: asset('assets/services/social-media-showcase.jpg'),
+      image: asset('assets/services/social-media-showcase.webp'),
       type: 'social',
     },
   ]
@@ -637,7 +637,7 @@ function ServiceShowcase() {
         <div className="service-carousel-stage" aria-live="polite">
           {serviceSlides.map((slide, index) => (
             <article className={`service-carousel-card ${cardClassName(index)}`} key={slide.name} aria-hidden={index !== activeIndex}>
-              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
+              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" loading="lazy" decoding="async" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
               <div className="service-carousel-caption"><span>{slide.name}</span><h3>{slide.description}</h3><ArrowRight size={22} weight="light" /></div>
             </article>
           ))}
@@ -685,13 +685,13 @@ function ProjectCollage() {
       <div className="project-showcase reveal-on-scroll" key={project.name}>
         <article className="project-main">
           <div className="project-paper-copy"><strong>{project.short}</strong><p>{project.meta}</p></div>
-          <div className="project-screen"><img src={project.image} alt={`Projekt ${project.name}`} /></div>
+          <div className="project-screen"><img src={project.image} alt={`Projekt ${project.name}`} loading="lazy" decoding="async" /></div>
           <div className="project-caption"><span>{project.meta}</span><strong>{project.name}</strong></div>
         </article>
         <article className="project-side">
           <div className="accent-cut" />
           <div className="project-poster-title">Designing<span>²</span></div>
-          <img src={nextProject.image} alt={`Projekt ${nextProject.name}`} />
+          <img src={nextProject.image} alt={`Projekt ${nextProject.name}`} loading="lazy" decoding="async" />
           <p>{nextProject.short}<br /><b>{nextProject.name}</b></p>
         </article>
       </div>
@@ -709,7 +709,7 @@ function Services() {
     <section className="services grid-bg" id="leistungen-archiv">
       <div className="services-visual reveal-on-scroll">
         <div className="services-halo" />
-        <img src={asset('assets/people/alex-kodalis.png')} alt="Alex Kodalis" loading="lazy" width="1254" height="1254" />
+        <img src={asset('assets/people/alex-kodalis.webp')} alt="Alex Kodalis" loading="lazy" decoding="async" width="1254" height="1254" />
         {serviceItems.map(({ Icon, title, text }, index) => (
           <div className={`service-card card-${index + 1}`} key={title}>
             <Icon weight="duotone" /><div><strong>{title}</strong><span>{text}</span></div>
@@ -734,9 +734,9 @@ function Execution() {
         <div className="steps-mini"><span><b>Verstehen</b></span><span><b>Bauen</b></span><span><b>Live gehen</b></span></div>
       </div>
       <div className="showcase-stack reveal-on-scroll" aria-label="Verschiedene Projektansichten">
-        <div className="browser-layer"><img src={projects[1].image} alt="Avci Gerüstbau in einer Desktopansicht" loading="lazy" /></div>
-        <div className="poster-layer"><img src={projects[2].image} alt="Stadtmüller als Projektplakat" loading="lazy" /><b>Ideen werden Systeme.</b></div>
-        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="da nico auf einem Smartphone" loading="lazy" /></div>
+        <div className="browser-layer"><img src={projects[1].image} alt="Avci Gerüstbau in einer Desktopansicht" loading="lazy" decoding="async" /></div>
+        <div className="poster-layer"><img src={projects[2].image} alt="Stadtmüller als Projektplakat" loading="lazy" decoding="async" /><b>Ideen werden Systeme.</b></div>
+        <div className="phone-layer"><div className="phone-notch" /><img src={projects[0].image} alt="da nico auf einem Smartphone" loading="lazy" decoding="async" /></div>
       </div>
     </section>
   )
@@ -863,7 +863,7 @@ function Contact() {
           <ScrollFillHeading id="project-start-title" className="contact-scroll-title" text="Lasst uns herausfinden, was wir für euch umsetzen können." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .28)" />
           <p>Ihr habt eine Idee, ein konkretes Projekt oder wisst noch nicht genau, welche Lösung passt? Beantwortet ein paar kurze Fragen – wir melden uns mit einer ehrlichen ersten Einschätzung.</p>
           <div className="project-start-trust" aria-label="Hinweise zur Anfrage"><span>Unverbindlich</span><span>Persönliche Rückmeldung</span><span>In der Regel innerhalb von 24 Stunden</span></div>
-          <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
+          <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" loading="lazy" decoding="async" width="1536" height="1024" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
         </div>
         <div className="project-start-form-wrap">
           <form className="project-start-form" ref={formRef} onSubmit={submit} noValidate>
@@ -917,7 +917,7 @@ function FAQ() {
         <ScrollFillHeading id="faq-title" className="faq-scroll-title" text="Fragen, die vor dem Start wichtig sind." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" />
         <p>Hier findet ihr klare Antworten zu Websites, Automatisierung, KI und der Zusammenarbeit mit SideTwo.</p>
         <aside className="faq-personal-card">
-          <div className="faq-personal-portraits"><img src={asset('assets/people/alex-kodalis.png')} alt="Alexandros Kodalis" /><img src={asset('assets/people/bilal-altuntas.png')} alt="Bilal Altuntas" /></div>
+          <div className="faq-personal-portraits"><img src={asset('assets/people/alex-kodalis.webp')} alt="Alexandros Kodalis" loading="lazy" decoding="async" width="1254" height="1254" /><img src={asset('assets/people/bilal-altuntas.webp')} alt="Bilal Altuntas" loading="lazy" decoding="async" width="1254" height="1254" /></div>
           <strong>Alex und Bilal von SideTwo</strong><p>Ihr habt einen Sonderfall oder möchtet einfach kurz sprechen? Schreibt uns.</p>
           <a href="#kontakt">Projekt anfragen <ArrowRight size={16} weight="bold" /></a>
         </aside>
@@ -960,7 +960,7 @@ function Blog() {
     <section className="blog" id="blog" aria-labelledby="blog-title">
       <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('insights/')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
       <div className="blog-grid">
-        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" /><span className="blog-card-ai-label" aria-hidden="true">KI-generiert</span><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
+        {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} srcSet={postImageSrcSet(post, [480, 720, 960], 900 / 634)} sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 900px) calc(50vw - 36px), 440px" alt={post.mainImage?.alt || post.title} loading="lazy" decoding="async" width="900" height="634" /><span className="blog-card-ai-label" aria-hidden="true">KI-generiert</span><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
         {!posts.length && !loadError ? <p className="blog-empty">Insights werden geladen.</p> : null}
         {loadError ? <p className="blog-empty" role="status">Insights sind gerade nicht verfügbar.</p> : null}
       </div>
@@ -969,7 +969,7 @@ function Blog() {
 }
 
 function ProcessCards() {
-  const processImage = asset('assets/editorial/process-motifs.png')
+  const processImage = asset('assets/editorial/process-motifs.webp')
 
   return (
     <section className="process dark-panel" id="prozess" aria-labelledby="process-title">
@@ -977,7 +977,7 @@ function ProcessCards() {
       <div className="process-grid reveal-on-scroll">
         {processSteps.map(([title, text], index) => (
           <article key={title}>
-            <div className="process-art" style={{ '--motif-index': index }}><img src={processImage} alt="" loading="lazy" /></div>
+            <div className="process-art" style={{ '--motif-index': index }}><img src={processImage} alt="" loading="lazy" decoding="async" width="1983" height="793" /></div>
             <div className="process-label"><strong>{title}</strong><ArrowRight size={16} weight="bold" /></div>
             <p>{text}</p>
           </article>
@@ -1041,7 +1041,7 @@ function App() {
     }
   }, [])
 
-  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
+  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Execution /><Contact /><FAQ /><Blog /><Footer /></main></>
 }
 
 createRoot(document.getElementById('root')).render(<App />)

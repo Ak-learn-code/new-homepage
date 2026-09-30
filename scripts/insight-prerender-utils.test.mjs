@@ -39,8 +39,9 @@ test('prerenders Directus posts for the blog overview with stable image dimensio
   assert.match(html, /class="blog-featured"/)
   assert.match(html, /class="blog-page-card"/)
   assert.match(html, /class="ai-generated-label" aria-hidden="true">KI-generiert/)
-  assert.match(html, /width="1400" height="900" fetchpriority="high"/)
-  assert.match(html, /width="900" height="650" loading="lazy"/)
+  assert.match(html, /width="1400" height="900" fetchpriority="high" decoding="async"/)
+  assert.match(html, /width="900" height="634" loading="lazy" decoding="async"/)
+  assert.match(html, /srcset=.*480w.*720w.*960w/)
   assert.doesNotMatch(html, /\/new-homepage\/new-homepage\//)
 })
 
