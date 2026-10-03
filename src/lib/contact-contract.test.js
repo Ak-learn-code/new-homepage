@@ -1,13 +1,21 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { contactFieldLimits, validateContactPayload } from './contact-contract.js'
+import { contactFieldLimits, projectTypeValues, validateContactPayload } from './contact-contract.js'
 
-const valid = { name: 'Élodie van der Meer', email: 'elodie@example.com', company: '', phone: '', message: 'Hallo SideTwo, ich interessiere mich für ein Projekt.', turnstileToken: 'token' }
+const valid = { name: 'Élodie van der Meer', email: 'elodie@example.com', company: '', phone: '', message: 'Hallo SideTwo, ich interessiere mich für ein Projekt.', projectType: 'Webseite', turnstileToken: 'token' }
 
 test('accepts international names and optional company and phone fields', () => {
   const result = validateContactPayload(valid, { requireTurnstile: true })
   assert.equal(result.ok, true)
   assert.equal(result.value.name, 'Élodie van der Meer')
+  assert.equal(result.value.projectType, 'Webseite')
+})
+
+test('accepts only the visible service choices', () => {
+  for (const projectType of projectTypeValues) assert.equal(validateContactPayload({ ...valid, projectType }).ok, true)
+  const result = validateContactPayload({ ...valid, projectType: 'Individuelle App' })
+  assert.equal(result.ok, false)
+  assert.equal(result.errors.projectType, 'Bitte wähle eine Leistung aus.')
 })
 
 test('rejects missing mandatory fields, malformed email and oversized content', () => {

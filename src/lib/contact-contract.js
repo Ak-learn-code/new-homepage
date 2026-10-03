@@ -1,5 +1,6 @@
-export const contactFieldLimits = Object.freeze({ name: 120, email: 254, company: 160, phone: 40, message: 5000, turnstileToken: 2048 })
-export const contactFieldNames = Object.freeze(['name', 'email', 'company', 'phone', 'message', 'turnstileToken'])
+export const projectTypeValues = Object.freeze(['Webseite', 'Automatisierung', 'KI-Agenten', 'Social Media Betreuung', 'Noch nicht sicher'])
+export const contactFieldLimits = Object.freeze({ name: 120, email: 254, company: 160, phone: 40, message: 5000, projectType: 40, turnstileToken: 2048 })
+export const contactFieldNames = Object.freeze(['name', 'email', 'company', 'phone', 'message', 'projectType', 'turnstileToken'])
 
 const forbiddenControls = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u
@@ -27,6 +28,7 @@ export function validateContactPayload(payload, { requireTurnstile = false } = {
     company: asText(payload.company ?? ''),
     phone: asText(payload.phone ?? ''),
     message: asText(payload.message, { multiline: true }),
+    projectType: asText(payload.projectType),
     turnstileToken: asText(payload.turnstileToken ?? ''),
   }
 
@@ -35,6 +37,7 @@ export function validateContactPayload(payload, { requireTurnstile = false } = {
   if (value.company === null || !isWithinLimit(value.company, contactFieldLimits.company)) errors.company = 'Die Firma enthält ungültige Zeichen oder ist zu lang.'
   if (value.phone === null || !isWithinLimit(value.phone, contactFieldLimits.phone)) errors.phone = 'Die Telefonnummer enthält ungültige Zeichen oder ist zu lang.'
   if (!value.message || !isWithinLimit(value.message, contactFieldLimits.message)) errors.message = 'Bitte beschreibe dein Projekt in maximal 5.000 Zeichen.'
+  if (!value.projectType || !isWithinLimit(value.projectType, contactFieldLimits.projectType) || !projectTypeValues.includes(value.projectType)) errors.projectType = 'Bitte wähle eine Leistung aus.'
   if (value.turnstileToken === null || !isWithinLimit(value.turnstileToken, contactFieldLimits.turnstileToken) || (requireTurnstile && !value.turnstileToken)) errors.turnstileToken = 'Bitte bestätige die Sicherheitsprüfung.'
 
   return Object.keys(errors).length ? { ok: false, errors } : { ok: true, value }

@@ -17,6 +17,16 @@ test('the contact form keeps only name, email and message mandatory', async () =
   assert.doesNotMatch(homepage, /name="phone"[^>]*required/)
 })
 
+test('the selected service survives the form steps and is sent without the privacy checkbox', async () => {
+  const homepage = await read('src/main.jsx')
+
+  assert.match(homepage, /const \[projectType, setProjectType\] = useState\('Webseite'\)/)
+  assert.match(homepage, /checked=\{projectType === choice\}/)
+  assert.match(homepage, /const \{ privacy: _privacy, \.\.\.fields \} = Object\.fromEntries\(formData\.entries\(\)\)/)
+  assert.match(homepage, /validateContactPayload\(\{ \.\.\.fields, projectType, turnstileToken \}/)
+  assert.match(homepage, /body: JSON\.stringify\(validation\.value\)/)
+})
+
 test('all public React footers link to imprint and privacy pages', async () => {
   const [homepage, blog, legal] = await Promise.all([
     read('src/main.jsx'), read('src/blog.jsx'), read('src/legal.jsx'),

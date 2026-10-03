@@ -13,11 +13,12 @@ GitHub Pages kann keinen geheimen Schlüssel schützen. Deshalb bleibt das Formu
   "company": "Optional GmbH",
   "phone": "+49 621 123456",
   "message": "Projektanfrage",
+  "projectType": "Webseite",
   "turnstileToken": "client-token"
 }
 ```
 
-Nur diese sechs Felder dürfen übernommen werden. Der Server muss dieselben Regeln aus `src/lib/contact-contract.js` anwenden, alle unbekannten Felder ablehnen, Zeichen-/Größenlimits vor jeder Weiterverarbeitung durchsetzen und niemals Header aus Benutzereingaben zusammensetzen.
+Nur diese sieben Felder dürfen übernommen werden. `projectType` muss genau einer im Formular angebotenen Leistung entsprechen. Der Server muss dieselben Regeln aus `src/lib/contact-contract.js` anwenden, alle unbekannten Felder ablehnen, Zeichen-/Größenlimits vor jeder Weiterverarbeitung durchsetzen und niemals Header aus Benutzereingaben zusammensetzen.
 
 ## Serverseitige Pflichtschritte
 

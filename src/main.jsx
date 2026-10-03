@@ -836,14 +836,14 @@ function Contact() {
     const formData = new FormData(form)
     if (!formData.get('privacy')) { setErrors({ form: 'Bitte bestätige die Datenschutzerklärung.' }); setNotice('Bitte bestätige die Datenschutzerklärung.'); return }
     const { privacy: _privacy, ...fields } = Object.fromEntries(formData.entries())
-    const validation = validateContactPayload({ ...fields, turnstileToken }, { requireTurnstile: productionWorkflowEnabled })
+    const validation = validateContactPayload({ ...fields, projectType, turnstileToken }, { requireTurnstile: productionWorkflowEnabled })
     if (!validation.ok) { setErrors(validation.errors); setNotice(validation.errors.form || 'Bitte prüfe die markierten Felder.'); return }
     setErrors({})
     if (!productionWorkflowEnabled) { setNotice('Der Formularversand ist vor dem Produktivstart noch nicht verfügbar. Bitte schreibt uns bis dahin an info@sidetwo.de.'); return }
     setIsSubmitting(true)
     setNotice('')
     try {
-      const response = await fetch(contactApiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'omit', body: JSON.stringify({ ...validation.value, turnstileToken }) })
+      const response = await fetch(contactApiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'omit', body: JSON.stringify(validation.value) })
       const result = await response.json().catch(() => ({}))
       if (!response.ok || result.success !== true) throw new Error(result.message || 'Die Anfrage konnte nicht gesendet werden.')
       form.reset()
