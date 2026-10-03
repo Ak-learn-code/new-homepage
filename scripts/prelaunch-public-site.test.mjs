@@ -121,6 +121,8 @@ test('the executable public source contains no client-side storage or secrets an
   assert.match(source, /VITE_CONTACT_API_URL/)
   assert.match(source, /VITE_TURNSTILE_SITE_KEY/)
   assert.match(source, /Boolean\(contactApiUrl && turnstileSiteKey\)/)
+  assert.match(source, /theme: 'light'/)
+  assert.match(source, /'response-field': false/)
 })
 
 test('local environment files are ignored while the safe example remains trackable', async () => {

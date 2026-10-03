@@ -764,7 +764,7 @@ function TurnstileWidget({ siteKey, onToken, onError, resetSignal }) {
     const scriptId = 'sidetwo-turnstile-script'
     const render = () => {
       if (!mounted || !targetRef.current || !window.turnstile) return
-      widgetIdRef.current = window.turnstile.render(targetRef.current, { sitekey: siteKey, action: 'contact', callback: onToken, 'error-callback': onError, 'expired-callback': () => onToken('') })
+      widgetIdRef.current = window.turnstile.render(targetRef.current, { sitekey: siteKey, theme: 'light', action: 'contact', 'response-field': false, callback: onToken, 'error-callback': onError, 'expired-callback': () => onToken('') })
     }
     const existing = document.getElementById(scriptId)
     if (existing) { existing.addEventListener('load', render); render(); return () => { mounted = false; existing.removeEventListener('load', render) } }
