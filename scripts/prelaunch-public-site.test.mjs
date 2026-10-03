@@ -27,6 +27,20 @@ test('the selected service survives the form steps and is sent without the priva
   assert.match(homepage, /body: JSON\.stringify\(validation\.value\)/)
 })
 
+test('the contact success state replaces the form only after a confirmed API response', async () => {
+  const [homepage, styles] = await Promise.all([read('src/main.jsx'), read('src/styles.css')])
+
+  assert.match(homepage, /if \(!response\.ok \|\| result\.success !== true\) throw new Error/)
+  assert.match(homepage, /setSuccessSubmission\(\{ name: validation\.value\.name, projectType: validation\.value\.projectType \}\)/)
+  assert.match(homepage, /successSubmission && successContent \? \(/)
+  assert.match(homepage, /ref=\{successHeadingRef\} tabIndex="-1"/)
+  assert.match(homepage, /aria-live="polite"/)
+  assert.match(homepage, /href=\{asset\('#referenzen'\)\}/)
+  assert.match(styles, /\.project-success-timeline \{ display: grid; grid-template-columns: repeat\(3, minmax\(0,1fr\)\)/)
+  assert.match(styles, /@media \(max-width: 680px\)[\s\S]*?\.project-success-timeline \{ grid-template-columns: 1fr;/)
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.project-start-success, \.project-success-check \{ animation: none;/)
+})
+
 test('all public React footers link to imprint and privacy pages', async () => {
   const [homepage, blog, legal] = await Promise.all([
     read('src/main.jsx'), read('src/blog.jsx'), read('src/legal.jsx'),

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { formatPublishedAt, getLatestDirectusPosts as getLatestPosts, postImageUrl } from './lib/directus'
 import { validateContactPayload } from './lib/contact-contract'
+import { contactSuccessContent } from './lib/contact-success'
 import {
   ArrowBendDownRight,
   ArrowRight,
@@ -790,16 +791,23 @@ function Contact() {
   const [notice, setNotice] = useState('')
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successSubmission, setSuccessSubmission] = useState(null)
   const [turnstileToken, setTurnstileToken] = useState('')
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0)
   const [step, setStep] = useState(1)
   const [projectType, setProjectType] = useState('Webseite')
   const formRef = useRef(null)
+  const successHeadingRef = useRef(null)
   const sectionRef = useRef(null)
   const contactLineRef = useRef(null)
   const contactApiUrl = import.meta.env.VITE_CONTACT_API_URL || ''
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
   const productionWorkflowEnabled = Boolean(contactApiUrl && turnstileSiteKey)
+  const successContent = successSubmission ? contactSuccessContent(successSubmission) : null
+
+  useEffect(() => {
+    if (successSubmission) successHeadingRef.current?.focus()
+  }, [successSubmission])
 
   useEffect(() => {
     let frame = 0
@@ -849,7 +857,8 @@ function Contact() {
       form.reset()
       setTurnstileToken('')
       setTurnstileResetSignal((current) => current + 1)
-      setNotice(result.message || 'Vielen Dank. Wir melden uns zeitnah bei euch.')
+      setNotice('')
+      setSuccessSubmission({ name: validation.value.name, projectType: validation.value.projectType })
     } catch (error) {
       setNotice(error instanceof Error && error.message ? error.message : 'Die Anfrage konnte nicht gesendet werden. Bitte versucht es später erneut.')
     } finally {
@@ -879,7 +888,21 @@ function Contact() {
           <div className="project-start-image"><img src={asset('assets/contact/project-start-team.jpg')} alt="Alex und Bilal von SideTwo bei der gemeinsamen Projektarbeit" loading="lazy" decoding="async" width="1536" height="1024" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
         </div>
         <div className="project-start-form-wrap">
-          <form className="project-start-form" ref={formRef} onSubmit={submit} noValidate>
+          {successSubmission && successContent ? (
+            <section className="project-start-success" aria-live="polite" aria-labelledby="contact-success-title">
+              <div className="project-success-check" aria-hidden="true">✓</div>
+              <span className="project-success-eyebrow">Anfrage angekommen</span>
+              <h3 id="contact-success-title" ref={successHeadingRef} tabIndex="-1">Das war’s von dir.<br />Jetzt sind wir dran.</h3>
+              <p className="project-success-copy">{successContent.acknowledgement}</p>
+              <div className="project-success-project"><span>Dein Projekt</span><strong>{successSubmission.projectType}</strong></div>
+              <ol className="project-success-timeline" aria-label="So geht es mit deiner Anfrage weiter">
+                <li className="is-complete"><i aria-hidden="true">✓</i><div><strong>Anfrage angekommen</strong><span>Erfolgreich übermittelt</span></div></li>
+                <li><i aria-hidden="true">02</i><div><strong>Wir schauen’s uns an</strong><span>Persönlich, nicht automatisch</span></div></li>
+                <li><i aria-hidden="true">03</i><div><strong>Wir melden uns</strong><span>Mit den nächsten Schritten</span></div></li>
+              </ol>
+              <div className="project-success-closing"><div><strong>{successContent.closing}</strong><span>Bis dahin schon mal neugierig?</span></div><a className="project-success-cta" href={asset('#referenzen')}>Unsere Arbeit ansehen <ArrowRight size={16} weight="bold" /></a></div>
+            </section>
+          ) : <><form className="project-start-form" ref={formRef} onSubmit={submit} noValidate>
             <div className="project-start-progress"><div><span>Schritt {step} von 2</span><strong>{step === 1 ? 'Leistung auswählen' : 'Kontakt teilen'}</strong></div></div>
             {step === 1 ? (
               <fieldset className="project-service-choices">
@@ -903,8 +926,7 @@ function Contact() {
               {step === 2 ? <button className="project-back" type="button" onClick={() => setStep(1)}>Zurück</button> : <span />}
               <button className="project-next" type="submit" disabled={isSubmitting}><span>{isSubmitting ? 'Wird gesendet …' : step === 1 ? 'Weiter' : productionWorkflowEnabled ? 'Anfrage senden' : 'Anfrage vorbereiten'}</span><ArrowRight size={17} weight="bold" /></button>
             </div>
-          </form>
-          {notice ? <p className="contact-notice" role={Object.keys(errors).length ? 'alert' : 'status'}>{notice}</p> : null}
+          </form>{notice ? <p className="contact-notice" role={Object.keys(errors).length ? 'alert' : 'status'}>{notice}</p> : null}</>}
         </div>
       </div>
     </section>
