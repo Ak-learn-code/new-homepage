@@ -34,7 +34,7 @@ const projects = [
   { name: 'da nico', meta: 'Website, Backend, Bestellsystem', image: asset('assets/projects/da-nico.webp'), short: 'Bestellen, ganz einfach.' },
   { name: 'Avci Gerüstbau', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/avci-geruestbau.webp'), short: 'Starker Auftritt fürs Handwerk.' },
   { name: 'Krug – Das Restaurant', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/krug-das-restaurant.webp'), short: 'Regional genießen.' },
-  { name: 'Ingenieurbüro Nuri', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.webp'), short: 'Technik verständlich gemacht.' },
+  { name: 'Ingenieurbüro Kaltbrunn', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/kfz-nuri.webp'), short: 'Technik verständlich gemacht.' },
   { name: 'Pfrimmpark Arena', meta: 'Website, UX/UI, Entwicklung', image: asset('assets/projects/pfrimmpark-arena.webp'), short: 'Sport gemeinsam erleben.' },
 ]
 
