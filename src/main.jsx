@@ -244,12 +244,15 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-heading">
           <a className="google-rating" href={googleProfileUrl} target="_blank" rel="noopener noreferrer" aria-label="SideTwo auf Google ansehen">
-            <span className="google-rating-context"><Star size={20} weight="fill" aria-hidden="true" /><strong>5.0</strong></span>
-            <span className="google-rating-pill">
-              <span className="google-rating-avatars" aria-hidden="true" style={{ '--google-rating-avatar-image': `url(${asset('assets/people/google-review-avatars.webp')})` }}>
-                <span />
-                <span />
-                <span />
+            <span className="google-rating-avatars" aria-hidden="true" style={{ '--google-rating-avatar-image': `url(${asset('assets/people/google-review-avatars.webp')})` }}>
+              <span />
+              <span />
+              <span />
+            </span>
+            <span className="google-rating-details">
+              <span className="google-rating-score" aria-label="5 von 5 Sternen">
+                {[0, 1, 2, 3, 4].map((star) => <Star key={star} weight="fill" aria-hidden="true" />)}
+                <strong>5.0</strong>
               </span>
               <span>Zufriedene Kunden</span>
             </span>
@@ -665,19 +668,34 @@ function CaseStudiesPlaceholder() {
   return (
     <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
       <div className="proof-placeholder-head">
-        <ScrollFillHeading id="proof-placeholder-title" className="proof-scroll-title" text="Fallstudien und Stimmen, die bald mehr erzählen." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
-        <p>Hier entsteht Raum für ausführliche Einblicke in Projekte und für echte Rückmeldungen unserer Kundinnen und Kunden.</p>
+        <ScrollFillHeading id="proof-placeholder-title" className="proof-scroll-title" text="Fallstudien und Stimmen, die mehr erzählen." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
+        <p>Ein Einblick in die Zusammenarbeit mit Ingenieurbüro Memic – vom digitalen Auftritt bis zur lokalen Sichtbarkeit.</p>
       </div>
       <div className="proof-placeholder-grid">
         <article className="case-study-placeholder">
-          <div className="case-study-art" aria-hidden="true"><i /><i /><i /><b /></div>
-          <div><span>Fallstudien</span><h3>Wie aus Anforderungen funktionierende digitale Auftritte werden.</h3><p>In Vorbereitung</p></div>
+          <div className="case-study-art">
+            <img src={asset('assets/projects/ingenieurbuero-memic.webp')} alt="Webauftritt des Ingenieurbüro Memic auf Monitor und Smartphone" />
+          </div>
+          <div className="case-study-copy">
+            <span>Ingenieurbüro Memic · Mannheim</span>
+            <h3>Klar sichtbar. Klar strukturiert.</h3>
+            <p>Konzept, Design und Entwicklung der Website – inklusive Google-Unternehmensprofil für lokale Sichtbarkeit.</p>
+            <a href="https://www.ib-memic.de/" target="_blank" rel="noopener noreferrer">Website ansehen <ArrowRight weight="bold" aria-hidden="true" /></a>
+          </div>
         </article>
-        <article className="reviews-placeholder">
-          <div className="review-quote" aria-hidden="true">„</div>
-          <h3>Echte Kundenstimmen folgen hier.</h3>
-          <div className="review-lines" aria-hidden="true"><i /><i /><i /></div>
-          <p>In Vorbereitung</p>
+        <article className="reviews-placeholder" aria-label="Google-Bewertung von Denis Memic">
+          <div className="review-author">
+            <span className="review-author-image" aria-hidden="true" style={{ '--reviewer-image': `url(${asset('assets/people/google-review-avatars.webp')})` }} />
+            <span><strong>Denis Memic</strong><small>Ingenieurbüro Memic</small></span>
+          </div>
+          <div className="review-rating" aria-label="5 von 5 Sternen auf Google">
+            {[0, 1, 2, 3, 4].map((star) => <Star key={star} weight="fill" aria-hidden="true" />)}
+            <span>Google Bewertung</span>
+          </div>
+          <blockquote>
+            <p>„Die Jungs von SideTwo haben die Website für mein Ingenieurbüro erstellt, und ich bin mit dem Ergebnis sehr zufrieden! Die Zusammenarbeit war angenehm und unkompliziert, und die neue Website stellt mein Büro und meine Arbeit sehr schön dar.“</p>
+          </blockquote>
+          <a className="review-link" href="https://maps.app.goo.gl/A4nuj5NMT945NjtS8" target="_blank" rel="noopener noreferrer">Auf Google lesen <ArrowRight weight="bold" aria-hidden="true" /></a>
         </article>
       </div>
     </section>
@@ -1026,12 +1044,26 @@ function Footer() {
   return (
     <footer className="footer" id="ueber-uns">
       <div className="footer-inner">
-        <div className="footer-brand"><SideTwoLogo className="footer-brand-logo" /><p>Wir bauen digitale Auftritte, Systeme und Automatisierungen, die im Alltag wirklich arbeiten.</p><FooterSocialLinks /></div>
-        <div className="footer-col"><strong>Leistungen</strong><a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a></div>
-        <div className="footer-col"><strong>Studio</strong><a href="#impact">Über uns</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#faq">Fragen &amp; Antworten</a><a href="#kontakt">Kontakt</a></div>
-        <div className="footer-col"><strong>Starten</strong><a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>
+        <div className="footer-brand">
+          <SideTwoLogo className="footer-brand-logo" />
+          <p>Websites, Automatisierung und KI, die im Alltag wirklich arbeiten.</p>
+          <FooterSocialLinks />
+        </div>
+        <nav className="footer-col footer-site" aria-label="Seitenbereiche">
+          <strong>Seite</strong>
+          <a href="#impact">Über uns</a><a href="#leistungen">Leistungen</a><a href="#referenzen">Projekte</a><a href="#fallstudien">Fallstudien</a><a href="#faq">Fragen</a>
+        </nav>
+        <nav className="footer-col footer-services" aria-label="Leistungen">
+          <strong>Leistungen</strong>
+          <a href="#leistungen">Webseiten</a><a href="#leistungen">Automatisierung</a><a href="#leistungen">KI-Agenten</a><a href="#leistungen">Social Media</a>
+        </nav>
+        <div className="footer-col footer-contact">
+          <strong>Kontakt</strong>
+          <a href="#kontakt">Projekt anfragen</a><a href="#kontakt">Unverbindlich sprechen</a><a href="mailto:info@sidetwo.de">info@sidetwo.de</a><a href="#kontakt">Kontaktformular</a>
+        </div>
       </div>
-      <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
+      <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></span></div>
+      <div className="footer-wordmark" aria-hidden="true"><span>SideTwo</span></div>
     </footer>
   )
 }
