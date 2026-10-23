@@ -139,9 +139,9 @@ const faqItems = [
   },
 ]
 
-function Button({ href = '#kontakt', children, secondary = false }) {
+function Button({ href = '#kontakt', children, secondary = false, className = '' }) {
   return (
-    <a className={`button${secondary ? ' button-secondary' : ''}`} href={href}>
+    <a className={`button${secondary ? ' button-secondary' : ''}${className ? ` ${className}` : ''}`} href={href}>
       <span>{children}</span><ArrowRight size={17} weight="bold" />
     </a>
   )
@@ -495,11 +495,11 @@ function StudioImpact() {
           <span className="impact-team-plus" aria-hidden="true"><ArrowUpRight weight="bold" /></span>
         </button>
         <div className="impact-stack">
-          <article className="impact-card impact-projects" ref={projectCardRef}>
+          <a className="impact-card impact-projects" href="#referenzen" ref={projectCardRef} aria-label="Zu unseren Projekten">
             <strong aria-label={`${projectCount} plus Webprojekte`}>{projectCount}<sup>+</sup></strong>
             <span>Webprojekte</span>
-            <a className="impact-project-link" href="#referenzen" aria-label="Zu den Projekten"><ArrowUpRight weight="bold" /></a>
-          </article>
+            <i className="impact-project-link" aria-hidden="true"><ArrowUpRight weight="bold" /></i>
+          </a>
           <article className="impact-card impact-quote">
             <p>Wir sind die <b>zweite Seite</b> eures Unternehmens — die <b>digitale, die mitdenkt.</b></p>
           </article>
@@ -517,7 +517,7 @@ function StudioImpact() {
             ))}
           </div>
           <strong>Wir arbeiten mit diesen Tools.</strong>
-          <p>Wir verbinden eure bestehenden Tools.</p>
+          <p>Um eure Projekte schnell, direkt und reibungslos umzusetzen.</p>
         </article>
         <div className="impact-contact-stack">
           <article className={`impact-card impact-speed${contactMessagesReady ? ' contact-messages-ready' : ''}`} ref={contactCardRef}>
@@ -691,13 +691,13 @@ function ServiceShowcase() {
       tone: 'rose',
     },
   ]
-  const showNextService = () => railViewportRef.current?.scrollBy({ left: railViewportRef.current.clientWidth * .72, behavior: 'smooth' })
+  const moveServiceRail = (direction) => railViewportRef.current?.scrollBy({ left: direction * railViewportRef.current.clientWidth * .72, behavior: 'smooth' })
 
   return (
     <section className="service-gallery" id="leistungen" aria-labelledby="service-gallery-title">
       <div className="service-gallery-head">
         <ScrollFillHeading id="service-gallery-title" className="service-gallery-scroll-title" text="Unsere Dienstleistungen. Für digitalen Rückenwind im Alltag." fillColor="#edf3ef" mutedColor="rgba(237, 243, 239, .48)" />
-        <p>Wählt den Baustein, der gerade den größten Unterschied für euer Team macht.</p>
+        <div className="reference-pagination proof-carousel-nav service-gallery-nav" aria-label="Dienstleistungen navigieren"><button type="button" onClick={() => moveServiceRail(-1)} aria-label="Vorherige Dienstleistung"><CaretLeft weight="bold" /></button><button type="button" onClick={() => moveServiceRail(1)} aria-label="Nächste Dienstleistung"><CaretRight weight="bold" /></button></div>
       </div>
       <div className="service-gallery-viewport" ref={railViewportRef} aria-label="Leistungsbereiche">
         <div className="service-gallery-rail">
@@ -709,44 +709,112 @@ function ServiceShowcase() {
           ))}
         </div>
       </div>
-      <button className="service-gallery-next" type="button" onClick={showNextService} aria-label="Weitere Dienstleistungen anzeigen"><ArrowRight weight="bold" /></button>
     </section>
   )
 }
 
 function CaseStudiesPlaceholder() {
+  const railRef = useRef(null)
+  const [expandedCaseQuote, setExpandedCaseQuote] = useState(null)
+  const moveRail = (direction) => {
+    const rail = railRef.current
+    if (!rail) return
+    rail.scrollBy({ left: direction * Math.min(rail.clientWidth * .82, 620), behavior: 'smooth' })
+  }
+  const cases = [
+    {
+      kind: 'review',
+      person: 'Google Bewertung',
+      company: 'Verifizierte Rezension',
+      quote: '„Sehr ehrliches Unternehmen mit super schneller Kommunikation und viel Geduld. Bei Fragen oder Ähnlichem sofort hilfsbereit und wirklich sehr empfehlenswert!“',
+      href: 'https://maps.app.goo.gl/QiHGAyLLYAdAnokEA',
+      avatar: asset('assets/reviews/google-review-waveboy.png'),
+      avatarPosition: 'left center',
+    },
+    {
+      kind: 'case',
+      name: 'Ingenieurbüro Kaltbrunn',
+      image: asset('assets/services/kaltbrunn-screen.png'),
+      alt: 'Webauftritt des Ingenieurbüro Kaltbrunn',
+      services: ['Website', 'Logo', 'Optimierung'],
+      quote: '„Mein Projekt für die Webseite mit Anpassen und Optimieren meines Logos wurde sehr gut gelöst. Besonders schätze ich die schnelle Umsetzung und gute Rückmeldegüte! Mit SideTwo habe ich den richtigen Partner auf meiner Seite!“',
+      attribution: 'Kundenstimme · Google',
+      reviewer: 'Nurettin Sogukcesme',
+      href: 'https://ing-kaltbrunn.de/',
+      avatar: asset('assets/reviews/nurettin-sogukcesme.png'),
+      avatarPosition: 'left center',
+    },
+    {
+      kind: 'review',
+      person: 'Tim Rupprecht',
+      company: 'Google Bewertung',
+      quote: '„Super Arbeit und absolut empfehlenswert! 👍 Die Zusammenarbeit mit SideTwo war von Anfang bis Ende professionell, zuverlässig und unkompliziert. Vielen Dank für die tolle Arbeit – gerne wieder! 🙌⭐“',
+      href: 'https://maps.app.goo.gl/JZNSGEsA9APjPbMP6',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXUUbafQDRKCX3XIbiB6608ZD7E1GBw8VcjoWTEPS_jqYWAcEoEqQ=w72-h72-p-rp-mo-br100',
+      avatarPosition: 'left center',
+    },
+    {
+      kind: 'case',
+      name: 'Ingenieurbüro Memic',
+      image: asset('assets/projects/ingenieurbuero-memic.webp'),
+      alt: 'Webauftritt des Ingenieurbüro Memic auf Monitor und Smartphone',
+      services: ['Website', 'SEO', 'Google Profil'],
+      quote: '„Die Jungs von SideTwo haben die Website für mein Ingenieurbüro erstellt, und ich bin mit dem Ergebnis sehr zufrieden! Die Zusammenarbeit war angenehm und unkompliziert, und die neue Website stellt mein Büro und meine Arbeit sehr schön dar.“',
+      attribution: 'Denis Memic · Ingenieurbüro Memic',
+      reviewer: 'Denis Memic',
+      href: 'https://www.ib-memic.de/',
+      avatarPosition: 'left center',
+    },
+    {
+      kind: 'review',
+      person: 'H.',
+      company: 'Google Bewertung',
+      quote: '„Danke für die Website und die Zusammenarbeit!“',
+      href: 'https://maps.app.goo.gl/zSdhLV7Ph3M5YXQ38',
+      avatar: asset('assets/reviews/google-review-h.png'),
+      avatarClass: 'review-avatar-native',
+      avatarPosition: 'center',
+    },
+    {
+      kind: 'review',
+      person: 'Gent Karaxha',
+      company: 'Google Bewertung',
+      quote: '„Sehr zuverlässig und gute individuelle Arbeit 👍“',
+      href: 'https://maps.app.goo.gl/BxUT6Kc3riu3z1ip7',
+      avatar: asset('assets/reviews/google-review-gent-karaxha.png'),
+      avatarClass: 'review-avatar-native',
+      avatarPosition: 'center',
+    },
+  ]
+
   return (
     <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
-      <div className="proof-placeholder-head">
-        <ScrollFillHeading id="proof-placeholder-title" className="proof-scroll-title" text="Fallstudien und Stimmen, die mehr erzählen." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
-        <p>Ein Einblick in die Zusammenarbeit mit Ingenieurbüro Memic – vom digitalen Auftritt bis zur lokalen Sichtbarkeit.</p>
-      </div>
-      <div className="proof-placeholder-grid">
-        <article className="case-study-placeholder">
-          <div className="case-study-art">
-            <img src={asset('assets/projects/ingenieurbuero-memic.webp')} alt="Webauftritt des Ingenieurbüro Memic auf Monitor und Smartphone" />
+      <div className="proof-carousel-layout">
+        <header className="proof-placeholder-head">
+          <ScrollFillHeading id="proof-placeholder-title" className="proof-scroll-title" text="Fallstudien und Stimmen, die mehr erzählen." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
+          <p>Echte Ergebnisse aus der Zusammenarbeit mit Unternehmen aus der Region – von der ersten Idee bis zur sichtbaren Wirkung.</p>
+          <div className="reference-pagination proof-carousel-nav" aria-label="Fallstudien navigieren"><button className="proof-carousel-previous" type="button" onClick={() => moveRail(-1)} aria-label="Vorherige Fallstudie"><CaretLeft weight="bold" /></button><button className="proof-carousel-forward" type="button" onClick={() => moveRail(1)} aria-label="Nächste Fallstudie"><CaretRight weight="bold" /></button></div>
+        </header>
+        <div className="proof-carousel-stage">
+          <div className="proof-carousel-viewport" ref={railRef} aria-label="Fallstudien und Google-Bewertungen">
+            <div className="proof-carousel-rail">
+            {cases.map((item, index) => item.kind === 'case' ? (
+              <article className={`proof-card proof-case${item.name === 'Ingenieurbüro Kaltbrunn' ? ' is-kaltbrunn' : ''}${expandedCaseQuote === item.name ? ' is-quote-expanded' : ''}`} key={`${item.name}-${index}`}>
+                <div className="proof-case-image"><img src={item.image} alt={item.alt} loading="lazy" decoding="async" /></div>
+                <a className="impact-project-link proof-case-top-link" href={item.href} target="_blank" rel="noopener noreferrer" aria-label={`${item.name} ansehen`}><ArrowUpRight weight="bold" /></a>
+                <div className="proof-case-detail"><div><h3>{item.name}</h3><div className="proof-case-services">{item.services.map((service) => <span key={service}>{service}</span>)}</div></div><div className="proof-case-voice"><div className="review-author"><span className={`review-author-image ${item.avatarClass || ''}`} aria-hidden="true" style={{ '--reviewer-image': `url(${item.avatar || asset('assets/people/google-review-avatars.webp')})`, backgroundPosition: item.avatarPosition, backgroundSize: item.avatar ? 'cover' : undefined }} /><span><strong>{item.reviewer}</strong><small className="proof-review-source">{[0, 1, 2, 3, 4].map((star) => <Star key={star} weight="fill" aria-hidden="true" />)}Google Bewertung</small></span></div><blockquote><p>{item.quote}</p><button className="proof-case-quote-toggle" type="button" onClick={() => setExpandedCaseQuote((current) => current === item.name ? null : item.name)} aria-expanded={expandedCaseQuote === item.name}>{expandedCaseQuote === item.name ? 'Weniger lesen' : 'Mehr lesen'}</button></blockquote></div></div>
+              </article>
+            ) : (
+              <article className="reviews-placeholder proof-card proof-review" key={`${item.company}-${index}`} aria-label={`Google-Bewertung von ${item.person}`}>
+                <div className="review-author"><span className={`review-author-image ${item.avatarClass || ''}`} aria-hidden="true" style={{ '--reviewer-image': `url(${item.avatar || asset('assets/people/google-review-avatars.webp')})`, backgroundPosition: item.avatarPosition, backgroundSize: item.avatar ? 'cover' : undefined }} /><span><strong>{item.person}</strong><small>{item.company}</small></span></div>
+                <a className="impact-project-link proof-review-top-link" href={item.href} target="_blank" rel="noopener noreferrer" aria-label={`Bewertung von ${item.person} auf Google lesen`}><ArrowUpRight weight="bold" /></a>
+                <div className="review-rating" aria-label="5 von 5 Sternen auf Google">{[0, 1, 2, 3, 4].map((star) => <Star key={star} weight="fill" aria-hidden="true" />)}<span>Google Bewertung</span></div>
+                <blockquote><p>{item.quote}</p></blockquote>
+              </article>
+            ))}
+            </div>
           </div>
-          <div className="case-study-copy">
-            <span>Ingenieurbüro Memic · Mannheim</span>
-            <h3>Klar sichtbar. Klar strukturiert.</h3>
-            <p>Konzept, Design und Entwicklung der Website – inklusive Google-Unternehmensprofil für lokale Sichtbarkeit.</p>
-            <a href="https://www.ib-memic.de/" target="_blank" rel="noopener noreferrer">Website ansehen <ArrowRight weight="bold" aria-hidden="true" /></a>
-          </div>
-        </article>
-        <article className="reviews-placeholder" aria-label="Google-Bewertung von Denis Memic">
-          <div className="review-author">
-            <span className="review-author-image" aria-hidden="true" style={{ '--reviewer-image': `url(${asset('assets/people/google-review-avatars.webp')})` }} />
-            <span><strong>Denis Memic</strong><small>Ingenieurbüro Memic</small></span>
-          </div>
-          <div className="review-rating" aria-label="5 von 5 Sternen auf Google">
-            {[0, 1, 2, 3, 4].map((star) => <Star key={star} weight="fill" aria-hidden="true" />)}
-            <span>Google Bewertung</span>
-          </div>
-          <blockquote>
-            <p>„Die Jungs von SideTwo haben die Website für mein Ingenieurbüro erstellt, und ich bin mit dem Ergebnis sehr zufrieden! Die Zusammenarbeit war angenehm und unkompliziert, und die neue Website stellt mein Büro und meine Arbeit sehr schön dar.“</p>
-          </blockquote>
-          <a className="review-link" href="https://maps.app.goo.gl/A4nuj5NMT945NjtS8" target="_blank" rel="noopener noreferrer">Auf Google lesen <ArrowRight weight="bold" aria-hidden="true" /></a>
-        </article>
+        </div>
       </div>
     </section>
   )
@@ -976,7 +1044,7 @@ function Contact() {
               <fieldset className="project-service-choices">
                 <legend>Wobei können wir euch unterstützen?</legend>
                 {['Webseite', 'Automatisierung', 'KI-Agenten', 'Social Media Betreuung', 'Noch nicht sicher'].map((choice) => (
-                  <label key={choice} className={projectType === choice ? 'is-selected' : ''}><input type="radio" name="projectType" value={choice} checked={projectType === choice} onChange={() => setProjectType(choice)} /><span>{choice}</span><i>✓</i></label>
+                  <label key={choice} className={projectType === choice ? 'is-selected' : ''}><input type="radio" name="projectType" value={choice} checked={projectType === choice} onChange={() => setProjectType(choice)} /><span>{choice}</span><i aria-hidden="true"><ArrowUpRight weight="bold" /></i></label>
                 ))}
               </fieldset>
             ) : (
@@ -1061,7 +1129,7 @@ function Blog() {
 
   return (
     <section className="blog" id="blog" aria-labelledby="blog-title">
-      <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><a href={asset('insights/')}>Alle Artikel <ArrowRight size={16} weight="bold" /></a></div>
+      <div className="blog-head"><ScrollFillHeading id="blog-title" className="blog-scroll-title" text="Impulse für digitale Arbeit." fillColor="#1c3030" mutedColor="rgba(28, 48, 48, .25)" /><Button href={asset('insights/')} className="blog-all-articles-button">Alle Artikel</Button></div>
       <div className="blog-grid">
         {posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug || post.title}><a href={insightOverviewUrl(post.slug)} aria-label={`${post.title} lesen`}><img src={postImageUrl(post, { width: 900, height: 634 })} alt={post.mainImage?.alt || post.title} loading="lazy" decoding="async" /><span className="blog-card-ai-label" aria-hidden="true">KI-generiert</span><div><span>{post.category} · {formatPublishedAt(post.publishedAt)} · {post.readTime}</span><h3>{post.title}</h3><p>{post.excerpt}</p><b>Artikel lesen <ArrowRight size={15} weight="bold" /></b></div></a></article>)}
         {!posts.length && !loadError ? <p className="blog-empty">Insights werden geladen.</p> : null}
