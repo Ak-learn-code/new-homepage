@@ -6,18 +6,22 @@ import { contactSuccessContent } from './lib/contact-success'
 import {
   ArrowBendDownRight,
   ArrowRight,
+  ArrowUpRight,
   Asterisk,
   BracketsCurly,
   Browser,
   CaretLeft,
   CaretRight,
-  ChartLineUp,
+  ChatCenteredText,
   FlowArrow,
+  GithubLogo,
   List,
+  Phone,
   Plus,
   Robot,
   ShareNetwork,
   Star,
+  VideoCamera,
   X,
 } from '@phosphor-icons/react'
 import { FooterSocialLinks, socialLinks } from './components/footer-social-links'
@@ -54,6 +58,21 @@ const serviceItems = [
   { Icon: BracketsCurly, title: 'Interne Tools', text: 'Systeme, die täglich genutzt werden.' },
   { Icon: ShareNetwork, title: 'Social Media', text: 'Content, der sichtbar bleibt.' },
 ]
+
+const integrationLogos = [
+  { label: 'OpenAI', src: asset('assets/integrations/openai.png'), tone: 'openai', invert: true },
+  { label: 'Hilti', src: asset('assets/integrations/hilti.png'), tone: 'hilti', invert: true },
+  { label: 'Qonto', src: asset('assets/integrations/qonto.png'), tone: 'qonto', invert: true },
+  { label: 'GitHub', Icon: GithubLogo, tone: 'github' },
+  { label: 'Adobe Photoshop', src: asset('assets/integrations/photoshop.png'), tone: 'photoshop', invert: true },
+  { label: 'Adobe Illustrator', src: asset('assets/integrations/illustrator.png'), tone: 'illustrator', invert: true },
+  { label: 'HubSpot', src: asset('assets/integrations/hubspot.png'), tone: 'hubspot', invert: true },
+  { label: 'LinkedIn', src: asset('assets/integrations/linkedin.png'), tone: 'linkedin' },
+  { label: 'TikTok', src: asset('assets/integrations/tiktok.png'), tone: 'tiktok' },
+  { label: 'Meta', src: asset('assets/integrations/meta.png'), tone: 'meta', invert: true },
+]
+
+const integrationRows = [integrationLogos, [...integrationLogos].reverse()]
 
 const clientLogos = [
   { name: 'da nico', type: 'da-nico', src: asset('assets/client-logos/da-nico.svg') },
@@ -361,7 +380,11 @@ function StudioImpact() {
   const headlineWords = headline.split(' ')
   let letterIndex = 0
   const sectionRef = useRef(null)
+  const projectCardRef = useRef(null)
+  const contactCardRef = useRef(null)
   const [headingProgress, setHeadingProgress] = useState(0)
+  const [projectCount, setProjectCount] = useState(10)
+  const [contactMessagesReady, setContactMessagesReady] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const profileTriggerRef = useRef(null)
   const profileDialogRef = useModalFocus(profileOpen, () => setProfileOpen(false), profileTriggerRef)
@@ -372,6 +395,47 @@ function StudioImpact() {
     }
     document.addEventListener('keydown', closeOnEscape)
     return () => document.removeEventListener('keydown', closeOnEscape)
+  }, [])
+
+  useEffect(() => {
+    const card = contactCardRef.current
+    if (!card || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setContactMessagesReady(true)
+      observer.disconnect()
+    }, { threshold: .45 })
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const card = projectCardRef.current
+    if (!card || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+
+    let frame = 0
+    let hasStarted = false
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || hasStarted) return
+      hasStarted = true
+      setProjectCount(0)
+      const startedAt = window.performance.now()
+      const duration = 1800
+      const tick = (now) => {
+        const progress = Math.min(1, (now - startedAt) / duration)
+        const eased = 1 - (1 - progress) ** 4
+        setProjectCount(Math.round(eased * 10))
+        if (progress < 1) frame = window.requestAnimationFrame(tick)
+      }
+      frame = window.requestAnimationFrame(tick)
+      observer.disconnect()
+    }, { threshold: .85 })
+
+    observer.observe(card)
+    return () => {
+      observer.disconnect()
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   useEffect(() => {
@@ -417,36 +481,61 @@ function StudioImpact() {
         <p>Websites, Automatisierungen und KI, die nicht mehr Arbeit machen — sondern sie abnehmen.</p>
       </div>
       <div className="studio-impact-grid">
-        <article className="impact-card impact-projects">
-          <div className="impact-project-mark" aria-hidden="true"><i /><i /><i /></div>
-          <strong>10</strong>
-          <span>Web-Projekte</span>
-          <p>für Unternehmen aus der Region realisiert.</p>
-        </article>
+        <button className="impact-card impact-team" ref={profileTriggerRef} type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
+          <div className="impact-team-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
+            <img src={asset('assets/people/alex-kodalis.webp')} alt="Alexandros Kodalis" loading="lazy" decoding="async" width="1254" height="1254" />
+            <img src={asset('assets/people/bilal-altuntas.webp')} alt="Bilal Altuntas" loading="lazy" decoding="async" width="1254" height="1254" />
+          </div>
+          <strong>Zwei Köpfe.</strong>
+          <p>Strategie und Umsetzung, zusammen gedacht.</p>
+          <span className="impact-team-actions" aria-hidden="true">
+            <span><Phone weight="fill" /></span>
+            <span><ChatCenteredText weight="fill" /></span>
+            <span><VideoCamera weight="fill" /></span>
+          </span>
+          <span className="impact-team-plus" aria-hidden="true"><ArrowUpRight weight="bold" /></span>
+        </button>
         <div className="impact-stack">
-          <button className="impact-card impact-team" ref={profileTriggerRef} type="button" onClick={() => setProfileOpen(true)} aria-haspopup="dialog" aria-label="Profile von Alexandros Kodalis und Bilal Altuntas öffnen">
-            <div className="impact-portraits" aria-label="Alexandros Kodalis und Bilal Altuntas">
-              <img src={asset('assets/people/alex-kodalis.webp')} alt="Alexandros Kodalis" loading="lazy" decoding="async" width="1254" height="1254" />
-              <img src={asset('assets/people/bilal-altuntas.webp')} alt="Bilal Altuntas" loading="lazy" decoding="async" width="1254" height="1254" />
-            </div>
-            <strong>Zwei Köpfe.</strong>
-            <p>Strategie und Umsetzung, zusammen gedacht.</p>
-            <span className="impact-team-plus" aria-hidden="true"><Plus weight="bold" /></span>
-          </button>
-          <article className="impact-card impact-speed">
-            <strong>2×</strong><span>klarer entscheiden.</span>
+          <article className="impact-card impact-projects" ref={projectCardRef}>
+            <strong aria-label={`${projectCount} plus Webprojekte`}>{projectCount}<sup>+</sup></strong>
+            <span>Webprojekte</span>
+            <a className="impact-project-link" href="#referenzen" aria-label="Zu den Projekten"><ArrowUpRight weight="bold" /></a>
+          </article>
+          <article className="impact-card impact-quote">
+            <p>Wir sind die <b>zweite Seite</b> eures Unternehmens — die <b>digitale, die mitdenkt.</b></p>
           </article>
         </div>
         <article className="impact-card impact-time">
-          <div className="impact-time-mark" aria-hidden="true"><i /><i /><i /></div>
-          <strong>Mehr Zeit im Alltag.</strong>
-          <p>Automatisierung nimmt Routine aus dem System.</p>
+          <div className="integration-lanes" aria-label="Kompatibel mit OpenAI, Hilti, Qonto, GitHub, Adobe, HubSpot, LinkedIn, TikTok und Meta">
+            {integrationRows.map((row, rowIndex) => (
+              <div className="integration-lane" key={rowIndex}>
+                <div className={`integration-track integration-track-${rowIndex + 1}`} aria-hidden="true">
+                  {[...row, ...row, ...row].map(({ label, src, Icon, tone, invert }, iconIndex) => (
+                    <span className={`integration-icon integration-icon-${tone}`} key={`${label}-${iconIndex}`}>{Icon ? <Icon weight="fill" /> : <img src={src} alt="" className={invert ? 'integration-icon-invert' : ''} decoding="async" />}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <strong>Wir arbeiten mit diesen Tools.</strong>
+          <p>Wir verbinden eure bestehenden Tools.</p>
         </article>
-        <article className="impact-card impact-quote">
-          <span className="impact-quote-mark">„</span>
-          <p>Wir sind die zweite Seite eures Unternehmens — die digitale, die mitdenkt.</p>
-          <div><ChartLineUp size={18} weight="bold" /> <span>SideTwo</span></div>
-        </article>
+        <div className="impact-contact-stack">
+          <article className={`impact-card impact-speed${contactMessagesReady ? ' contact-messages-ready' : ''}`} ref={contactCardRef}>
+            <div className="impact-support-message">
+              <span className="impact-support-avatar" aria-hidden="true">
+                <img src={asset('assets/people/alex-kodalis.webp')} alt="" loading="lazy" decoding="async" />
+                <i>1</i>
+              </span>
+              <span className="impact-support-copy"><small>Alex sagt:</small><b>Wie können wir helfen?</b></span>
+            </div>
+            <div className="impact-customer-message" aria-label="Kundenanfrage">
+              <span className="impact-customer-avatar" aria-hidden="true" style={{ '--customer-avatar-image': `url(${asset('assets/people/google-review-avatars.webp')})` }}><i>1</i></span>
+              <span className="impact-customer-copy"><small>Kunde sagt:</small><strong>Ich brauche eine Website.</strong></span>
+            </div>
+            <strong>Direkter Kontakt</strong>
+          </article>
+        </div>
       </div>
       {profileOpen ? (
         <div className="reference-modal-backdrop team-modal-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
@@ -533,7 +622,7 @@ function ReferencesSequence() {
             <img src={project.image} alt={`Website-Referenz: ${project.name}`} loading="lazy" decoding="async" />
             <span className="reference-tile-cover">
               <span><b>{project.name}</b><small>{project.meta}</small></span>
-              <i><Plus weight="bold" /></i>
+              <i><ArrowUpRight weight="bold" /></i>
             </span>
           </button>
         ))}
@@ -551,103 +640,77 @@ function ReferencesSequence() {
   )
 }
 
+function ServiceCardVisual({ type, image, name }) {
+  if (type === 'website') {
+    return <div className="service-art service-art-website" aria-hidden="true"><div className="service-site-shot"><img src={image} alt="" loading="lazy" decoding="async" /></div><span className="service-site-glow" /></div>
+  }
+  if (type === 'automation') {
+    return <div className="service-art service-art-automation" aria-hidden="true"><div className="automation-board"><div className="automation-rail"><i /><i /><i /><i /></div><div className="automation-flow"><span className="automation-node automation-node-source"><b>Neue Anfrage</b><small>Eingang</small></span><i className="automation-line" /><span className="automation-node automation-node-check"><b>Daten prüfen</b><small>Regel</small></span><i className="automation-line" /><span className="automation-node"><b>Antwort senden</b><small>bereit</small></span></div><div className="automation-log"><span /><span /><span /></div></div></div>
+  }
+  if (type === 'agent') {
+    return <div className="service-art service-art-agent" aria-hidden="true"><div className="agent-window"><div className="agent-head"><i /><span>KI-Assistent</span><b>Aktiv</b></div><div className="agent-thread"><span className="agent-message agent-in">Wie kann ich helfen?</span><span className="agent-message agent-out">Ich prüfe das direkt.</span><span className="agent-action">KI bereitet Terminoptionen vor</span></div></div><div className="agent-orb" /></div>
+  }
+  if (type === 'tools') {
+    return <div className="service-art service-art-tools" aria-hidden="true"><div className="tool-window"><div className="tool-side"><i /><i /><i /><i /></div><div className="tool-main"><div className="tool-title"><span /><b>Arbeitsbereich</b><i /></div><div className="tool-metrics"><span><i /><b /><small>Anfragen</small></span><span><i /><b /><small>Aufgaben</small></span><span><i /><b /><small>Projekte</small></span></div><em className="tool-pie" /><div className="tool-chart"><strong>Aktivität</strong><i /><i /><i /><i /><i /><i /></div><div className="tool-list"><span><i />Freigabe einholen</span><span><i />Projekt aktualisieren</span><span><i />Antwort vorbereiten</span></div></div></div></div>
+  }
+  return <div className="service-art service-art-social" aria-hidden="true"><div className="social-phone"><img src={image} alt="" loading="lazy" decoding="async" /></div><div className="social-calendar"><img src={asset('assets/services/meta-business-insights.png')} alt="" loading="lazy" decoding="async" /></div></div>
+}
+
 function ServiceShowcase() {
+  const railViewportRef = useRef(null)
   const serviceSlides = [
     {
       name: 'Webseiten',
-      Icon: Browser,
       description: 'Ein Auftritt, der eure Leistung verständlich macht – und die passenden Anfragen auslöst.',
-      image: asset('assets/services/websites-showcase.webp'),
+      image: asset('assets/services/kaltbrunn-screen.png'),
       type: 'website',
+      tone: 'ivory',
     },
     {
       name: 'Automatisierung',
-      Icon: FlowArrow,
       description: 'Wiederkehrende Abläufe laufen verlässlich im Hintergrund. Euer Team gewinnt Zeit zurück.',
-      image: asset('assets/services/automation-showcase.webp'),
       type: 'automation',
+      tone: 'night',
     },
     {
       name: 'KI-Agenten',
-      Icon: Robot,
       description: 'Digitale Mitarbeitende, die Anfragen sortieren, zuhören und zuverlässig antworten.',
-      image: asset('assets/services/agents-showcase.webp'),
       type: 'agent',
+      tone: 'sage',
     },
     {
       name: 'Interne Tools',
-      Icon: BracketsCurly,
       description: 'Eigene kleine Systeme, die Informationen bündeln und eure tägliche Arbeit klar machen.',
-      image: asset('assets/services/tools-showcase.webp'),
       type: 'tools',
+      tone: 'sand',
     },
     {
       name: 'Social Media',
-      Icon: ShareNetwork,
       description: 'Content und Betreuung, die euren Auftritt konsistent sichtbar und relevant hält.',
-      image: asset('assets/services/social-media-showcase.webp'),
+      image: asset('assets/services/sidetwo-instagram-screen.png'),
       type: 'social',
+      tone: 'rose',
     },
   ]
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const [hasEntered, setHasEntered] = useState(false)
-  const sectionRef = useRef(null)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section || !('IntersectionObserver' in window)) {
-      setHasEntered(true)
-      return undefined
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      setHasEntered(true)
-      observer.disconnect()
-    }, { threshold: .22 })
-    observer.observe(section)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (paused) return undefined
-    const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % serviceSlides.length)
-    }, 4600)
-    return () => window.clearInterval(interval)
-  }, [paused, serviceSlides.length])
-
-  const cardClassName = (index) => {
-    const distance = (index - activeIndex + serviceSlides.length) % serviceSlides.length
-    if (distance === 0) return 'is-active'
-    if (distance === 1) return 'is-next'
-    if (distance === serviceSlides.length - 1) return 'is-previous'
-    return 'is-hidden'
-  }
+  const showNextService = () => railViewportRef.current?.scrollBy({ left: railViewportRef.current.clientWidth * .72, behavior: 'smooth' })
 
   return (
-    <section className="service-carousel" id="leistungen" ref={sectionRef} aria-labelledby="service-carousel-title">
-      <div className="service-carousel-head">
-        <ScrollFillHeading id="service-carousel-title" className="service-scroll-title" text="Das sind unsere Dienstleistungen." fillColor="#edf1ec" mutedColor="rgba(237, 241, 236, .3)" />
-        <p>Die Bausteine für einen Auftritt, der im Alltag wirklich etwas leichter macht.</p>
+    <section className="service-gallery" id="leistungen" aria-labelledby="service-gallery-title">
+      <div className="service-gallery-head">
+        <ScrollFillHeading id="service-gallery-title" className="service-gallery-scroll-title" text="Unsere Dienstleistungen. Für digitalen Rückenwind im Alltag." fillColor="#edf3ef" mutedColor="rgba(237, 243, 239, .48)" />
+        <p>Wählt den Baustein, der gerade den größten Unterschied für euer Team macht.</p>
       </div>
-      <div className="service-carousel-shell" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-        <div className={`service-carousel-list${hasEntered ? ' is-visible' : ''}`} aria-label="Leistungsbereiche">
-          {serviceSlides.map(({ name, Icon }, index) => (
-            <button key={name} style={{ '--option-index': index }} className={index === activeIndex ? 'is-active' : ''} type="button" onClick={() => setActiveIndex(index)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)} aria-pressed={index === activeIndex}>
-              <Icon size={19} weight="regular" aria-hidden="true" /><span>{name}</span>
-            </button>
-          ))}
-        </div>
-        <div className="service-carousel-stage" aria-live="polite">
-          {serviceSlides.map((slide, index) => (
-            <article className={`service-carousel-card ${cardClassName(index)}`} key={slide.name} aria-hidden={index !== activeIndex}>
-              <div className={`service-carousel-media service-carousel-media-${slide.type}`}><img src={slide.image} alt="" loading="lazy" decoding="async" /><span className="ai-generated-label" aria-hidden="true">KI-generiert</span></div>
-              <div className="service-carousel-caption"><span>{slide.name}</span><h3>{slide.description}</h3><ArrowRight size={22} weight="light" /></div>
+      <div className="service-gallery-viewport" ref={railViewportRef} aria-label="Leistungsbereiche">
+        <div className="service-gallery-rail">
+          {serviceSlides.map(({ name, description, image, type, tone }) => (
+            <article className={`service-gallery-card service-gallery-card-${type} service-gallery-card-${tone}`} key={name}>
+              <div className="service-gallery-visual"><ServiceCardVisual type={type} image={image} name={name} /></div>
+              <div className="service-gallery-copy"><h3>{name}</h3><p>{description}</p></div>
             </article>
           ))}
         </div>
       </div>
+      <button className="service-gallery-next" type="button" onClick={showNextService} aria-label="Weitere Dienstleistungen anzeigen"><ArrowRight weight="bold" /></button>
     </section>
   )
 }
@@ -890,9 +953,9 @@ function Contact() {
         <svg viewBox="0 0 1600 560" preserveAspectRatio="none" focusable="false">
           <defs>
             <linearGradient id="contact-loop-amber" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#f4a24d" />
-              <stop offset=".55" stopColor="#ffb16a" />
-              <stop offset="1" stopColor="#ee8e39" />
+              <stop offset="0" stopColor="#f47c48" />
+              <stop offset=".55" stopColor="#ffad82" />
+              <stop offset="1" stopColor="#e96b43" />
             </linearGradient>
           </defs>
           <path d="M -96 414 C 155 267 331 558 622 426 C 858 319 835 177 1085 125 C 1348 71 1481 219 1369 359 C 1260 495 1044 448 1053 324 C 1062 202 1251 191 1415 277 C 1532 338 1646 401 1710 345" />
@@ -982,7 +1045,7 @@ function FAQ() {
             <article className={`faq-item${open ? ' is-open' : ''}`} key={item.question}>
               <h3>
                 <button type="button" aria-expanded={open} aria-controls={`faq-answer-${index}`} onClick={() => setOpenIndex(open ? -1 : index)}>
-                  <span>{item.question}</span><i aria-hidden="true"><Plus size={19} weight="bold" /></i>
+                  <span>{item.question}</span><i aria-hidden="true"><ArrowUpRight weight="bold" /></i>
                 </button>
               </h3>
               <div className="faq-answer" id={`faq-answer-${index}`} hidden={!open}><p>{item.answer}</p></div>

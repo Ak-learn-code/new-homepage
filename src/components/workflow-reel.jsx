@@ -336,10 +336,14 @@ export default function WorkflowReel() {
   useEffect(() => {
     const frame = frameRef.current
     const observer = new ResizeObserver(([entry]) => {
-      const { width } = entry.contentRect
+      const { width, height } = entry.contentRect
       const portrait = width < 620
+      const canvasWidth = portrait ? 720 : 1280
+      const canvasHeight = portrait ? 900 : 720
+      const scale = width / canvasWidth
       frame.dataset.layout = portrait ? 'port' : 'land'
-      frame.style.setProperty('--rk-scale', String(width / (portrait ? 720 : 1280)))
+      frame.style.setProperty('--rk-scale', String(scale))
+      frame.style.setProperty('--rk-offset-y', `${(height - canvasHeight * scale) / 2}px`)
     })
     observer.observe(frame)
     return () => observer.disconnect()
