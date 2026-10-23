@@ -96,6 +96,7 @@ function BlogFooter() {
       <div className="footer-col"><strong>Starten</strong><a href={home('#kontakt')}>Projekt anfragen</a><a href={home('#kontakt')}>Unverbindlich sprechen</a><a href={asset('impressum')}>Impressum</a><a href={asset('datenschutz')}>Datenschutz</a></div>
     </div>
     <div className="footer-bottom"><span>© 2026 SideTwo. Alle Rechte vorbehalten.</span><span>Alexandros Kodalis &amp; Bilal Altuntas</span><span>Direkt. Klar. Persönlich.</span></div>
+    <div className="footer-wordmark" aria-hidden="true"><span>SideTwo</span></div>
   </footer>
 }
 
